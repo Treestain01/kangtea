@@ -92,9 +92,11 @@ Responsibilities:
 ### Task 1: Root workspace skeleton
 
 **Files:**
+
 - Create: `.gitattributes`, `.gitignore`, `.editorconfig`, `.nvmrc`, `.prettierrc`, `.prettierignore`, `tsconfig.base.json`, `eslint.config.mjs`, `package.json`, `pnpm-workspace.yaml`
 
 **Interfaces:**
+
 - Produces: root scripts `pnpm build|lint|typecheck|test|check|dev|format|format:check`; `tsconfig.base.json` that every package extends; a root ESLint flat config that applies to every package.
 
 - [ ] **Step 1: Create `.gitattributes`**
@@ -301,10 +303,12 @@ git commit -m "Add pnpm workspace root with shared TypeScript, ESLint and Pretti
 ### Task 2: `packages/shared` contract package
 
 **Files:**
+
 - Create: `packages/shared/package.json`, `packages/shared/tsconfig.json`, `packages/shared/src/index.ts`, `packages/shared/src/health.ts`
 - Test: `packages/shared/test/health.test.ts`
 
 **Interfaces:**
+
 - Produces: `HealthResponseSchema` (Zod object: `status: 'ok'`, `service: 'bbt-api'`, `timestamp: ISO 8601 string`) and `type HealthResponse = z.infer<typeof HealthResponseSchema>`, both exported from `@bbt/shared`.
 
 - [ ] **Step 1: Create `packages/shared/package.json`**
@@ -367,7 +371,9 @@ describe('HealthResponseSchema', () => {
   });
 
   it('rejects a non ISO timestamp', () => {
-    expect(HealthResponseSchema.safeParse({ ...valid, timestamp: 'yesterday' }).success).toBe(false);
+    expect(HealthResponseSchema.safeParse({ ...valid, timestamp: 'yesterday' }).success).toBe(
+      false,
+    );
   });
 
   it('rejects a missing service', () => {
@@ -430,10 +436,12 @@ git commit -m "Add @bbt/shared contract package with health response schema"
 ### Task 3: `api` Hono backend
 
 **Files:**
+
 - Create: `api/package.json`, `api/tsconfig.json`, `api/vercel.json`, `api/.env.example`, `api/api/index.ts`, `api/src/app.ts`, `api/src/env.ts`, `api/src/server.ts`, `api/src/routes/health.ts`
 - Test: `api/test/env.test.ts`, `api/test/app.test.ts`
 
 **Interfaces:**
+
 - Consumes: `HealthResponseSchema`, `HealthResponse` from `@bbt/shared`.
 - Produces: `loadEnv(source?: NodeJS.ProcessEnv): Env`, `parseAllowedOrigins(value: string): string[]`, `createApp(env: Env): Hono`, `GET /health` returning a `HealthResponse`, JSON 404 `{ error: 'Not found' }`, JSON 500 `{ error: 'Internal server error' }`.
 
@@ -732,10 +740,12 @@ git commit -m "Add @bbt/api Hono backend with health route, CORS and Vercel entr
 ### Task 4: `webapp` React frontend
 
 **Files:**
+
 - Create: `webapp/package.json`, `webapp/tsconfig.json`, `webapp/vite.config.ts`, `webapp/vercel.json`, `webapp/.env.example`, `webapp/index.html`, `webapp/src/main.tsx`, `webapp/src/App.tsx`, `webapp/src/config.ts`, `webapp/src/platform.ts`, `webapp/src/styles.css`, `webapp/src/vite-env.d.ts`, `webapp/src/api/client.ts`, `webapp/src/components/ApiStatus.tsx`, `webapp/src/test/setup.ts`
 - Test: `webapp/src/platform.test.ts`, `webapp/src/api/client.test.ts`, `webapp/src/components/ApiStatus.test.tsx`, `webapp/src/App.test.tsx`
 
 **Interfaces:**
+
 - Consumes: `HealthResponseSchema`, `HealthResponse` from `@bbt/shared`.
 - Produces: `IOS_SHELL_USER_AGENT_TOKEN = 'BBTiOS/'`, `isInIosShell(userAgent?: string): boolean`, `API_URL: string`, `fetchHealth(fetchImpl?: typeof fetch): Promise<HealthResponse>`, `<ApiStatus />`, `<App />`.
 
@@ -827,10 +837,7 @@ VITE_API_URL=http://localhost:3000
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
     <title>BBT</title>
   </head>
@@ -866,8 +873,7 @@ import '@testing-library/jest-dom/vitest';
 ```css
 :root {
   color-scheme: light dark;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -1091,9 +1097,7 @@ import { useEffect, useState } from 'react';
 import { fetchHealth } from '../api/client';
 
 type Status =
-  | { kind: 'loading' }
-  | { kind: 'ok'; timestamp: string }
-  | { kind: 'error'; message: string };
+  { kind: 'loading' } | { kind: 'ok'; timestamp: string } | { kind: 'error'; message: string };
 
 export function ApiStatus() {
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
@@ -1236,6 +1240,7 @@ git commit -m "Add @bbt/webapp React app with API health status and iOS shell de
 ### Task 5: End to end verification of the JS workspace
 
 **Files:**
+
 - None created. This task proves the three packages work together.
 
 - [ ] **Step 1: Run the full root check**
@@ -1291,10 +1296,12 @@ If anything changed, `git add -A; git commit -m "Apply formatting fixes from wor
 ### Task 6: `iosapp` SwiftUI shell (XcodeGen)
 
 **Files:**
+
 - Create: `iosapp/project.yml`, `iosapp/Config/Debug.xcconfig`, `iosapp/Config/Release.xcconfig`, `iosapp/BBT/Info.plist`, `iosapp/BBT/BBTApp.swift`, `iosapp/BBT/AppConfig.swift`, `iosapp/BBT/WebViewModel.swift`, `iosapp/BBT/WebView.swift`, `iosapp/BBT/StatusViews.swift`, `iosapp/BBT/ContentView.swift`, `iosapp/BBT/Assets.xcassets/Contents.json`, `iosapp/BBT/Assets.xcassets/AppIcon.appiconset/Contents.json`, `iosapp/BBT/Assets.xcassets/AccentColor.colorset/Contents.json`
 - Test: `iosapp/BBTTests/AppConfigTests.swift`
 
 **Interfaces:**
+
 - Produces: `AppConfig(rawURL:appVersion:) throws`, `AppConfig.load(from:) throws`, `AppConfig.webAppURL: URL`, `AppConfig.userAgentSuffix: String` (`BBTiOS/<version>`), `WebViewModel` with `state: .loading | .loaded | .failed(message:)`, `WebView` (`UIViewRepresentable`), `ContentView(config:)`.
 - Cannot be compiled on Windows. Verification is by inspection plus parsing YAML, plist XML and JSON.
 
@@ -1305,7 +1312,7 @@ name: BBT
 options:
   bundleIdPrefix: com.tristanjong
   deploymentTarget:
-    iOS: "17.0"
+    iOS: '17.0'
   createIntermediateGroups: true
   generateEmptyDirectories: true
 
@@ -1319,9 +1326,9 @@ configFiles:
 
 settings:
   base:
-    SWIFT_VERSION: "5.10"
-    MARKETING_VERSION: "1.0.0"
-    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: '5.10'
+    MARKETING_VERSION: '1.0.0'
+    CURRENT_PROJECT_VERSION: '1'
     CODE_SIGN_STYLE: Automatic
     SWIFT_STRICT_CONCURRENCY: complete
 
@@ -1339,7 +1346,7 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
-        TARGETED_DEVICE_FAMILY: "1"
+        TARGETED_DEVICE_FAMILY: '1'
         SUPPORTED_INTERFACE_ORIENTATIONS: UIInterfaceOrientationPortrait
         SUPPORTED_INTERFACE_ORIENTATIONS_IPAD: UIInterfaceOrientationPortrait
 
@@ -1856,14 +1863,16 @@ git commit -m "Add iosapp SwiftUI WKWebView shell described by XcodeGen"
 ### Task 7: Root agent infrastructure (CLAUDE.md, knowledge, ADRs, skills)
 
 **Files:**
+
 - Create: `CLAUDE.md`, `knowledge/INDEX.md`, `knowledge/architecture.md`, `knowledge/conventions.md`, `knowledge/glossary.md`, `knowledge/decisions/TEMPLATE.md`, `knowledge/decisions/0001-monorepo-with-pnpm-workspaces.md`, `knowledge/decisions/0002-ios-shell-loads-remote-webapp.md`, `knowledge/decisions/0003-xcodegen-for-ios-project.md`, `knowledge/decisions/0004-hono-on-vercel-for-api.md`, `knowledge/decisions/0005-shared-contract-package.md`, `.claude/skills/verify-all/SKILL.md`, `.claude/skills/record-decision/SKILL.md`, `.claude/skills/update-knowledge/SKILL.md`
 
 **Interfaces:**
+
 - Produces: the root entry points every agent reads first. Later tasks link to `knowledge/architecture.md` and `knowledge/conventions.md` by path.
 
 - [ ] **Step 1: Create `CLAUDE.md`**
 
-````markdown
+```markdown
 # BBT App Monorepo
 
 ## Purpose
@@ -1874,35 +1883,35 @@ Each project builds and deploys independently.
 
 ## Repo map
 
-| Path | What | Read first |
-|---|---|---|
-| `webapp/` | React + TypeScript site on Vercel | `webapp/CLAUDE.md` |
-| `api/` | Hono + TypeScript backend on Vercel | `api/CLAUDE.md` |
-| `packages/shared/` | Zod schemas and types shared by webapp and api | `packages/shared/CLAUDE.md` |
-| `iosapp/` | SwiftUI WKWebView shell, XcodeGen project | `iosapp/CLAUDE.md` |
-| `knowledge/` | Durable facts about the whole repo | `knowledge/INDEX.md` |
-| `docs/superpowers/` | Design specs and implementation plans | latest spec |
+| Path                | What                                           | Read first                  |
+| ------------------- | ---------------------------------------------- | --------------------------- |
+| `webapp/`           | React + TypeScript site on Vercel              | `webapp/CLAUDE.md`          |
+| `api/`              | Hono + TypeScript backend on Vercel            | `api/CLAUDE.md`             |
+| `packages/shared/`  | Zod schemas and types shared by webapp and api | `packages/shared/CLAUDE.md` |
+| `iosapp/`           | SwiftUI WKWebView shell, XcodeGen project      | `iosapp/CLAUDE.md`          |
+| `knowledge/`        | Durable facts about the whole repo             | `knowledge/INDEX.md`        |
+| `docs/superpowers/` | Design specs and implementation plans          | latest spec                 |
 
 ## Who does the work
 
 All development work on this repo is done through Tristan's agency at `C:\Users\trist\OneDrive\Desktop\tristans-agency`.
 Read the agency's `CLAUDE.md` and `orchestration.md` first, then adopt the matching agent definition and its skills from `agents/<agent>/`.
 
-| Work | Agent |
-|---|---|
-| Structure, cross-project decisions, ADRs, new subsystems | `architect` |
-| `webapp` UI, components, state, browser verification | `front-end-engineer` |
-| `api` endpoints, data modelling, `packages/shared` contract | `back-end-engineer` |
-| `iosapp` Swift, SwiftUI, WKWebView | `front-end-engineer` for UI, `architect` for the shell to web contract |
-| Vercel deployment, PR creation, addressing review | `delivery-engineer` |
-| Acceptance criteria, end to end behaviour verification | `acceptance-verification-engineer` |
-| Test strategy, PR correctness review | `qa-engineer` |
-| Auth, secrets, CORS, threat modelling, security review | `security-engineer` |
-| `CLAUDE.md`, knowledge bases, READMEs, doc rot audits | `technical-writer` |
-| Analytics and event modelling | `data-engineer` |
-| Visual design, design system alignment | `ui-ux-designer` |
-| Scoping, prioritisation, requirements | `product-manager` |
-| Coordinating multi-agent work, sequencing | `engineering-manager` |
+| Work                                                        | Agent                                                                  |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Structure, cross-project decisions, ADRs, new subsystems    | `architect`                                                            |
+| `webapp` UI, components, state, browser verification        | `front-end-engineer`                                                   |
+| `api` endpoints, data modelling, `packages/shared` contract | `back-end-engineer`                                                    |
+| `iosapp` Swift, SwiftUI, WKWebView                          | `front-end-engineer` for UI, `architect` for the shell to web contract |
+| Vercel deployment, PR creation, addressing review           | `delivery-engineer`                                                    |
+| Acceptance criteria, end to end behaviour verification      | `acceptance-verification-engineer`                                     |
+| Test strategy, PR correctness review                        | `qa-engineer`                                                          |
+| Auth, secrets, CORS, threat modelling, security review      | `security-engineer`                                                    |
+| `CLAUDE.md`, knowledge bases, READMEs, doc rot audits       | `technical-writer`                                                     |
+| Analytics and event modelling                               | `data-engineer`                                                        |
+| Visual design, design system alignment                      | `ui-ux-designer`                                                       |
+| Scoping, prioritisation, requirements                       | `product-manager`                                                      |
+| Coordinating multi-agent work, sequencing                   | `engineering-manager`                                                  |
 
 Any change that touches the `webapp` to `api` boundary involves both `front-end-engineer` and `back-end-engineer` through the agency's `coordinate-api-contract` skill.
 Known gap: the agency has no dedicated iOS agent.
@@ -1932,7 +1941,7 @@ Say so in your report when doing iOS work rather than silently improvising.
 - Conventions: `knowledge/conventions.md`.
 - Why things are the way they are: `knowledge/decisions/`.
 - Repo-level skills: `.claude/skills/` (`verify-all`, `record-decision`, `update-knowledge`).
-````
+```
 
 - [ ] **Step 2: Create `knowledge/INDEX.md`, `knowledge/glossary.md`, `knowledge/conventions.md`**
 
@@ -2043,11 +2052,11 @@ Project knowledge bases: `webapp/knowledge/INDEX.md`, `api/knowledge/INDEX.md`, 
 
 ## URL configuration flow
 
-| Consumer | Setting | Development value | Production value |
-|---|---|---|---|
-| `webapp` | `VITE_API_URL` (Vercel env var, `.env` locally) | `http://localhost:3000` | deployed api URL |
-| `api` | `ALLOWED_ORIGINS` (Vercel env var, `.env` locally) | `http://localhost:5173` | deployed webapp origin |
-| `iosapp` | `WEBAPP_URL` in `Config/Debug.xcconfig` and `Config/Release.xcconfig` | `http://localhost:5173` | deployed webapp URL |
+| Consumer | Setting                                                               | Development value       | Production value       |
+| -------- | --------------------------------------------------------------------- | ----------------------- | ---------------------- |
+| `webapp` | `VITE_API_URL` (Vercel env var, `.env` locally)                       | `http://localhost:3000` | deployed api URL       |
+| `api`    | `ALLOWED_ORIGINS` (Vercel env var, `.env` locally)                    | `http://localhost:5173` | deployed webapp origin |
+| `iosapp` | `WEBAPP_URL` in `Config/Debug.xcconfig` and `Config/Release.xcconfig` | `http://localhost:5173` | deployed webapp URL    |
 
 `WEBAPP_URL` flows from the xcconfig into `Info.plist` as `$(WEBAPP_URL)` and is read at runtime by `AppConfig.load()`.
 xcconfig treats `//` as a comment, so URLs are written `https:/$()/host`.
@@ -2354,7 +2363,7 @@ description: Use when making or discovering a non-obvious technical decision in 
 
 `.claude/skills/update-knowledge/SKILL.md`:
 
-````markdown
+```markdown
 ---
 name: update-knowledge
 description: Use after changing how anything in this repo works (config flow, commands, conventions, boundaries between projects, ports, environment variables). Decides which knowledge document is affected and updates it in the same change.
@@ -2366,15 +2375,15 @@ description: Use after changing how anything in this repo works (config flow, co
 
 1. Ask which of these your change touched:
 
-   | Changed | Update |
-   |---|---|
-   | How projects connect, URLs, CORS, user agent, safe areas | `knowledge/architecture.md` |
-   | Commands, formatting, testing rules, ports | `knowledge/conventions.md` and the relevant `CLAUDE.md` Commands section |
-   | A word people would need defined | `knowledge/glossary.md` |
-   | Why something is the way it is | a new ADR via `record-decision` |
-   | `webapp` internals | `webapp/knowledge/` |
-   | `api` internals or deployment | `api/knowledge/` |
-   | `iosapp` internals or configuration | `iosapp/knowledge/` |
+   | Changed                                                  | Update                                                                   |
+   | -------------------------------------------------------- | ------------------------------------------------------------------------ |
+   | How projects connect, URLs, CORS, user agent, safe areas | `knowledge/architecture.md`                                              |
+   | Commands, formatting, testing rules, ports               | `knowledge/conventions.md` and the relevant `CLAUDE.md` Commands section |
+   | A word people would need defined                         | `knowledge/glossary.md`                                                  |
+   | Why something is the way it is                           | a new ADR via `record-decision`                                          |
+   | `webapp` internals                                       | `webapp/knowledge/`                                                      |
+   | `api` internals or deployment                            | `api/knowledge/`                                                         |
+   | `iosapp` internals or configuration                      | `iosapp/knowledge/`                                                      |
 
 2. Open the target document and edit the paragraph that is now wrong.
    Prefer replacing a sentence over appending a note.
@@ -2392,7 +2401,7 @@ description: Use after changing how anything in this repo works (config flow, co
 - One sentence per line, no em dashes.
 - Facts go in `knowledge/`, procedures go in `.claude/skills/`, always-on rules go in `CLAUDE.md`.
 - Do not duplicate content between levels. Link instead.
-````
+```
 
 - [ ] **Step 6: Format check and commit**
 
@@ -2412,6 +2421,7 @@ git commit -m "Add root CLAUDE.md, knowledge base, ADRs and repo-level skills"
 ### Task 8: `webapp` agent infrastructure
 
 **Files:**
+
 - Create: `webapp/CLAUDE.md`, `webapp/.claude/skills/add-feature/SKILL.md`, `webapp/.claude/skills/check/SKILL.md`, `webapp/knowledge/INDEX.md`, `webapp/knowledge/stack.md`, `webapp/knowledge/testing.md`, `webapp/knowledge/ios-integration.md`, `webapp/knowledge/api-client.md`
 
 - [ ] **Step 1: Create `webapp/CLAUDE.md`**
@@ -2455,7 +2465,7 @@ It runs in any browser and inside the `iosapp` WKWebView, and must behave identi
 
 `webapp/.claude/skills/add-feature/SKILL.md`:
 
-````markdown
+```markdown
 ---
 name: add-feature
 description: Use when adding or changing user visible behaviour in webapp (a component, a page, a state change, an API call). Test-first flow ending in a browser check.
@@ -2488,7 +2498,7 @@ description: Use when adding or changing user visible behaviour in webapp (a com
 8. If the change alters how the webapp talks to the API or the shell, update `knowledge/api-client.md` or `knowledge/ios-integration.md`.
 
 9. Run the root `verify-all` skill and commit.
-````
+```
 
 `webapp/.claude/skills/check/SKILL.md`:
 
@@ -2536,16 +2546,16 @@ description: Use when you need to know whether webapp is green. Runs lint, typec
 ```markdown
 # Stack
 
-| Piece | Role | Configured in |
-|---|---|---|
-| Vite | dev server and production bundler | `vite.config.ts` |
-| React 19 | UI | `src/main.tsx` mounts `App` under `StrictMode` |
-| TypeScript (strict) | types | `tsconfig.json` extends `../tsconfig.base.json` |
-| ESLint | lint, with `react-hooks` rules | root `eslint.config.mjs`, block scoped to `webapp/**` |
-| Prettier | formatting | root `.prettierrc` |
-| Vitest + jsdom | test runner and DOM | `test` block in `vite.config.ts` |
-| React Testing Library + jest-dom | rendering and matchers | `src/test/setup.ts` |
-| `@bbt/shared` | response schemas | workspace dependency |
+| Piece                            | Role                              | Configured in                                         |
+| -------------------------------- | --------------------------------- | ----------------------------------------------------- |
+| Vite                             | dev server and production bundler | `vite.config.ts`                                      |
+| React 19                         | UI                                | `src/main.tsx` mounts `App` under `StrictMode`        |
+| TypeScript (strict)              | types                             | `tsconfig.json` extends `../tsconfig.base.json`       |
+| ESLint                           | lint, with `react-hooks` rules    | root `eslint.config.mjs`, block scoped to `webapp/**` |
+| Prettier                         | formatting                        | root `.prettierrc`                                    |
+| Vitest + jsdom                   | test runner and DOM               | `test` block in `vite.config.ts`                      |
+| React Testing Library + jest-dom | rendering and matchers            | `src/test/setup.ts`                                   |
+| `@bbt/shared`                    | response schemas                  | workspace dependency                                  |
 
 ## Notes
 
@@ -2677,6 +2687,7 @@ git commit -m "Add webapp CLAUDE.md, skills and knowledge base"
 ### Task 9: `api` agent infrastructure
 
 **Files:**
+
 - Create: `api/CLAUDE.md`, `api/.claude/skills/add-endpoint/SKILL.md`, `api/.claude/skills/check/SKILL.md`, `api/.claude/skills/run-local/SKILL.md`, `api/knowledge/INDEX.md`, `api/knowledge/stack.md`, `api/knowledge/routing-and-validation.md`, `api/knowledge/deployment.md`
 
 - [ ] **Step 1: Create `api/CLAUDE.md`**
@@ -2739,7 +2750,11 @@ description: Use when adding or changing an api route. Contract-first, test-firs
 
    ```ts
    const app = createApp({ ALLOWED_ORIGINS: 'http://localhost:5173', PORT: 3000 });
-   const res = await app.request('/things', { method: 'POST', body: JSON.stringify(input), headers: { 'content-type': 'application/json' } });
+   const res = await app.request('/things', {
+     method: 'POST',
+     body: JSON.stringify(input),
+     headers: { 'content-type': 'application/json' },
+   });
    expect(res.status).toBe(201);
    expect(ThingResponseSchema.safeParse(await res.json()).success).toBe(true);
    ```
@@ -2852,16 +2867,16 @@ description: Use when you need the api running locally to test against, from the
 ```markdown
 # Stack
 
-| Piece | Role | Configured in |
-|---|---|---|
-| Hono | router and middleware | `src/app.ts` |
-| `hono/cors` | CORS allowlist | `src/app.ts` from `ALLOWED_ORIGINS` |
-| `hono/vercel` | adapts the app to a Vercel function | `api/index.ts` |
-| `@hono/node-server` + `tsx` | local dev server with reload | `src/server.ts`, `dev` script |
-| Zod | environment and boundary validation | `src/env.ts`, routes |
-| `@bbt/shared` | contract schemas | workspace dependency |
-| TypeScript (strict) | types | `tsconfig.json` extends `../tsconfig.base.json` with `types: ["node"]` |
-| Vitest | tests via `app.request()` | default config, `test/**/*.test.ts` |
+| Piece                       | Role                                | Configured in                                                          |
+| --------------------------- | ----------------------------------- | ---------------------------------------------------------------------- |
+| Hono                        | router and middleware               | `src/app.ts`                                                           |
+| `hono/cors`                 | CORS allowlist                      | `src/app.ts` from `ALLOWED_ORIGINS`                                    |
+| `hono/vercel`               | adapts the app to a Vercel function | `api/index.ts`                                                         |
+| `@hono/node-server` + `tsx` | local dev server with reload        | `src/server.ts`, `dev` script                                          |
+| Zod                         | environment and boundary validation | `src/env.ts`, routes                                                   |
+| `@bbt/shared`               | contract schemas                    | workspace dependency                                                   |
+| TypeScript (strict)         | types                               | `tsconfig.json` extends `../tsconfig.base.json` with `types: ["node"]` |
+| Vitest                      | tests via `app.request()`           | default config, `test/**/*.test.ts`                                    |
 
 ## Notes
 
@@ -2929,8 +2944,8 @@ Preflight `OPTIONS` requests are handled by the middleware automatically.
 
 ## Environment variables
 
-| Name | Purpose | Production value |
-|---|---|---|
+| Name              | Purpose                        | Production value                                                 |
+| ----------------- | ------------------------------ | ---------------------------------------------------------------- |
 | `ALLOWED_ORIGINS` | comma separated CORS allowlist | the deployed webapp origin, for example `https://bbt.vercel.app` |
 
 `PORT` is ignored on Vercel.
@@ -2960,6 +2975,7 @@ git commit -m "Add api CLAUDE.md, skills and knowledge base"
 ### Task 10: `iosapp` agent infrastructure
 
 **Files:**
+
 - Create: `iosapp/CLAUDE.md`, `iosapp/.claude/skills/regenerate-project/SKILL.md`, `iosapp/.claude/skills/point-at-webapp/SKILL.md`, `iosapp/knowledge/INDEX.md`, `iosapp/knowledge/project-generation.md`, `iosapp/knowledge/webview.md`, `iosapp/knowledge/configuration.md`
 
 - [ ] **Step 1: Create `iosapp/CLAUDE.md`**
@@ -3120,7 +3136,7 @@ Folder based sources mean no per-file registration.
 packages:
   SomeLib:
     url: https://github.com/org/somelib
-    from: "1.0.0"
+    from: '1.0.0'
 targets:
   BBT:
     dependencies:
@@ -3235,6 +3251,7 @@ git commit -m "Add iosapp CLAUDE.md, skills and knowledge base"
 ### Task 11: `packages/shared` CLAUDE.md, root README, final verification
 
 **Files:**
+
 - Create: `packages/shared/CLAUDE.md`, `README.md`
 
 - [ ] **Step 1: Create `packages/shared/CLAUDE.md`**
@@ -3275,12 +3292,12 @@ If a shape lives here, neither side can drift without TypeScript or a runtime pa
 
 A website, its backend, and a native iOS shell that loads the website.
 
-| Project | Stack | Deploys to |
-|---|---|---|
-| `webapp/` | React 19, TypeScript, Vite | Vercel (static) |
-| `api/` | Hono, TypeScript, Zod | Vercel (serverless function) |
-| `packages/shared/` | Zod schemas shared by webapp and api | consumed as source |
-| `iosapp/` | SwiftUI, WKWebView, XcodeGen | App Store, built on a Mac |
+| Project            | Stack                                | Deploys to                   |
+| ------------------ | ------------------------------------ | ---------------------------- |
+| `webapp/`          | React 19, TypeScript, Vite           | Vercel (static)              |
+| `api/`             | Hono, TypeScript, Zod                | Vercel (serverless function) |
+| `packages/shared/` | Zod schemas shared by webapp and api | consumed as source           |
+| `iosapp/`          | SwiftUI, WKWebView, XcodeGen         | App Store, built on a Mac    |
 
 ## Quick start (JavaScript)
 

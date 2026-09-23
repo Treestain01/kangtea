@@ -193,21 +193,21 @@ Knowledge:
 The root `CLAUDE.md` states that all development work on this repo is done through the agency at `C:\Users\trist\OneDrive\Desktop\tristans-agency`.
 Agents read the agency's `CLAUDE.md` and `orchestration.md` first, then adopt the matching agent definition and its skills.
 
-| Work | Agent |
-|---|---|
-| Structure, cross-project decisions, ADRs, new subsystems | `architect` |
-| `webapp` UI, components, state, browser verification | `front-end-engineer` |
-| `api` endpoints, data modelling, `packages/shared` contract | `back-end-engineer` |
-| `iosapp` Swift, SwiftUI, WKWebView | `front-end-engineer` for UI, `architect` for the shell to web contract |
-| Vercel deployment, PR creation, addressing review | `delivery-engineer` |
-| Acceptance criteria, end to end behaviour verification | `acceptance-verification-engineer` |
-| Test strategy, PR correctness review | `qa-engineer` |
-| Auth, secrets, CORS, threat modelling, security review | `security-engineer` |
-| `CLAUDE.md`, knowledge bases, READMEs, doc rot audits | `technical-writer` |
-| Analytics and event modelling | `data-engineer` |
-| Visual design, design system alignment | `ui-ux-designer` |
-| Scoping, prioritisation, requirements | `product-manager` |
-| Coordinating multi-agent work, sequencing | `engineering-manager` |
+| Work                                                        | Agent                                                                  |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Structure, cross-project decisions, ADRs, new subsystems    | `architect`                                                            |
+| `webapp` UI, components, state, browser verification        | `front-end-engineer`                                                   |
+| `api` endpoints, data modelling, `packages/shared` contract | `back-end-engineer`                                                    |
+| `iosapp` Swift, SwiftUI, WKWebView                          | `front-end-engineer` for UI, `architect` for the shell to web contract |
+| Vercel deployment, PR creation, addressing review           | `delivery-engineer`                                                    |
+| Acceptance criteria, end to end behaviour verification      | `acceptance-verification-engineer`                                     |
+| Test strategy, PR correctness review                        | `qa-engineer`                                                          |
+| Auth, secrets, CORS, threat modelling, security review      | `security-engineer`                                                    |
+| `CLAUDE.md`, knowledge bases, READMEs, doc rot audits       | `technical-writer`                                                     |
+| Analytics and event modelling                               | `data-engineer`                                                        |
+| Visual design, design system alignment                      | `ui-ux-designer`                                                       |
+| Scoping, prioritisation, requirements                       | `product-manager`                                                      |
+| Coordinating multi-agent work, sequencing                   | `engineering-manager`                                                  |
 
 Cross-cutting rule: any change that touches the `webapp` to `api` boundary involves both `front-end-engineer` and `back-end-engineer` through the `coordinate-api-contract` skill.
 
