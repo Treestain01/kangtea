@@ -719,7 +719,7 @@ Expected: clean.
 Start the server in the background, hit it, and stop it:
 
 ```powershell
-$proc = Start-Process -FilePath pnpm -ArgumentList '--filter','@bbt/api','dev' -PassThru -NoNewWindow
+$proc = Start-Process -FilePath pnpm.cmd -ArgumentList '--filter','@bbt/api','dev' -PassThru -NoNewWindow
 Start-Sleep -Seconds 4
 Invoke-RestMethod http://localhost:3000/health
 Invoke-WebRequest http://localhost:3000/health -Headers @{ Origin = 'http://localhost:5173' } | Select-Object -ExpandProperty Headers
@@ -1254,7 +1254,7 @@ Expected: every package lints, typechecks and tests green; `webapp` builds; Pret
 - [ ] **Step 2: Start api and webapp together**
 
 ```powershell
-$dev = Start-Process -FilePath pnpm -ArgumentList 'dev' -PassThru -NoNewWindow
+$dev = Start-Process -FilePath pnpm.cmd -ArgumentList 'dev' -PassThru -NoNewWindow
 Start-Sleep -Seconds 6
 ```
 
@@ -2821,7 +2821,7 @@ description: Use when you need the api running locally to test against, from the
 2. Start in the background from the repo root:
 
    ```powershell
-   $api = Start-Process -FilePath pnpm -ArgumentList '--filter','@bbt/api','dev' -PassThru -NoNewWindow
+   $api = Start-Process -FilePath pnpm.cmd -ArgumentList '--filter','@bbt/api','dev' -PassThru -NoNewWindow
    Start-Sleep -Seconds 4
    ```
 
