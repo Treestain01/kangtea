@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { fetchHealth } from '../api/client';
 
 type Status =
-  | { kind: 'loading' }
-  | { kind: 'ok'; timestamp: string }
-  | { kind: 'error'; message: string };
+  { kind: 'loading' } | { kind: 'ok'; timestamp: string } | { kind: 'error'; message: string };
 
 export function ApiStatus() {
   const [status, setStatus] = useState<Status>({ kind: 'loading' });

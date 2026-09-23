@@ -17,7 +17,9 @@ describe('HealthResponseSchema', () => {
   });
 
   it('rejects a non ISO timestamp', () => {
-    expect(HealthResponseSchema.safeParse({ ...valid, timestamp: 'yesterday' }).success).toBe(false);
+    expect(HealthResponseSchema.safeParse({ ...valid, timestamp: 'yesterday' }).success).toBe(
+      false,
+    );
   });
 
   it('rejects a missing service', () => {
