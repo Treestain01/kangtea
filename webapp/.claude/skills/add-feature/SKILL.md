@@ -18,14 +18,13 @@ description: Use when adding or changing user visible behaviour in webapp (a com
 
 4. Implement the smallest change that passes.
    Components live in `src/components/`, API calls in `src/api/client.ts`, config in `src/config.ts`.
+   Style with tokens from `src/theme/tokens.css` only (see `knowledge/theme.md`) and write mobile first.
 
 5. Run `pnpm --filter @bbt/webapp test` and confirm it passes.
 
 6. Run `pnpm --filter @bbt/webapp lint` and `pnpm --filter @bbt/webapp typecheck`.
 
-7. Start `pnpm dev` at the repo root and load http://localhost:5173.
-   Look at the feature at phone width (about 390px) as well as desktop, because the primary surface is the iOS shell.
-   Check the console for errors.
+7. Run the `responsive-ui` skill: it verifies the feature at 390px and 1280px, in light and dark mode, with tokens only and 44px touch targets, and gives you the report shape.
 
 8. If the change alters how the webapp talks to the API or the shell, update `knowledge/api-client.md` or `knowledge/ios-integration.md`.
 

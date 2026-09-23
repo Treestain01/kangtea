@@ -16,6 +16,8 @@ It runs in any browser and inside the `iosapp` WKWebView, and must behave identi
 ## Rules
 
 - Test first. Use the `add-feature` skill for any new behaviour.
+- Every UI change serves phones and desktops. Use the `responsive-ui` skill whenever you touch a `.tsx` or `.css` file; a hook reminds you.
+- Colours only via `var(--color-*)` from `src/theme/tokens.css`. Breakpoints only 768px and 1024px. `src/theme/tokens.test.ts` enforces both.
 - Query the DOM by role and text in tests, never by class name.
 - Only `src/config.ts` reads `import.meta.env`. Only `src/api/client.ts` calls `fetch` against the API.
 - Parse every API response with the schema from `@bbt/shared`. Never hand write a response type.
@@ -28,5 +30,6 @@ It runs in any browser and inside the `iosapp` WKWebView, and must behave identi
 - `knowledge/INDEX.md` - start here.
 - `knowledge/ios-integration.md` - what the shell does and does not do for you.
 - `knowledge/api-client.md` - how to call the API.
-- Skills: `.claude/skills/add-feature`, `.claude/skills/check`.
+- `knowledge/theme.md` - every token and what it is for.
+- Skills: `.claude/skills/add-feature`, `.claude/skills/responsive-ui`, `.claude/skills/check`.
 - Agency agent: `front-end-engineer` (see root `CLAUDE.md`).

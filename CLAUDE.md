@@ -66,3 +66,4 @@ Say so in your report when doing iOS work rather than silently improvising.
 - Conventions: `knowledge/conventions.md`.
 - Why things are the way they are: `knowledge/decisions/`.
 - Repo-level skills: `.claude/skills/` (`verify-all`, `record-decision`, `update-knowledge`).
+- Hooks: `.claude/settings.json` registers `.claude/hooks/responsive-ui-reminder.mjs`, which reminds you to run `webapp:responsive-ui` after editing any webapp `.tsx` or `.css` file.

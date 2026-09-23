@@ -36,3 +36,4 @@
 - pnpm is the only package manager. Do not create `package-lock.json` or `yarn.lock`.
 - `webapp` dev server is port 5173, `api` dev server is port 3000. Do not change these without updating `iosapp/Config/Debug.xcconfig` and `api/.env.example`.
 - In PowerShell, start pnpm in the background with `Start-Process -FilePath pnpm.cmd`. The bare `pnpm` resolves to a `.ps1` shim that `Start-Process` cannot launch.
+- Windows PowerShell 5.1 prepends a UTF-8 BOM when piping a string into a native process. Scripts that parse piped JSON (the hooks in `.claude/hooks/`) strip a leading `U+FEFF` first.
