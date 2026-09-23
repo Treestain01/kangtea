@@ -1,0 +1,3 @@
+// Release points at the deployed webapp on Vercel.
+// Replace the host once the Vercel project exists. Keep the /$()/ trick, "//" is a comment.
+WEBAPP_URL = https:/$()/REPLACE_WITH_PRODUCTION_HOST

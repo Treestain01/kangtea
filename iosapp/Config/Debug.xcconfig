@@ -1,0 +1,3 @@
+// Debug points at the local Vite dev server.
+// "//" starts a comment in xcconfig, so URLs are written as scheme:/$()/host.
+WEBAPP_URL = http:/$()/localhost:5173
