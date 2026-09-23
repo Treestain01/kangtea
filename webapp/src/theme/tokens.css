@@ -1,5 +1,5 @@
 /*
- * BBT design tokens. The single source of truth for colour, spacing, radius and focus.
+ * Kang Tea design tokens. The single source of truth for colour, spacing, radius and focus.
  * Components use var(--token) only. src/theme/tokens.test.ts fails the build if a colour
  * is written literally anywhere else under src/.
  *

@@ -5,7 +5,7 @@ description: Use when creating or changing any .tsx component, page, layout or .
 
 # Responsive UI (webapp)
 
-BBT is used from phones (including inside the iOS shell) and from desktops.
+Kang Tea is used from phones (including inside the iOS shell) and from desktops.
 Every UI change ships for both at once.
 This skill is also injected automatically by the `.claude/hooks/responsive-ui-reminder.mjs` hook after any edit to a `webapp/**/*.tsx` or `webapp/**/*.css` file.
 

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The BBT backend.
+The Kang Tea backend (service id `bbt-api`).
 Hono + TypeScript, deployed to Vercel as a single serverless function.
 Serves `webapp` only; the iOS shell never calls it directly.
 

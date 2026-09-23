@@ -1,6 +1,7 @@
-# BBT App
+# Kang Tea App
 
-A website, its backend, and a native iOS shell that loads the website.
+The Kang Tea (康緹) bubble tea ordering product: a website, its backend, and a native iOS shell that loads the website.
+The repo and its internal identifiers use the codename BBT.
 
 | Project            | Stack                                | Deploys to                   |
 | ------------------ | ------------------------------------ | ---------------------------- |

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The BBT website.
+The Kang Tea website.
 React 19 + TypeScript built with Vite, deployed to Vercel as a static site.
 It runs in any browser and inside the `iosapp` WKWebView, and must behave identically in both.
 

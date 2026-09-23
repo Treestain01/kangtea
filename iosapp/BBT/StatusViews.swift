@@ -10,7 +10,7 @@ struct OfflineView: View {
             Image(systemName: "wifi.exclamationmark")
                 .font(.system(size: 48))
                 .foregroundStyle(.secondary)
-            Text("Can't reach BBT")
+            Text("Can't reach Kang Tea")
                 .font(.title2.weight(.semibold))
             Text(message)
                 .font(.footnote)

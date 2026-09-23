@@ -2,7 +2,8 @@
 
 ## Purpose
 
-The native iOS shell for BBT.
+The native iOS shell for Kang Tea, shown on the home screen as "Kang Tea" (`CFBundleDisplayName` in `BBT/Info.plist`).
+The Xcode target, scheme and folder keep the codename `BBT`.
 SwiftUI app whose single screen is a WKWebView loading the deployed `webapp`.
 No product UI lives here; the shell owns configuration, loading state, the offline screen, and the user agent token.
 

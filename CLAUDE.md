@@ -1,8 +1,10 @@
-# BBT App Monorepo
+# Kang Tea App Monorepo (codename BBT)
 
 ## Purpose
 
-BBT is a product with a standalone website (`webapp`), its backend (`api`), and a native iOS shell (`iosapp`) that loads the deployed website in a WKWebView.
+Kang Tea (康緹) is a bubble tea shop.
+This repo, codenamed BBT, holds its standalone website (`webapp`), the backend (`api`), and a native iOS shell (`iosapp`) that loads the deployed website in a WKWebView.
+User facing copy says Kang Tea; internal identifiers (package names, bundle id, Xcode target, API service id) say BBT.
 Each project builds and deploys independently.
 `packages/shared` holds the typed contract between `webapp` and `api`.
 
