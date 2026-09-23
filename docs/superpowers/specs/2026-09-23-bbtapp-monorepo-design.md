@@ -104,7 +104,9 @@ api/
 - Package name `@bbt/shared`.
 - Holds Zod schemas and inferred TypeScript types for API requests and responses.
 - Starts with `HealthResponse` only.
-- Built with `tsc` to `dist/` with declaration files.
+- Has no build step.
+  Its `package.json` exports `./src/index.ts` directly, so Vite, tsx, Vitest, `tsc --noEmit` and Vercel's function bundler all consume the TypeScript source.
+  This avoids every consumer and both Vercel projects having to build `shared` first.
   `webapp` and `api` depend on it via `workspace:*`.
 - Rule: any change to an API shape starts here, then `api`, then `webapp`.
 
@@ -125,7 +127,7 @@ iosapp/
 │   ├── WebView.swift              # UIViewRepresentable around WKWebView
 │   ├── WebViewModel.swift         # loading, loaded, failed(Error) state
 │   ├── AppConfig.swift            # reads WEBAPP_URL from Info.plist
-│   ├── Info.plist                 # WEBAPP_URL = $(WEBAPP_URL), ATS localhost exception in Debug
+│   ├── Info.plist                 # WEBAPP_URL = $(WEBAPP_URL), NSAllowsLocalNetworking
 │   └── Assets.xcassets/
 └── BBTTests/
     └── AppConfigTests.swift       # URL parsing and user agent suffix
@@ -139,7 +141,9 @@ iosapp/
 - `WebView` shows a loading indicator while the first navigation is in flight and an offline or error view with a retry button when navigation fails.
   Because the app has no bundled content, this state is required from day one.
 - `ContentView` ignores safe areas so the webapp controls insets via CSS.
-- `NSAppTransportSecurity` allows plain HTTP to `localhost` in Debug only, so the simulator can reach the Vite dev server.
+- `NSAppTransportSecurity` sets `NSAllowsLocalNetworking` so the simulator can reach the Vite dev server over plain HTTP.
+  A single `Info.plist` cannot vary by build configuration without duplicating the file, and this key only affects local hosts, so it applies to all configurations.
+- `.xcconfig` values containing `//` must be written as `https:/$()/host` because `//` starts a comment in xcconfig syntax.
 - No JavaScript to Swift message bridge exists yet.
   `WebView.swift` has a clearly marked extension point (`WKUserContentController`) for adding one.
 
