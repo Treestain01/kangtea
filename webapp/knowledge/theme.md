@@ -13,9 +13,9 @@
 | Token                  | Light     | Dark      | Role                                                                                                                     |
 | ---------------------- | --------- | --------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `--color-brand`        | `#CBC6C3` | same      | The main brand colour, a warm grey. Shapes surfaces and borders. Never used for text (contrast on white is about 1.7:1). |
-| `--color-accent`       | `#2233C0` | `#6B78E8` | The highlight. Links, primary buttons, active states, focus ring.                                                        |
-| `--color-accent-hover` | `#1A2899` | `#8D97EE` | Hover and pressed state of accent elements.                                                                              |
-| `--color-on-accent`    | `#FFFFFF` | `#0F1233` | Text and icons placed on the accent.                                                                                     |
+| `--color-accent`       | `#084986` | `#6BA0E0` | The Kang Tea logo navy, sampled from the mark. Links, primary buttons, active states, focus ring.                        |
+| `--color-accent-hover` | `#063A6B` | `#8FB8EC` | Hover and pressed state of accent elements.                                                                              |
+| `--color-on-accent`    | `#FFFFFF` | `#0B2440` | Text and icons placed on the accent.                                                                                     |
 
 ## Neutrals (derived from the brand grey)
 
@@ -83,7 +83,18 @@ Components never check the scheme themselves; they read tokens and get the right
 3. Prefer a new semantic token (`--color-text-muted`) over exposing a raw shade.
 4. If it changes the brand palette, record why with the `record-decision` skill.
 
+## Brand assets
+
+The Kang Tea (康緹) logo is a monoline navy mark above the wordmark KANGTEA in a Trajan-style serif, with 康緹 beneath.
+
+- `src/components/brand/KangTeaMark.tsx`: the mark as inline SVG. Strokes use `currentColor`, so set `color` on a parent to recolour it. `size` sets the height; width follows the 35:62 aspect ratio.
+- `src/components/brand/KangTeaLogo.tsx`: the full lockup (mark, wordmark, Chinese name) or `variant="mark"` for the mark alone.
+- `public/brand/kangtea-mark.svg`: the same mark as a standalone file for favicons, the iOS app icon and anything outside React. Its fallback colour is `#084986`.
+- The wordmark uses Cinzel (loaded from Google Fonts in `index.html`) as the closest open face to the logo's Trajan-style capitals, with `letter-spacing: 0.12em`. 康緹 uses the system serif stack.
+
+The mark's colour is `--color-accent`, which is why the accent is the logo navy rather than a separate brand colour.
+
 ## The iOS shell
 
-`iosapp/BBT/Assets.xcassets/AccentColor.colorset` is set to the same `#2233C0`, so native controls in the shell (the offline retry button) match the web accent.
+`iosapp/BBT/Assets.xcassets/AccentColor.colorset` is set to the same `#084986`, so native controls in the shell (the offline retry button) match the web accent.
 Change both together.

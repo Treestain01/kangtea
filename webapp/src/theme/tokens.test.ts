@@ -42,7 +42,7 @@ const namedColourValue =
 describe('theme tokens', () => {
   it('defines the brand colours', () => {
     expect(tokensCss).toMatch(/--color-brand:\s*#cbc6c3/i);
-    expect(tokensCss).toMatch(/--color-accent:\s*#2233c0/i);
+    expect(tokensCss).toMatch(/--color-accent:\s*#084986/i);
   });
 
   it('is the only place colours are written literally', () => {

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="2 0 35 62" width="35" height="62" role="img" aria-labelledby="kangtea-mark-title" style="color:#084986">
+  <title id="kangtea-mark-title">Kang Tea</title>
+  <!--
+    Kang Tea (康緹) mark. Two monoline strokes, 3 units wide, flat ends, rounded corners.
+    Traced from the brand logo. Colour comes from currentColor so it can sit on any surface.
+  -->
+  <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="butt" stroke-linejoin="round">
+    <path d="M5 24 V43 A3 3 0 0 0 8 46 H12 A3 3 0 0 1 15 49 V54 A3 3 0 0 0 18 57 H20 A3 3 0 0 0 23 54 V42 A3 3 0 0 0 20 39 H16.5 A3 3 0 0 1 13.5 36 V6.5 A3.75 3.75 0 0 1 21 6.5 V30 A3.5 3.5 0 0 0 24.5 33.5 H28.5 A3.5 3.5 0 0 0 32 30 V15" />
+    <path d="M28 40 H30.5 A3 3 0 0 1 33.5 43 V59" />
+  </g>
+</svg>

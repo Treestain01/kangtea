@@ -4,16 +4,17 @@
  * is written literally anywhere else under src/.
  *
  * Brand: the warm grey is the main colour and shapes every surface, background and border.
- * The blue is the highlight and carries everything interactive: links, primary actions, focus.
- * The grey is too light to be readable as text, so it is never used for text.
+ * The navy is the Kang Tea logo colour (sampled from the mark) and carries everything
+ * interactive: links, primary actions, focus. The grey is too light to be readable as text,
+ * so it is never used for text.
  *
  * Breakpoints live in breakpoints.ts because custom properties cannot be used inside @media.
  */
 :root {
   /* Brand */
   --color-brand: #cbc6c3;
-  --color-accent: #2233c0;
-  --color-accent-hover: #1a2899;
+  --color-accent: #084986;
+  --color-accent-hover: #063a6b;
   --color-on-accent: #ffffff;
 
   /* Neutrals derived from the brand grey */
@@ -51,9 +52,9 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-accent: #6b78e8;
-    --color-accent-hover: #8d97ee;
-    --color-on-accent: #0f1233;
+    --color-accent: #6ba0e0;
+    --color-accent-hover: #8fb8ec;
+    --color-on-accent: #0b2440;
 
     --color-bg: #1b1917;
     --color-surface: #262321;

@@ -13,5 +13,6 @@ Read the document, not this index, for the facts.
   - [0004 Hono on Vercel for the api](decisions/0004-hono-on-vercel-for-api.md)
   - [0005 Shared contract package](decisions/0005-shared-contract-package.md)
   - [0006 CSS custom property theme with a test guard](decisions/0006-css-custom-property-theme-with-test-guard.md)
+  - [0007 Accent is the Kang Tea logo navy](decisions/0007-accent-is-the-kang-tea-logo-navy.md)
 
 Project knowledge bases: `webapp/knowledge/INDEX.md`, `api/knowledge/INDEX.md`, `iosapp/knowledge/INDEX.md`.

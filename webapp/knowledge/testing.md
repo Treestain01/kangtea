@@ -3,7 +3,8 @@
 ## Layout
 
 Tests sit beside the code: `src/platform.test.ts`, `src/components/ApiStatus.test.tsx`.
-`src/test/setup.ts` registers jest-dom matchers for every test.
+`src/test/setup.ts` registers jest-dom matchers for every test and calls React Testing Library's `cleanup()` in `afterEach`.
+That explicit cleanup matters: Vitest runs with `globals: false`, so RTL cannot register its own, and without it every `render` leaks into the next test and `getByRole` starts finding duplicates.
 
 ## Patterns
 
