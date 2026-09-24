@@ -17,21 +17,28 @@
   --color-accent-hover: #063a6b;
   --color-on-accent: #ffffff;
 
-  /* Neutrals derived from the brand grey */
-  --color-bg: #f5f3f2;
-  --color-surface: #ffffff;
-  --color-surface-muted: #e9e5e3;
+  /* Neutrals derived from the brand grey. Surface matches the page so depth comes from shadow. */
+  --color-bg: #ece8e6;
+  --color-surface: #ece8e6;
+  --color-surface-muted: #e2ddda;
   --color-border: #cbc6c3;
   --color-text: #2b2826;
   --color-text-muted: #6b655f;
+
+  /* Elevation: neumorphic soft shadows, light from the top left. The only depth device. */
+  --shadow-light: #ffffff;
+  --shadow-dark: #c6bfbb;
+  --shadow-raised: -6px -6px 14px var(--shadow-light), 6px 6px 14px var(--shadow-dark);
+  --shadow-raised-sm: -3px -3px 8px var(--shadow-light), 3px 3px 8px var(--shadow-dark);
+  --shadow-inset: inset 4px 4px 10px var(--shadow-dark), inset -4px -4px 10px var(--shadow-light);
 
   /* Semantic */
   --color-success: #1f7a4d;
   --color-warning: #a35d00;
   --color-danger: #b3261e;
 
-  /* Focus ring, always the accent */
-  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  /* Focus outline, always the accent. An outline so it never fights a surface's shadow. */
+  --focus-outline: 3px solid color-mix(in srgb, var(--color-accent) 60%, transparent);
 
   /* Spacing, 4px base */
   --space-1: 0.25rem;
@@ -44,7 +51,7 @@
   /* Radius */
   --radius-sm: 4px;
   --radius-md: 8px;
-  --radius-lg: 16px;
+  --radius-lg: 20px;
 
   /* Minimum touch target on mobile */
   --tap-target: 44px;
@@ -56,12 +63,15 @@
     --color-accent-hover: #8fb8ec;
     --color-on-accent: #0b2440;
 
-    --color-bg: #1b1917;
-    --color-surface: #262321;
-    --color-surface-muted: #322e2b;
+    --color-bg: #221f1d;
+    --color-surface: #221f1d;
+    --color-surface-muted: #1b1917;
     --color-border: #4a4541;
     --color-text: #edeae8;
     --color-text-muted: #a8a19c;
+
+    --shadow-light: #302b28;
+    --shadow-dark: #120f0e;
 
     --color-success: #5fc78f;
     --color-warning: #e0a04a;

@@ -20,14 +20,14 @@ Test files are exempt because their fixtures carry drink colours as data; compon
 
 ## Neutrals (derived from the brand grey)
 
-| Token                   | Light     | Dark      | Role                                                                  |
-| ----------------------- | --------- | --------- | --------------------------------------------------------------------- |
-| `--color-bg`            | `#F5F3F2` | `#1B1917` | Page background.                                                      |
-| `--color-surface`       | `#FFFFFF` | `#262321` | Cards, sheets, inputs.                                                |
-| `--color-surface-muted` | `#E9E5E3` | `#322E2B` | Secondary surfaces, table stripes, disabled fills.                    |
-| `--color-border`        | `#CBC6C3` | `#4A4541` | Dividers and outlines. Light mode uses the brand grey directly.       |
-| `--color-text`          | `#2B2826` | `#EDEAE8` | Body text.                                                            |
-| `--color-text-muted`    | `#6B655F` | `#A8A19C` | Secondary text, captions, placeholders. Passes 4.5:1 on `--color-bg`. |
+| Token                   | Light     | Dark      | Role                                                                                           |
+| ----------------------- | --------- | --------- | ---------------------------------------------------------------------------------------------- |
+| `--color-bg`            | `#ECE8E6` | `#221F1D` | Page background.                                                                               |
+| `--color-surface`       | `#ECE8E6` | `#221F1D` | Cards, chips, buttons. Same as the page on purpose: depth comes from `--shadow-*`, not colour. |
+| `--color-surface-muted` | `#E2DDDA` | `#1B1917` | Secondary fills where a shadow would be too much, such as the default cup tint.                |
+| `--color-border`        | `#CBC6C3` | `#4A4541` | Dividers and outlines. Light mode uses the brand grey directly.                                |
+| `--color-text`          | `#2B2826` | `#EDEAE8` | Body text.                                                                                     |
+| `--color-text-muted`    | `#6B655F` | `#A8A19C` | Secondary text, captions, placeholders. Passes 4.5:1 on `--color-bg`.                          |
 
 ## Semantic
 
@@ -37,11 +37,32 @@ Test files are exempt because their fixtures carry drink colours as data; compon
 | `--color-warning` | `#A35D00` | `#E0A04A` | Caution.                     |
 | `--color-danger`  | `#B3261E` | `#EF7B74` | Errors, destructive actions. |
 
+## Elevation (neumorphic)
+
+The UI is neumorphic: surfaces share the page colour and read as raised or pressed through two soft shadows, light from the top left and dark from the bottom right.
+Shadows are the only permitted depth device.
+Borders are not used on surfaces; `--color-border` remains for hairlines such as the cup lid.
+
+| Token                             | Use                                                                                                 |
+| --------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `--shadow-light`, `--shadow-dark` | The two shadow colours, defined per theme. Never used directly by components.                       |
+| `--shadow-raised`                 | Cards and tiles at rest.                                                                            |
+| `--shadow-raised-sm`              | Chips, small buttons, pills.                                                                        |
+| `--shadow-inset`                  | Pressed state (`:active`, `aria-pressed="true"`) and wells that hold content, such as the cup area. |
+
+Rules:
+
+- Text never depends on the shadows for contrast. Body and muted text keep the same contrast as before against `--color-bg`.
+- A selected control is pressed in with accent coloured text, not filled with the accent.
+- Press transitions are 120ms on `box-shadow` and `color`, and disabled under `prefers-reduced-motion: reduce`.
+- Grids leave gap for the 14px shadow spread (`--space-4` and up) so neighbouring cards do not clip each other's shadow.
+- Dark mode has its own shadow pair. Do not invert the light pair.
+
 ## Non-colour tokens
 
-- `--focus-ring`: `0 0 0 3px` of the accent at 35% via `color-mix`. Applied globally on `:focus-visible`.
+- `--focus-outline`: `3px solid` accent at 60%. Applied globally on `:focus-visible` as an outline so it never replaces a surface's shadow.
 - `--space-1` to `--space-6`: 4, 8, 12, 16, 24, 32px as rem.
-- `--radius-sm`, `--radius-md`, `--radius-lg`: 4, 8, 16px.
+- `--radius-sm`, `--radius-md`, `--radius-lg`: 4, 8, 20px. Soft shapes need the larger radius.
 - `--tap-target`: 44px minimum height for tappable elements on phones.
 
 ## Breakpoints

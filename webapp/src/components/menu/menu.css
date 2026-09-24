@@ -1,9 +1,12 @@
+/* Neumorphic surfaces: same colour as the page, depth from --shadow-* tokens, no borders. */
+
 /* Category chips: one scrollable row on phones, wraps on wider screens. */
 .chips {
   display: flex;
-  gap: var(--space-2);
+  gap: var(--space-3);
   overflow-x: auto;
-  padding-bottom: var(--space-1);
+  padding: var(--space-2) var(--space-2) var(--space-3);
+  margin: 0 calc(-1 * var(--space-2));
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
@@ -24,36 +27,40 @@
   min-height: var(--tap-target);
   padding: 0 var(--space-4);
   border-radius: 999px;
-  border: 1px solid var(--color-border);
+  border: 0;
   background: var(--color-surface);
   color: var(--color-text);
+  box-shadow: var(--shadow-raised-sm);
   font: inherit;
   font-weight: 600;
   font-size: 0.9375rem;
   white-space: nowrap;
   cursor: pointer;
+  transition:
+    box-shadow 120ms ease,
+    color 120ms ease;
 }
 
+.chip:active,
 .chip[aria-pressed='true'] {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  color: var(--color-on-accent);
+  box-shadow: var(--shadow-inset);
+  color: var(--color-accent);
 }
 
-/* Drink grid: 2 columns on phones, 3 from 768px, 4 from 1024px. */
+/* Drink grid: 2 columns on phones, 3 from 768px, 4 from 1024px. Gaps leave room for shadows. */
 .drinks {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: var(--space-2) 0 var(--space-4);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-3);
+  gap: var(--space-5) var(--space-4);
 }
 
 @media (min-width: 768px) {
   .drinks {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-4);
+    gap: var(--space-6) var(--space-5);
   }
 }
 
@@ -69,7 +76,7 @@
   text-align: center;
 }
 
-/* Drink card */
+/* Drink card: a raised tile with the cup sitting in a pressed-in well. */
 .drink {
   height: 100%;
   display: grid;
@@ -77,8 +84,8 @@
   gap: var(--space-2);
   padding: var(--space-3);
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-raised);
   min-width: 0;
 }
 
@@ -88,16 +95,18 @@
   place-items: center;
   height: 120px;
   border-radius: var(--radius-md);
-  background: var(--color-surface-muted);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-inset);
 }
 
 .drink__tag {
   position: absolute;
   top: var(--space-2);
   left: var(--space-2);
-  padding: 2px var(--space-2);
+  padding: 3px var(--space-2);
   border-radius: 999px;
   background: var(--color-surface);
+  box-shadow: var(--shadow-raised-sm);
   color: var(--color-success);
   font-size: 0.6875rem;
   font-weight: 700;
@@ -123,6 +132,12 @@
   margin: 0;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
 }
 
 /* CSS cup. --tea is the drink colour from the menu, --cup-size its height. */
@@ -181,7 +196,7 @@
   width: 6%;
   height: 55%;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--color-surface) 45%, transparent);
+  background: color-mix(in srgb, var(--shadow-light) 45%, transparent);
 }
 
 .cup--pearls .cup__body::after {
