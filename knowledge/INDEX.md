@@ -15,5 +15,6 @@ Read the document, not this index, for the facts.
   - [0006 CSS custom property theme with a test guard](decisions/0006-css-custom-property-theme-with-test-guard.md)
   - [0007 Accent is the Kang Tea logo navy](decisions/0007-accent-is-the-kang-tea-logo-navy.md)
   - [0008 Neumorphic surface treatment](decisions/0008-neumorphic-surface-treatment.md)
+  - [0009 Local first orders with the shared contract](decisions/0009-local-first-orders-with-shared-contract.md)
 
 Project knowledge bases: `webapp/knowledge/INDEX.md`, `api/knowledge/INDEX.md`, `iosapp/knowledge/INDEX.md`.
