@@ -40,7 +40,7 @@ Three columns: the sidebar (left, 340px), the page (middle, fluid), and the orde
 `components/layout/TabBar.tsx`, one component, two shapes:
 
 - Below 1024px: fixed to the bottom, four equal columns, icons over labels, `--shadow-raised`, safe area padding at the bottom.
-- From 1024px: fixed to the left as a 340px sidebar (`--sidebar-width`, equal to `--cart-panel-width`) with the full logo lockup at the top and 60px icon plus label rows at 1.25rem.
+- From 1024px: fixed to the left as a sidebar whose width is `--sidebar-width`, defined as `var(--cart-panel-width)` so the two side columns always match. The full logo lockup sits at the top and the tabs are 52px icon plus label rows at 1.0625rem.
 
 `NavLink` supplies `aria-current="page"`; the active tab is `--shadow-inset` with accent text, matching chips.
 The Order tab shows the cart line count as a badge, or a dot while an order is active.

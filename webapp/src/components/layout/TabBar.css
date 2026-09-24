@@ -110,22 +110,22 @@
     display: none;
   }
 
-  /* Wider sidebar, so the tabs grow with it: taller rows, larger type and icons. */
+  /* Sized for the 340px column: comfortable rows without crowding the logo. */
   .tab {
     grid-template-columns: auto 1fr;
     justify-items: start;
     align-items: center;
-    gap: var(--space-4);
-    min-height: 60px;
-    padding: 0 var(--space-5);
+    gap: var(--space-3);
+    min-height: 52px;
+    padding: 0 var(--space-4);
     border-radius: var(--radius-lg);
-    font-size: 1.25rem;
+    font-size: 1.0625rem;
     font-weight: 600;
     letter-spacing: 0;
   }
 
   .tab svg {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
 }

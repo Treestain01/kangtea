@@ -64,7 +64,7 @@ Rules:
 - `--space-1` to `--space-6`: 4, 8, 12, 16, 24, 32px as rem.
 - `--radius-sm`, `--radius-md`, `--radius-lg`: 4, 8, 20px. Soft shapes need the larger radius.
 - `--tap-target`: 44px minimum height for tappable elements on phones.
-- `--tab-bar-height` (64px), `--sidebar-width` (340px, matching the order panel), `--cart-panel-width` (340px): the fixed layout pieces `.app` leaves room for. See `navigation.md`.
+- `--tab-bar-height` (64px), `--cart-panel-width` (340px), `--sidebar-width` (locked to `--cart-panel-width`): the fixed layout pieces `.app` leaves room for. Change the panel width and the sidebar follows. See `navigation.md`.
 
 ## Breakpoints
 

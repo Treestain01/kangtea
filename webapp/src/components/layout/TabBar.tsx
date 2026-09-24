@@ -45,7 +45,7 @@ export function TabBar() {
   return (
     <nav className="tabbar" aria-label="Main">
       <div className="tabbar__brand" aria-hidden="true">
-        <KangTeaLogo size={72} />
+        <KangTeaLogo size={64} />
       </div>
       <NavLink to="/" end className={tabClass}>
         {icons.home}
