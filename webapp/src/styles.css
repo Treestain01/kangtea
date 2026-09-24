@@ -27,7 +27,7 @@ h4 {
 .row-head h2,
 .row-head h3 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.125rem;
 }
 
 .row-head a {
@@ -36,9 +36,20 @@ h4 {
   min-height: var(--tap-target);
   color: var(--color-accent);
   font-weight: 700;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   text-decoration: none;
   white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .row-head h2,
+  .row-head h3 {
+    font-size: 1.25rem;
+  }
+
+  .row-head a {
+    font-size: 0.9375rem;
+  }
 }
 
 *,

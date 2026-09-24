@@ -46,10 +46,13 @@
   cursor: pointer;
 }
 
-/* Your usual: the accent card from the mockup. */
+/* Your usual: the accent card from the mockup. Text left, the cup top right, the button bottom right. */
 .usual {
   display: grid;
   grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'text art'
+    'text btn';
   align-items: end;
   gap: var(--space-3);
   padding: var(--space-4);
@@ -59,7 +62,23 @@
 }
 
 .usual__text {
+  grid-area: text;
   min-width: 0;
+  align-self: end;
+}
+
+.usual__art {
+  grid-area: art;
+  justify-self: end;
+}
+
+.usual__art .cup__straw {
+  background: var(--color-on-accent);
+}
+
+.usual__btn {
+  grid-area: btn;
+  justify-self: end;
 }
 
 .usual__eyebrow {

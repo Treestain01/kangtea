@@ -18,7 +18,9 @@ export function MenuPage() {
   const { catalogue, retry } = useCatalogue();
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('q') ?? '';
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(() =>
+    searchParams.get('category'),
+  );
   const [announcement, setAnnouncement] = useState('');
   const [customising, setCustomising] = useState<MenuItem | null>(null);
 

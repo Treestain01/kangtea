@@ -223,7 +223,8 @@
 }
 
 .drink--compact .drink__art {
-  aspect-ratio: 1;
+  aspect-ratio: auto;
+  height: 96px;
 }
 
 .drink--compact .drink__name {
@@ -232,13 +233,13 @@
 }
 
 .drink--compact .drink__price {
-  font-size: 1rem;
+  font-size: 0.9375rem;
 }
 
 .drink--compact .drink__hint {
-  width: 32px;
-  height: 32px;
-  font-size: 1.125rem;
+  width: 36px;
+  height: 36px;
+  font-size: 1.25rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

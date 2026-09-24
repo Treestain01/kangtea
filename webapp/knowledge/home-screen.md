@@ -9,18 +9,21 @@ Top to bottom, following the design mockup:
 
 1. `AppHeader` with the time of day greeting, "Pick up at Calamvale Central · Open until 8:00 pm", and the `SearchBar` in its `actions` slot (beside the greeting from 768px, below it on phones).
    On phones the header also shows a small brand row (mark plus KANGTEA); on desktop the sidebar carries the logo so the row is hidden.
-2. `UsualCard`: the most recent collected order as "Your usual", with the first drink's name, its customisation summary, and "Reorder · $X" which calls `cart.replace(order.lines)` and navigates to `/order`.
+2. `CategoryChips` under the search, as in the mockup. On Home nothing is selected; tapping a chip navigates to `/menu?category=<id>`, which the menu page reads as its initial category.
+3. `UsualCard`: the most recent collected order as "Your usual", with the first drink's name, its customisation summary, the drink's cup illustration (when the menu still has that drink), and "Reorder · $X" which calls `cart.replace(order.lines)` and navigates to `/order`.
    Hidden until a collected order exists; it never shows placeholder content.
-3. `PopularRow`: "Popular now" with a "See the full menu" link to `/menu`.
+4. `PopularRow`: "Popular now" with a "See the full menu" link to `/menu`.
    Items come from `lib/popular.ts#popularItems`: best sellers first, then new, topped up in menu order to six.
-   A swipeable row of compact `DrinkCard`s on phones, a grid from 768px.
-4. `CustomiseDrinkDialog` and the visually hidden `role="status"` announcement, as on the menu page.
+   A swipeable row of compact `DrinkCard`s (148px wide, 96px art) on phones, a grid from 768px.
+5. `CustomiseDrinkDialog` and the visually hidden `role="status"` announcement, as on the menu page.
+
+The mockup's pearl loyalty card is the one element not carried over; it needs a points data source first.
 
 Submitting the search navigates to `/menu?q=<text>`.
 
 ## Menu (`pages/MenuPage.tsx`)
 
-- Heading, a controlled `SearchBar` bound to the `q` query parameter (`useSearchParams`, replaced as you type), `CategoryChips`, and the large `DrinkGrid`.
+- Heading, a controlled `SearchBar` bound to the `q` query parameter (`useSearchParams`, replaced as you type), `CategoryChips` (initial selection from the `category` parameter), and the large `DrinkGrid`.
 - Filtering combines the selected category with `lib/popular.ts#matchesQuery` (case-insensitive on name and description).
 - Empty search result: "No drinks match “…”" with a Clear search button.
 - Tapping a card opens the customise sheet; adding announces "Added {name}".

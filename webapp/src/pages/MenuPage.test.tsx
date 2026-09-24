@@ -78,6 +78,13 @@ describe('MenuPage', () => {
     expect(screen.getByRole('article', { name: 'Matcha Latte' })).toBeInTheDocument();
   });
 
+  it('starts on the category named in the URL', async () => {
+    renderMenu('/menu?category=matcha');
+    await screen.findByRole('heading', { name: 'Menu' });
+    expect(screen.getByRole('button', { name: 'Matcha' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getAllByRole('article')).toHaveLength(1);
+  });
+
   it('filters as you type and by category together', async () => {
     renderMenu();
     await screen.findByRole('heading', { name: 'Menu' });

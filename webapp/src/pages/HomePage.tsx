@@ -6,6 +6,7 @@ import { PopularRow } from '../components/home/PopularRow';
 import { SearchBar } from '../components/home/SearchBar';
 import { UsualCard } from '../components/home/UsualCard';
 import { AppHeader } from '../components/layout/AppHeader';
+import { CategoryChips } from '../components/menu/CategoryChips';
 import { CustomiseDrinkDialog } from '../components/menu/CustomiseDrinkDialog';
 import { popularItems } from '../lib/popular';
 import { useStores } from '../store/StoresProvider';
@@ -47,6 +48,10 @@ export function HomePage() {
     void navigate(query ? `/menu?q=${encodeURIComponent(query)}` : '/menu');
   };
 
+  const browseCategory = (categoryId: string | null) => {
+    void navigate(categoryId ? `/menu?category=${encodeURIComponent(categoryId)}` : '/menu');
+  };
+
   const usual = pastOrders(orders).find((order) => order.status === 'collected') ?? null;
 
   if (catalogue.kind === 'error') {
@@ -75,11 +80,21 @@ export function HomePage() {
   }
 
   const { store, menu } = catalogue;
+  const usualItem = usual
+    ? menu.items.find((item) => item.id === usual.lines[0]?.itemId)
+    : undefined;
 
   return (
     <div className="home">
       <AppHeader store={store} actions={<SearchBar onSubmit={search} />} />
-      {usual && <UsualCard order={usual} onReorder={reorder} />}
+      <CategoryChips categories={menu.categories} selected={null} onSelect={browseCategory} />
+      {usual && (
+        <UsualCard
+          order={usual}
+          art={usualItem ? { colour: usualItem.colour, pearls: usualItem.pearls } : undefined}
+          onReorder={reorder}
+        />
+      )}
       <PopularRow items={popularItems(menu)} onOpen={setCustomising} />
       <CustomiseDrinkDialog
         item={customising}
