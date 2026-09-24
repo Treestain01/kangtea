@@ -84,20 +84,16 @@
   min-width: 0;
 }
 
+/* Portrait well, sized for tall drink photos. Scales with the card width. */
 .drink__art {
   position: relative;
   display: grid;
   place-items: center;
-  height: 150px;
+  aspect-ratio: 3 / 4;
+  width: 100%;
   border-radius: var(--radius-md);
   background: var(--color-surface);
   box-shadow: var(--shadow-inset);
-}
-
-@media (min-width: 768px) {
-  .drink__art {
-    height: 180px;
-  }
 }
 
 .drink__tag {
