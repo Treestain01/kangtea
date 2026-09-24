@@ -72,10 +72,17 @@
 }
 
 /* Drink card: a raised tile with the cup sitting in a pressed-in well. */
+/* Every card shares one row plan so prices and buttons line up across the grid:
+   art, a two line name slot, a flexible description slot, then the meta row pinned to the bottom. */
 .drink {
   height: 100%;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
+  grid-template-areas:
+    'art'
+    'name'
+    'description'
+    'meta';
   gap: var(--space-3);
   padding: var(--space-4);
   background: var(--color-surface);
@@ -86,6 +93,7 @@
 
 /* Photo well. Scales with the card width; the ratio is the one dial for its height. */
 .drink__art {
+  grid-area: art;
   position: relative;
   display: grid;
   place-items: center;
@@ -111,14 +119,17 @@
 }
 
 .drink__name {
+  grid-area: name;
   margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
   line-height: 1.25;
+  min-height: 2.5em; /* always two lines tall, so one line names do not pull the rest up */
   overflow-wrap: anywhere;
 }
 
 .drink__description {
+  grid-area: description;
   margin: 0;
   font-size: 0.875rem;
   color: var(--color-text-muted);
@@ -126,6 +137,8 @@
 }
 
 .drink__meta {
+  grid-area: meta;
+  align-self: end;
   display: flex;
   justify-content: space-between;
   align-items: center;
