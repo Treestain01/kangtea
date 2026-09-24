@@ -86,15 +86,23 @@ Components never check the scheme themselves; they read tokens and get the right
 ```css
 .card {
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-raised);
   padding: var(--space-4);
 }
 
 .card__action {
-  color: var(--color-on-accent);
-  background: var(--color-accent);
   min-height: var(--tap-target);
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-accent);
+  box-shadow: var(--shadow-raised-sm);
+}
+
+.card__action:active,
+.card__action[aria-pressed='true'] {
+  box-shadow: var(--shadow-inset);
 }
 ```
 
