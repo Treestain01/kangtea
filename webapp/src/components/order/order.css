@@ -1,0 +1,139 @@
+/* Cart line: name and total on the first row, controls on the second. From 768px one row. */
+.cartline {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    'info total'
+    'qty remove';
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised);
+}
+
+@media (min-width: 768px) {
+  .cartline {
+    grid-template-columns: 1fr auto auto auto;
+    grid-template-areas: 'info qty total remove';
+    gap: var(--space-4);
+  }
+}
+
+.cartline__info {
+  grid-area: info;
+  min-width: 0;
+}
+
+.cartline__name {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.cartline__unit {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.cartline__total {
+  grid-area: total;
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  justify-self: end;
+}
+
+.cartline__qty {
+  grid-area: qty;
+  display: inline-grid;
+  grid-template-columns: var(--tap-target) auto var(--tap-target);
+  align-items: center;
+  justify-self: start;
+  border-radius: 999px;
+  box-shadow: var(--shadow-inset);
+}
+
+.cartline__step {
+  width: var(--tap-target);
+  height: var(--tap-target);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-accent);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cartline__count {
+  min-width: 1.5rem;
+  text-align: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.cartline__remove {
+  grid-area: remove;
+  justify-self: end;
+  min-height: var(--tap-target);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cartline__remove:hover {
+  color: var(--color-danger);
+}
+
+/* Status steps */
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.steps__step {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.steps__marker {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-inset);
+}
+
+.steps__step--done .steps__marker {
+  background: var(--color-accent);
+  box-shadow: none;
+}
+
+.steps__step--current {
+  color: var(--color-accent);
+}
+
+.steps__step--current .steps__marker {
+  box-shadow:
+    var(--shadow-raised-sm),
+    inset 0 0 0 4px var(--color-accent);
+}

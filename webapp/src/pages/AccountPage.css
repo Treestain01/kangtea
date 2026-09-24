@@ -1,0 +1,180 @@
+.account {
+  display: grid;
+  gap: var(--space-6);
+  padding-block: var(--space-4) var(--space-6);
+  max-width: 40rem;
+}
+
+.account__heading {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.account__form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Inputs are pressed-in wells; the focus outline sits outside the shadow. */
+.field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.field label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.field input {
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-inset);
+  font: inherit;
+}
+
+.field input[aria-invalid='true'] {
+  box-shadow:
+    var(--shadow-inset),
+    inset 0 0 0 2px var(--color-danger);
+}
+
+.field__error {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-danger);
+}
+
+.field__check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--tap-target);
+  cursor: pointer;
+}
+
+.field__check input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--color-accent);
+}
+
+.account__primary,
+.account__secondary,
+.danger__yes {
+  justify-self: start;
+  min-height: var(--tap-target);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised-sm);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    box-shadow 120ms ease,
+    color 120ms ease;
+}
+
+.account__primary {
+  color: var(--color-accent);
+}
+
+.account__secondary {
+  color: var(--color-text-muted);
+}
+
+.danger__yes {
+  color: var(--color-danger);
+}
+
+.account__primary:active,
+.account__secondary:active,
+.danger__yes:active {
+  box-shadow: var(--shadow-inset);
+}
+
+.account__message {
+  margin: 0;
+  min-height: 1.5em;
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.storecard,
+.danger {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raised);
+}
+
+.storecard__heading,
+.danger__heading {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.storecard__name {
+  margin: 0;
+  font-weight: 600;
+}
+
+.storecard__address {
+  margin: 0;
+  display: grid;
+  color: var(--color-text-muted);
+}
+
+.storecard__hours {
+  margin: 0;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.storecard__phone {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.storecard__loading,
+.danger__copy {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.danger__confirm {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.danger__confirm p {
+  margin: 0;
+}
+
+.danger__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .account__primary,
+  .account__secondary,
+  .danger__yes {
+    transition: none;
+  }
+}
