@@ -46,17 +46,16 @@
   padding: 0 var(--space-5);
   border: 0;
   border-radius: 999px;
-  background: var(--color-surface);
-  color: var(--color-accent);
-  box-shadow: var(--shadow-raised-sm);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
-  transition: box-shadow var(--motion-fast) var(--ease);
+  transition: background var(--motion-fast) var(--ease);
 }
 
-.menu__retry:active {
-  box-shadow: var(--shadow-inset);
+.menu__retry:hover {
+  background: var(--color-accent-hover);
 }
 
 @media (prefers-reduced-motion: reduce) {

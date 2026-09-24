@@ -1,13 +1,13 @@
-/* Search: a pressed-in field with the icon inside. */
+/* Search: a white field with the icon inside, as in the mockup. */
 .search {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   min-height: var(--tap-target);
   padding: 0 var(--space-3);
-  border-radius: 999px;
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
-  box-shadow: var(--shadow-inset);
+  border: 1px solid var(--color-border);
   color: var(--color-text-muted);
 }
 
@@ -37,6 +37,7 @@
 }
 
 .search:focus-within {
+  border-color: var(--color-accent);
   outline: var(--focus-outline);
   outline-offset: 2px;
 }
@@ -45,17 +46,16 @@
   cursor: pointer;
 }
 
-/* Your usual: the one accent filled card on the home screen. */
+/* Your usual: the accent card from the mockup. */
 .usual {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: end;
   gap: var(--space-3);
-  padding: var(--space-4) var(--space-5);
+  padding: var(--space-4);
   border-radius: var(--radius-lg);
   background: var(--color-accent);
   color: var(--color-on-accent);
-  box-shadow: var(--shadow-raised);
 }
 
 .usual__text {
@@ -98,23 +98,23 @@
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   cursor: pointer;
-  transition: box-shadow var(--motion-fast) var(--ease);
+  transition: background var(--motion-fast) var(--ease);
 }
 
-.usual__btn:active {
-  box-shadow: var(--shadow-inset);
+.usual__btn:hover {
+  background: var(--color-surface-muted);
 }
 
 /* Popular now: swipe on phones, grid from 768px. */
 .popular {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 .popular__list {
   list-style: none;
   margin: 0 calc(-1 * var(--space-4));
-  padding: var(--space-2) var(--space-4) var(--space-4);
+  padding: var(--space-1) var(--space-4) var(--space-3);
   display: flex;
   gap: var(--space-3);
   overflow-x: auto;
@@ -128,17 +128,17 @@
 }
 
 .popular__list > li {
-  flex: 0 0 156px;
+  flex: 0 0 148px;
   scroll-snap-align: start;
 }
 
 @media (min-width: 768px) {
   .popular__list {
     margin: 0;
-    padding: var(--space-2) 0 var(--space-4);
+    padding: var(--space-1) 0 var(--space-3);
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    gap: var(--space-5) var(--space-4);
+    gap: var(--space-4);
     overflow: visible;
   }
 

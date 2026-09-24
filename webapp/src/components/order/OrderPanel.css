@@ -45,9 +45,8 @@
   min-height: var(--tap-target);
   padding: 0 var(--space-5);
   border-radius: 999px;
-  background: var(--color-surface);
-  color: var(--color-accent);
-  box-shadow: var(--shadow-raised-sm);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   font-weight: 700;
   text-decoration: none;
 }
@@ -58,10 +57,6 @@
   margin: 0;
   padding: var(--space-2) 0;
   display: grid;
-  gap: var(--space-4);
-}
-
-.order--compact .order__lines {
   gap: var(--space-3);
 }
 
@@ -81,19 +76,19 @@
   font-size: 0.875rem;
 }
 
+/* Totals block, ruled off from the lines. */
 .order__summary {
   display: grid;
   gap: var(--space-3);
-  padding: var(--space-4);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-inset);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
 }
 
 .order__total {
   margin: 0;
   display: flex;
   justify-content: space-between;
+  font-family: var(--font-display);
   font-size: 1.125rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -116,8 +111,9 @@
   padding: var(--space-3) var(--space-6);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
-  box-shadow: var(--shadow-raised);
+  border: 1px solid var(--color-border);
   color: var(--color-accent);
+  font-family: var(--font-display);
   font-size: 2.5rem;
   font-weight: 700;
   letter-spacing: 0.2em;
@@ -128,27 +124,32 @@
   font-size: 2rem;
 }
 
+/* Primary: the accent pill from the mockup. Secondary: quiet text. */
 .order__primary,
 .order__secondary {
   min-height: var(--tap-target);
   padding: 0 var(--space-5);
   border: 0;
   border-radius: 999px;
-  background: var(--color-surface);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: var(--shadow-raised-sm);
   transition:
-    box-shadow var(--motion-fast) var(--ease),
+    background var(--motion-fast) var(--ease),
     color var(--motion-fast) var(--ease);
 }
 
 .order__primary {
-  color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.order__primary:hover {
+  background: var(--color-accent-hover);
 }
 
 .order__secondary {
+  background: transparent;
   color: var(--color-text-muted);
 }
 
@@ -156,16 +157,10 @@
   color: var(--color-danger);
 }
 
-.order__primary:active,
-.order__secondary:active {
-  box-shadow: var(--shadow-inset);
-}
-
 .order__primary:disabled {
+  background: var(--color-surface-muted);
   color: var(--color-text-muted);
-  box-shadow: none;
   cursor: not-allowed;
-  opacity: 0.6;
 }
 
 @media (min-width: 1024px) {

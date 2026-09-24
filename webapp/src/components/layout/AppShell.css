@@ -14,6 +14,6 @@
     padding: var(--space-5) var(--space-4) calc(var(--space-5) + env(safe-area-inset-bottom));
     overflow-y: auto;
     background: var(--color-surface);
-    box-shadow: var(--shadow-raised);
+    border-left: 1px solid var(--color-border);
   }
 }

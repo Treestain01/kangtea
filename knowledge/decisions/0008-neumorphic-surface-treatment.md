@@ -1,7 +1,7 @@
 # 0008 Neumorphic surface treatment
 
 Date: 2026-09-24
-Status: Accepted
+Status: Superseded by 0011
 
 ## Context
 

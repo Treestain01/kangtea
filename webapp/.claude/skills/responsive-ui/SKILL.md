@@ -36,7 +36,7 @@ Work through every line. Do not skip a line because it "obviously" holds.
 - [ ] The component looks right in dark mode. Tokens switch automatically; check that nothing assumes a light background.
 - [ ] Spacing and radius come from `--space-*` and `--radius-*`.
 - [ ] Motion uses `var(--motion-fast)` or `var(--motion-slow)` with `var(--ease)`, never a literal duration or easing, and is disabled under `prefers-reduced-motion: reduce`.
-- [ ] Depth comes only from `--shadow-raised`, `--shadow-raised-sm` and `--shadow-inset`. No borders on surfaces, no ad hoc `box-shadow`. Selected or pressed states use `--shadow-inset` with accent text. Grids leave at least `--space-4` between raised cards so shadows do not clip.
+- [ ] Surfaces are flat: `--color-surface` with `1px solid var(--color-border)`. No `box-shadow` anywhere except `var(--shadow-float)` on the customise sheet. Selected states are accent filled; primary actions are accent pills; hover changes the border colour.
 
 ### Verification
 

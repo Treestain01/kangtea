@@ -10,7 +10,7 @@
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
-  box-shadow: var(--shadow-raised);
+  border: 1px solid var(--color-border);
 }
 
 @media (min-width: 768px) {
@@ -59,8 +59,9 @@
   grid-template-columns: var(--tap-target) auto var(--tap-target);
   align-items: center;
   justify-self: start;
+  border: 1px solid var(--color-border);
   border-radius: 999px;
-  box-shadow: var(--shadow-inset);
+  background: var(--color-bg);
 }
 
 .cartline__step {
@@ -126,13 +127,13 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
+  border: 2px solid var(--color-border);
   background: var(--color-surface);
-  box-shadow: var(--shadow-inset);
 }
 
 .steps__step--done .steps__marker {
   background: var(--color-accent);
-  box-shadow: none;
+  border-color: var(--color-accent);
 }
 
 .steps__step--current {
@@ -140,7 +141,6 @@
 }
 
 .steps__step--current .steps__marker {
-  box-shadow:
-    var(--shadow-raised-sm),
-    inset 0 0 0 4px var(--color-accent);
+  border-color: var(--color-accent);
+  outline: 4px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
 }

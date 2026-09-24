@@ -17,20 +17,17 @@
   --color-accent-hover: #063a6b;
   --color-on-accent: #ffffff;
 
-  /* Neutrals derived from the brand grey. Surface matches the page so depth comes from shadow. */
-  --color-bg: #ece8e6;
-  --color-surface: #ece8e6;
-  --color-surface-muted: #e2ddda;
+  /* Neutrals derived from the brand grey. Flat surfaces: white cards on a warm grey page,
+     separated by 1px borders in the brand grey itself. */
+  --color-bg: #f5f3f2;
+  --color-surface: #ffffff;
+  --color-surface-muted: #e9e5e3;
   --color-border: #cbc6c3;
   --color-text: #2b2826;
   --color-text-muted: #6b655f;
 
-  /* Elevation: neumorphic soft shadows, light from the top left. The only depth device. */
-  --shadow-light: #ffffff;
-  --shadow-dark: #c6bfbb;
-  --shadow-raised: -6px -6px 14px var(--shadow-light), 6px 6px 14px var(--shadow-dark);
-  --shadow-raised-sm: -3px -3px 8px var(--shadow-light), 3px 3px 8px var(--shadow-dark);
-  --shadow-inset: inset 4px 4px 10px var(--shadow-dark), inset -4px -4px 10px var(--shadow-light);
+  /* The one shadow: for layers that float above the page (the customise sheet). */
+  --shadow-float: 0 16px 40px color-mix(in srgb, var(--color-text) 22%, transparent);
 
   /* Semantic */
   --color-success: #1f7a4d;
@@ -81,15 +78,12 @@
     --color-accent-hover: #8fb8ec;
     --color-on-accent: #0b2440;
 
-    --color-bg: #221f1d;
-    --color-surface: #221f1d;
-    --color-surface-muted: #1b1917;
+    --color-bg: #1b1917;
+    --color-surface: #262321;
+    --color-surface-muted: #322e2b;
     --color-border: #4a4541;
     --color-text: #edeae8;
     --color-text-muted: #a8a19c;
-
-    --shadow-light: #302b28;
-    --shadow-dark: #120f0e;
 
     --color-success: #5fc78f;
     --color-warning: #e0a04a;

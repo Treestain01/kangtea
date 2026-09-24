@@ -39,18 +39,18 @@
   padding: 0 var(--space-4);
   border: 0;
   border-radius: 999px;
-  background: var(--color-surface);
-  color: var(--color-accent);
-  box-shadow: var(--shadow-raised-sm);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   font: inherit;
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
-  transition: box-shadow var(--motion-fast) var(--ease);
+  transition: background var(--motion-fast) var(--ease);
 }
 
-.pastorder__again:active {
-  box-shadow: var(--shadow-inset);
+.history__link:hover,
+.pastorder__again:hover {
+  background: var(--color-accent-hover);
 }
 
 .history__list {
@@ -58,7 +58,7 @@
   margin: 0;
   padding: var(--space-2) 0;
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-3);
 }
 
 .pastorder {
@@ -67,7 +67,7 @@
   padding: var(--space-4);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
-  box-shadow: var(--shadow-raised);
+  border: 1px solid var(--color-border);
 }
 
 .pastorder__head,
@@ -86,7 +86,7 @@
 .pastorder__status {
   padding: 3px var(--space-2);
   border-radius: 999px;
-  box-shadow: var(--shadow-raised-sm);
+  background: var(--color-surface-muted);
   font-size: 0.6875rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -106,11 +106,13 @@
 }
 
 .pastorder__total {
+  font-family: var(--font-display);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .history__link,
   .pastorder__again {
     transition: none;
   }

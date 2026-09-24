@@ -5,12 +5,6 @@
   max-width: 40rem;
 }
 
-.account__heading {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
 @media (min-width: 1024px) {
   .account {
     margin-inline: auto;
@@ -18,12 +12,17 @@
   }
 }
 
+.account__heading {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
 .account__form {
   display: grid;
   gap: var(--space-4);
 }
 
-/* Inputs are pressed-in wells; the focus outline sits outside the shadow. */
 .field {
   display: grid;
   gap: var(--space-1);
@@ -38,18 +37,19 @@
 .field input {
   min-height: var(--tap-target);
   padding: 0 var(--space-4);
-  border: 0;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
   color: var(--color-text);
-  box-shadow: var(--shadow-inset);
   font: inherit;
 }
 
+.field input:focus-visible {
+  border-color: var(--color-accent);
+}
+
 .field input[aria-invalid='true'] {
-  box-shadow:
-    var(--shadow-inset),
-    inset 0 0 0 2px var(--color-danger);
+  border-color: var(--color-danger);
 }
 
 .field__error {
@@ -78,34 +78,39 @@
   justify-self: start;
   min-height: var(--tap-target);
   padding: 0 var(--space-5);
-  border: 0;
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: var(--color-surface);
-  box-shadow: var(--shadow-raised-sm);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
   transition:
-    box-shadow var(--motion-fast) var(--ease),
-    color var(--motion-fast) var(--ease);
+    background var(--motion-fast) var(--ease),
+    color var(--motion-fast) var(--ease),
+    border-color var(--motion-fast) var(--ease);
 }
 
 .account__primary {
-  color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.account__primary:hover {
+  background: var(--color-accent-hover);
 }
 
 .account__secondary {
-  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.account__secondary:hover {
+  border-color: var(--color-accent);
 }
 
 .danger__yes {
-  color: var(--color-danger);
-}
-
-.account__primary:active,
-.account__secondary:active,
-.danger__yes:active {
-  box-shadow: var(--shadow-inset);
+  background: var(--color-danger);
+  color: var(--color-on-accent);
 }
 
 .account__message {
@@ -122,7 +127,7 @@
   padding: var(--space-4);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
-  box-shadow: var(--shadow-raised);
+  border: 1px solid var(--color-border);
 }
 
 .storecard__heading,

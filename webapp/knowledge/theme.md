@@ -20,14 +20,14 @@ Test files are exempt because their fixtures carry drink colours as data; compon
 
 ## Neutrals (derived from the brand grey)
 
-| Token                   | Light     | Dark      | Role                                                                                           |
-| ----------------------- | --------- | --------- | ---------------------------------------------------------------------------------------------- |
-| `--color-bg`            | `#ECE8E6` | `#221F1D` | Page background.                                                                               |
-| `--color-surface`       | `#ECE8E6` | `#221F1D` | Cards, chips, buttons. Same as the page on purpose: depth comes from `--shadow-*`, not colour. |
-| `--color-surface-muted` | `#E2DDDA` | `#1B1917` | Secondary fills where a shadow would be too much, such as the default cup tint.                |
-| `--color-border`        | `#CBC6C3` | `#4A4541` | Dividers and outlines. Light mode uses the brand grey directly.                                |
-| `--color-text`          | `#2B2826` | `#EDEAE8` | Body text.                                                                                     |
-| `--color-text-muted`    | `#6B655F` | `#A8A19C` | Secondary text, captions, placeholders. Passes 4.5:1 on `--color-bg`.                          |
+| Token                   | Light     | Dark      | Role                                                                                   |
+| ----------------------- | --------- | --------- | -------------------------------------------------------------------------------------- |
+| `--color-bg`            | `#F5F3F2` | `#1B1917` | Page background, a light tint of the brand grey.                                       |
+| `--color-surface`       | `#FFFFFF` | `#262321` | Cards, chips, inputs, the tab bar and order panel. Always with a 1px `--color-border`. |
+| `--color-surface-muted` | `#E9E5E3` | `#322E2B` | Secondary fills: the drink art well, status pills, disabled buttons.                   |
+| `--color-border`        | `#CBC6C3` | `#4A4541` | Dividers and outlines. Light mode uses the brand grey directly.                        |
+| `--color-text`          | `#2B2826` | `#EDEAE8` | Body text.                                                                             |
+| `--color-text-muted`    | `#6B655F` | `#A8A19C` | Secondary text, captions, placeholders. Passes 4.5:1 on `--color-bg`.                  |
 
 ## Semantic
 
@@ -37,27 +37,21 @@ Test files are exempt because their fixtures carry drink colours as data; compon
 | `--color-warning` | `#A35D00` | `#E0A04A` | Caution.                     |
 | `--color-danger`  | `#B3261E` | `#EF7B74` | Errors, destructive actions. |
 
-## Elevation (neumorphic)
+## Surfaces (flat)
 
-The UI is neumorphic: surfaces share the page colour and read as raised or pressed through two soft shadows, light from the top left and dark from the bottom right.
-Shadows are the only permitted depth device.
-Borders are not used on surfaces; `--color-border` remains for hairlines such as the cup lid.
-
-| Token                             | Use                                                                                                 |
-| --------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `--shadow-light`, `--shadow-dark` | The two shadow colours, defined per theme. Never used directly by components.                       |
-| `--shadow-raised`                 | Cards and tiles at rest.                                                                            |
-| `--shadow-raised-sm`              | Chips, small buttons, pills.                                                                        |
-| `--shadow-inset`                  | Pressed state (`:active`, `aria-pressed="true"`) and wells that hold content, such as the cup area. |
+The UI is flat, faithful to the design mockup: white cards on the warm grey page, separated by 1px borders in the brand grey.
+Depth is not a device.
+The only shadow in the app is `--shadow-float`, on the customise sheet, because it floats above the page.
+`tokens.test.ts` fails on any other `box-shadow`.
 
 Rules:
 
-- Text never depends on the shadows for contrast. Body and muted text keep the same contrast as before against `--color-bg`.
-- A selected control is pressed in with accent coloured text, not filled with the accent.
-- One exception: the single primary action at the end of a flow (the customise sheet's "Add to order") may be accent filled with `--color-on-accent` text, so the sheet has exactly one loud object. Never two filled buttons on one screen.
+- Surfaces are `--color-surface` with `1px solid var(--color-border)` and `--radius-lg` (cards) or `--radius-md` (fields, tiles).
+- Selected means accent filled: a chosen chip, a filled step dot, the active phone tab in accent text, the active sidebar row as a white bordered card with accent text.
+- Primary actions are accent pills with `--color-on-accent` text (Place order, Reorder, Add to order, Save). Secondary actions are quiet text or a white bordered pill.
+- The drink card's "+" is an accent disc; the whole card is the button.
+- Hover on interactive surfaces changes the border to the accent, never adds a shadow.
 - Every transition and animation eases in and out via `--ease`, at `--motion-fast` (160ms) for state changes and `--motion-slow` (320ms) for sheets, and is disabled under `prefers-reduced-motion: reduce`. `tokens.test.ts` fails on a literal duration or easing outside `tokens.css`.
-- Grids leave gap for the 14px shadow spread (`--space-4` and up) so neighbouring cards do not clip each other's shadow.
-- Dark mode has its own shadow pair. Do not invert the light pair.
 
 ## Typography
 
@@ -100,8 +94,8 @@ Components never check the scheme themselves; they read tokens and get the right
 ```css
 .card {
   background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-raised);
   padding: var(--space-4);
 }
 
@@ -109,14 +103,14 @@ Components never check the scheme themselves; they read tokens and get the right
   min-height: var(--tap-target);
   border: 0;
   border-radius: 999px;
-  background: var(--color-surface);
-  color: var(--color-accent);
-  box-shadow: var(--shadow-raised-sm);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
-.card__action:active,
-.card__action[aria-pressed='true'] {
-  box-shadow: var(--shadow-inset);
+.card__chip[aria-pressed='true'] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
 }
 ```
 

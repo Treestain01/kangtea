@@ -45,9 +45,9 @@ export function DrinkCard({ item, onOpen, variant = 'default' }: DrinkCardProps)
       {!compact && item.description && <p className="drink__description">{item.description}</p>}
       <div className="drink__meta">
         <p className="drink__price">{formatPrice(item.priceCents)}</p>
-        {onOpen && !compact && (
+        {onOpen && (
           <span className="drink__hint" aria-hidden="true">
-            Customise
+            +
           </span>
         )}
       </div>

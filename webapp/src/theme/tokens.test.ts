@@ -86,6 +86,18 @@ describe('theme tokens', () => {
     expect(offenders, 'use var(--motion-fast|slow) var(--ease) from tokens.css').toEqual([]);
   });
 
+  it('keeps surfaces flat: the only box shadow is the floating sheet token', () => {
+    const offenders = cssFiles.flatMap((file) =>
+      file.text
+        .split('\n')
+        .map((line, index) => ({ line, number: index + 1 }))
+        .filter(({ line }) => /box-shadow\s*:/.test(line))
+        .filter(({ line }) => !/box-shadow\s*:\s*(?:var\(--shadow-float\)|none)\s*;/.test(line))
+        .map(({ number, line }) => `${file.path}:${number}: ${line.trim()}`),
+    );
+    expect(offenders, 'surfaces use 1px var(--color-border), not shadows').toEqual([]);
+  });
+
   it('uses only documented breakpoints in media queries', () => {
     const allowed = new Set<number>(Object.values(BREAKPOINTS));
     const offenders = cssFiles.flatMap((file) =>
