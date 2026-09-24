@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { StoresProvider } from '../store/StoresProvider';
-import { createTestStores, menuItemFixture } from '../store/testing';
+import { cartLineFixture, createTestStores } from '../store/testing';
 import type { Stores } from '../store/types';
 import { HistoryPage } from './HistoryPage';
 
@@ -21,9 +21,11 @@ function renderHistory(stores: Stores = createTestStores()) {
 }
 
 function finishedOrder(stores: Stores, status: 'collected' | 'cancelled', placedAt: string) {
-  stores.cart.add(menuItemFixture());
-  stores.cart.add(menuItemFixture());
-  stores.cart.add(menuItemFixture({ id: 'matcha-latte', name: 'Matcha Latte', priceCents: 790 }));
+  stores.cart.add(cartLineFixture());
+  stores.cart.add(cartLineFixture());
+  stores.cart.add(
+    cartLineFixture({ itemId: 'matcha-latte', name: 'Matcha Latte', unitPriceCents: 790 }),
+  );
   const order = stores.orders.place(stores.cart.read(), 's', new Date(placedAt));
   stores.cart.clear();
   stores.orders.setStatus(order.id, status);
@@ -56,7 +58,7 @@ describe('HistoryPage', () => {
 
   it('does not list an order that is still in progress', () => {
     const stores = createTestStores();
-    stores.cart.add(menuItemFixture());
+    stores.cart.add(cartLineFixture());
     stores.orders.place(stores.cart.read(), 's');
     renderHistory(stores);
     expect(screen.getByText('No orders yet.')).toBeInTheDocument();

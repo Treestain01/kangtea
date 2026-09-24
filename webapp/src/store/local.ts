@@ -4,11 +4,11 @@ import {
   OrderSchema,
   orderLinesTotalCents,
   type Account,
-  type MenuItem,
   type Order,
   type OrderStatus,
 } from '@bbt/shared';
 import { z } from 'zod';
+import { lineKey } from './lines';
 import type { AccountStore, CartLine, CartStore, OrdersStore, Stores } from './types';
 
 export const STORAGE_KEYS = {
@@ -94,35 +94,29 @@ function createCartStore(storage: Storage): CartStore {
   return {
     read: store.read,
     subscribe: store.subscribe,
-    add(item: MenuItem) {
+    add(incoming: CartLine) {
+      const line = OrderLineSchema.parse(incoming);
+      const key = lineKey(line);
       const lines = store.read();
-      const existing = lines.find((line) => line.itemId === item.id);
-      if (existing) {
+      if (lines.some((existing) => lineKey(existing) === key)) {
         store.write(
-          lines.map((line) =>
-            line.itemId === item.id ? { ...line, quantity: line.quantity + 1 } : line,
+          lines.map((existing) =>
+            lineKey(existing) === key
+              ? { ...existing, quantity: existing.quantity + line.quantity }
+              : existing,
           ),
         );
         return;
       }
-      store.write([
-        ...lines,
-        {
-          itemId: item.id,
-          name: item.name,
-          unitPriceCents: item.priceCents,
-          quantity: 1,
-          customisations: [],
-        },
-      ]);
+      store.write([...lines, line]);
     },
-    setQuantity(itemId, quantity) {
+    setQuantity(key, quantity) {
       const lines = store.read();
       if (quantity <= 0) {
-        store.write(lines.filter((line) => line.itemId !== itemId));
+        store.write(lines.filter((line) => lineKey(line) !== key));
         return;
       }
-      store.write(lines.map((line) => (line.itemId === itemId ? { ...line, quantity } : line)));
+      store.write(lines.map((line) => (lineKey(line) === key ? { ...line, quantity } : line)));
     },
     replace(lines) {
       store.write(z.array(OrderLineSchema).parse(lines));

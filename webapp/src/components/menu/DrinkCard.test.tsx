@@ -35,14 +35,14 @@ describe('DrinkCard', () => {
     expect(screen.getByText('New')).toBeInTheDocument();
   });
 
-  it('offers an Add button that reports the item', () => {
-    const onAdd = vi.fn();
-    render(<DrinkCard item={signature} onAdd={onAdd} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Add Signature Milk Tea' }));
-    expect(onAdd).toHaveBeenCalledWith(signature);
+  it('is a button that opens customisation for the item', () => {
+    const onOpen = vi.fn();
+    render(<DrinkCard item={signature} onOpen={onOpen} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Customise Signature Milk Tea' }));
+    expect(onOpen).toHaveBeenCalledWith(signature);
   });
 
-  it('has no Add button without a handler', () => {
+  it('has no button without a handler', () => {
     render(<DrinkCard item={signature} />);
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });

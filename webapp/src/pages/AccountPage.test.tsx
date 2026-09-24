@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchStore } from '../api/client';
 import { StoresProvider } from '../store/StoresProvider';
-import { createTestStores, menuItemFixture } from '../store/testing';
+import { cartLineFixture, createTestStores } from '../store/testing';
 import type { Stores } from '../store/types';
 import { AccountPage } from './AccountPage';
 
@@ -93,7 +93,7 @@ describe('AccountPage', () => {
 
   it('clears every store only after confirmation', () => {
     const stores = createTestStores();
-    stores.cart.add(menuItemFixture());
+    stores.cart.add(cartLineFixture());
     stores.account.save({
       displayName: 'Tristan',
       marketingOptIn: false,

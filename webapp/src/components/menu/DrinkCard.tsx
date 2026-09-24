@@ -10,15 +10,23 @@ const TAG_LABELS: Record<MenuItemTag, string> = {
 
 type DrinkCardProps = {
   item: MenuItem;
-  /** When provided, an Add button appears and calls this with the item. */
-  onAdd?: (item: MenuItem) => void;
+  /** When provided, the whole card is a button that opens customisation for the item. */
+  onOpen?: (item: MenuItem) => void;
 };
 
-/** One drink on the menu. */
-export function DrinkCard({ item, onAdd }: DrinkCardProps) {
+/** One drink on the menu. Tap anywhere on it to customise and add. */
+export function DrinkCard({ item, onOpen }: DrinkCardProps) {
   const tag = item.tags[0];
   return (
     <article className="drink" aria-labelledby={`drink-${item.id}-name`}>
+      {onOpen && (
+        <button
+          type="button"
+          className="drink__cover"
+          aria-label={`Customise ${item.name}`}
+          onClick={() => onOpen(item)}
+        />
+      )}
       <div className="drink__art">
         {tag && <span className="drink__tag">{TAG_LABELS[tag]}</span>}
         <CupIllustration colour={item.colour} pearls={item.pearls} size={110} />
@@ -29,15 +37,10 @@ export function DrinkCard({ item, onAdd }: DrinkCardProps) {
       {item.description && <p className="drink__description">{item.description}</p>}
       <div className="drink__meta">
         <p className="drink__price">{formatPrice(item.priceCents)}</p>
-        {onAdd && (
-          <button
-            type="button"
-            className="drink__add"
-            aria-label={`Add ${item.name}`}
-            onClick={() => onAdd(item)}
-          >
-            +
-          </button>
+        {onOpen && (
+          <span className="drink__hint" aria-hidden="true">
+            Customise
+          </span>
         )}
       </div>
     </article>

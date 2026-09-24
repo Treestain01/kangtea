@@ -1,0 +1,237 @@
+/* Native dialog, restyled. Bottom sheet on phones, centred card from 768px. */
+.customise {
+  margin: auto 0 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: 90dvh;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: var(--shadow-raised);
+}
+
+.customise::backdrop {
+  background: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+@media (min-width: 768px) {
+  .customise {
+    margin: auto;
+    width: min(32rem, calc(100% - 2 * var(--space-5)));
+    border-radius: var(--radius-lg);
+  }
+}
+
+.customise__body {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-5) var(--space-4) calc(var(--space-5) + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 768px) {
+  .customise__body {
+    padding: var(--space-6);
+  }
+}
+
+.customise__head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.customise__name {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.customise__base {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.customise__close {
+  width: var(--tap-target);
+  height: var(--tap-target);
+  align-self: start;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  box-shadow: var(--shadow-raised-sm);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.customise__close:active {
+  box-shadow: var(--shadow-inset);
+}
+
+/* Option groups */
+.options {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.options__legend {
+  padding: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.options__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.options__list {
+  display: grid;
+  gap: var(--space-2);
+}
+
+@media (min-width: 768px) {
+  .options__list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* The input stays focusable for the keyboard; the chip shows the state. */
+.option {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.option input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.option__chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-raised-sm);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  transition:
+    box-shadow 120ms ease,
+    color 120ms ease;
+}
+
+.option--wide .option__chip {
+  width: 100%;
+  justify-content: space-between;
+  border-radius: var(--radius-md);
+}
+
+.option input:checked + .option__chip {
+  box-shadow: var(--shadow-inset);
+  color: var(--color-accent);
+}
+
+.option input:focus-visible + .option__chip {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
+.option__price {
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Footer: quantity stepper and the add button with the live total */
+.customise__foot {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.qty {
+  display: inline-grid;
+  grid-template-columns: var(--tap-target) auto var(--tap-target);
+  align-items: center;
+  border-radius: 999px;
+  box-shadow: var(--shadow-inset);
+}
+
+.qty__step {
+  width: var(--tap-target);
+  height: var(--tap-target);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-accent);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.qty__step:disabled {
+  color: var(--color-text-muted);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.qty__count {
+  min-width: 1.5rem;
+  text-align: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.customise__add {
+  min-height: 52px;
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-accent);
+  box-shadow: var(--shadow-raised-sm);
+  font: inherit;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: box-shadow 120ms ease;
+}
+
+.customise__add:active {
+  box-shadow: var(--shadow-inset);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option__chip,
+  .customise__add {
+    transition: none;
+  }
+}

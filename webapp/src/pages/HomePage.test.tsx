@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchMenu, fetchStore } from '../api/client';
 import { StoresProvider } from '../store/StoresProvider';
-import { createTestStores } from '../store/testing';
+import { createTestStores, customisationsFixture } from '../store/testing';
 import type { Stores } from '../store/types';
 import { HomePage } from './HomePage';
 
@@ -52,6 +52,7 @@ const menu: Menu = {
       pearls: false,
     },
   ],
+  customisations: customisationsFixture,
 };
 
 function renderHome(stores: Stores = createTestStores()) {
@@ -98,16 +99,35 @@ describe('HomePage', () => {
     expect(screen.getAllByRole('article')).toHaveLength(2);
   });
 
-  it('adds a drink to the cart and announces it', async () => {
+  it('opens customisation from a card and adds the chosen drink to the cart', async () => {
     mockedFetchStore.mockResolvedValue(store);
     mockedFetchMenu.mockResolvedValue(menu);
     const stores = renderHome();
     await screen.findByText('Calamvale Central');
-    fireEvent.click(screen.getByRole('button', { name: 'Add Signature Milk Tea' }));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Customise Signature Milk Tea' }));
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Signature Milk Tea' }),
+    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('radio', { name: '50%' }));
+    fireEvent.click(screen.getByRole('checkbox', { name: /Pearls/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Add to order/ }));
+
     expect(stores.cart.read()).toEqual([
-      expect.objectContaining({ itemId: 'signature-milk-tea', quantity: 1 }),
+      expect.objectContaining({
+        itemId: 'signature-milk-tea',
+        quantity: 1,
+        unitPriceCents: 830,
+        customisations: expect.arrayContaining([
+          { name: 'Sugar', value: '50%' },
+          { name: 'Topping', value: 'Pearls' },
+        ]),
+      }),
     ]);
     expect(screen.getByRole('status')).toHaveTextContent('Added Signature Milk Tea');
+    expect(
+      screen.queryByRole('heading', { level: 2, name: 'Signature Milk Tea' }),
+    ).not.toBeInTheDocument();
   });
 
   it('shows an error with a retry that fetches again', async () => {

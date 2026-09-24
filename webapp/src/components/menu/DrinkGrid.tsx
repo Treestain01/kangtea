@@ -4,11 +4,11 @@ import './menu.css';
 
 type DrinkGridProps = {
   items: MenuItem[];
-  onAdd?: (item: MenuItem) => void;
+  onOpen?: (item: MenuItem) => void;
 };
 
-/** Responsive grid of drink cards: 2 columns on phones, 3 from 768px, 4 from 1024px. */
-export function DrinkGrid({ items, onAdd }: DrinkGridProps) {
+/** Responsive grid of drink cards: 2 columns on phones, as many 300px cards as fit from 768px. */
+export function DrinkGrid({ items, onOpen }: DrinkGridProps) {
   if (items.length === 0) {
     return <p className="drinks__empty">No drinks in this category yet.</p>;
   }
@@ -16,7 +16,7 @@ export function DrinkGrid({ items, onAdd }: DrinkGridProps) {
     <ul className="drinks" aria-label="Drinks">
       {items.map((item) => (
         <li key={item.id}>
-          <DrinkCard item={item} onAdd={onAdd} />
+          <DrinkCard item={item} onOpen={onOpen} />
         </li>
       ))}
     </ul>

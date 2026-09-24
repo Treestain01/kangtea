@@ -1,6 +1,6 @@
-import type { MenuItem } from '@bbt/shared';
+import type { Menu, MenuItem } from '@bbt/shared';
 import { createLocalStores } from './local';
-import type { Stores } from './types';
+import type { CartLine, Stores } from './types';
 
 /** An in memory Storage for tests. Same contract as window.localStorage. */
 export function createMemoryStorage(): Storage {
@@ -46,3 +46,31 @@ export function menuItemFixture(overrides: Partial<MenuItem> = {}): MenuItem {
     ...overrides,
   };
 }
+
+/** A plain cart line for the fixture drink, one of it, no customisations. */
+export function cartLineFixture(overrides: Partial<CartLine> = {}): CartLine {
+  return {
+    itemId: 'signature-milk-tea',
+    name: 'Signature Milk Tea',
+    unitPriceCents: 750,
+    quantity: 1,
+    customisations: [],
+    ...overrides,
+  };
+}
+
+/** The customisation choices every test menu offers. */
+export const customisationsFixture: Menu['customisations'] = {
+  sugarLevels: [
+    { id: 'sugar-50', name: '50%', isDefault: false },
+    { id: 'sugar-100', name: '100%', isDefault: true },
+  ],
+  iceLevels: [
+    { id: 'ice-less', name: 'Less ice', isDefault: false },
+    { id: 'ice-regular', name: 'Regular ice', isDefault: true },
+  ],
+  toppings: [
+    { id: 'pearls', name: 'Pearls', priceCents: 80 },
+    { id: 'pudding', name: 'Pudding', priceCents: 100 },
+  ],
+};

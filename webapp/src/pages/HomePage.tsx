@@ -1,8 +1,9 @@
-import type { Menu, MenuItem, Store } from '@bbt/shared';
+import type { Menu, MenuItem, OrderLine, Store } from '@bbt/shared';
 import { useCallback, useEffect, useState } from 'react';
 import { fetchMenu, fetchStore } from '../api/client';
 import { AppHeader } from '../components/layout/AppHeader';
 import { CategoryChips } from '../components/menu/CategoryChips';
+import { CustomiseDrinkDialog } from '../components/menu/CustomiseDrinkDialog';
 import { DrinkGrid } from '../components/menu/DrinkGrid';
 import { useStores } from '../store/StoresProvider';
 import './HomePage.css';
@@ -14,13 +15,14 @@ type Catalogue =
 
 const ANNOUNCEMENT_MS = 2000;
 
-/** The home screen: header, category filter, drink grid with add to cart. */
+/** The home screen: header, category filter, drink grid, and the customise dialog. */
 export function HomePage() {
   const { cart } = useStores();
   const [catalogue, setCatalogue] = useState<Catalogue>({ kind: 'loading' });
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [announcement, setAnnouncement] = useState('');
+  const [customising, setCustomising] = useState<MenuItem | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -50,10 +52,10 @@ export function HomePage() {
 
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
 
-  const addToCart = useCallback(
-    (item: MenuItem) => {
-      cart.add(item);
-      setAnnouncement(`Added ${item.name}`);
+  const addLine = useCallback(
+    (line: OrderLine) => {
+      cart.add(line);
+      setAnnouncement(`Added ${line.name}`);
     },
     [cart],
   );
@@ -101,8 +103,14 @@ export function HomePage() {
           selected={selectedCategory}
           onSelect={setSelectedCategory}
         />
-        <DrinkGrid items={items} onAdd={addToCart} />
+        <DrinkGrid items={items} onOpen={setCustomising} />
       </section>
+      <CustomiseDrinkDialog
+        item={customising}
+        customisations={menu.customisations}
+        onAdd={addLine}
+        onClose={() => setCustomising(null)}
+      />
       <p className="visually-hidden" role="status">
         {announcement}
       </p>

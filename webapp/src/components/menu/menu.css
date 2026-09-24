@@ -152,28 +152,48 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Raised round Add button, presses in on tap. */
-.drink__add {
-  width: 48px;
-  height: 48px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--color-surface);
-  color: var(--color-accent);
-  box-shadow: var(--shadow-raised-sm);
-  font-size: 1.5rem;
-  line-height: 1;
-  cursor: pointer;
-  transition: box-shadow 120ms ease;
+/* The whole card is the button: an invisible cover sits over the content. */
+.drink {
+  position: relative;
 }
 
-.drink__add:active {
+.drink__cover {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.drink:has(.drink__cover:hover) {
+  box-shadow:
+    var(--shadow-raised),
+    inset 0 0 0 2px color-mix(in srgb, var(--color-accent) 25%, transparent);
+}
+
+.drink:has(.drink__cover:active) {
   box-shadow: var(--shadow-inset);
 }
 
+.drink:has(.drink__cover:focus-visible) {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
+.drink__cover:focus {
+  outline: none;
+}
+
+.drink__hint {
+  color: var(--color-accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .chip,
-  .drink__add {
+  .chip {
     transition: none;
   }
 }

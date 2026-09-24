@@ -5,6 +5,7 @@ import { fetchStore } from '../../api/client';
 import { formatPrice } from '../../lib/money';
 import { useStores } from '../../store/StoresProvider';
 import { useCart, useOrders } from '../../store/hooks';
+import { lineKey, summariseCustomisations } from '../../store/lines';
 import { activeOrder, cartTotalCents } from '../../store/orders';
 import type { CartLine } from '../../store/types';
 import { CartLineRow } from './CartLineRow';
@@ -68,8 +69,8 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
       compact={compact}
       lines={cart}
       canPlace={store !== null && cart.length > 0}
-      onChangeQuantity={(itemId, quantity) => cartStore.setQuantity(itemId, quantity)}
-      onRemove={(itemId) => cartStore.setQuantity(itemId, 0)}
+      onChangeQuantity={(key, quantity) => cartStore.setQuantity(key, quantity)}
+      onRemove={(key) => cartStore.setQuantity(key, 0)}
       onPlace={() => {
         if (!store) return;
         ordersStore.place(cart, store.id);
@@ -126,7 +127,7 @@ function CartView({
       <ul className="order__lines" aria-label="Drinks in your order">
         {lines.map((line) => (
           <CartLineRow
-            key={line.itemId}
+            key={lineKey(line)}
             line={line}
             compact={compact}
             onChangeQuantity={onChangeQuantity}
@@ -175,9 +176,12 @@ function ActiveOrderView({ className, order, onCollect, onCancel }: ActiveOrderV
       )}
       <ul className="order__recap" aria-label="Drinks in this order">
         {order.lines.map((line) => (
-          <li key={line.itemId} className="order__recapline">
+          <li key={lineKey(line)} className="order__recapline">
             <span>
               {line.quantity} × {line.name}
+              {summariseCustomisations(line) && (
+                <span className="order__recapoptions"> ({summariseCustomisations(line)})</span>
+              )}
             </span>
             <span>{formatPrice(line.unitPriceCents * line.quantity)}</span>
           </li>

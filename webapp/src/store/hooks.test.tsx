@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { StoresProvider } from './StoresProvider';
 import { useAccount, useCart, useOrders } from './hooks';
-import { createTestStores, menuItemFixture } from './testing';
+import { cartLineFixture, createTestStores } from './testing';
 
 function Probe() {
   const cart = useCart();
@@ -25,7 +25,7 @@ describe('store hooks', () => {
     );
     expect(screen.getByText('cart:0 orders:0 name:none')).toBeInTheDocument();
 
-    act(() => stores.cart.add(menuItemFixture()));
+    act(() => stores.cart.add(cartLineFixture()));
     expect(screen.getByText('cart:1 orders:0 name:none')).toBeInTheDocument();
 
     act(() => {

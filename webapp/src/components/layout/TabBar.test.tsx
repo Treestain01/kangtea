@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { StoresProvider } from '../../store/StoresProvider';
-import { createTestStores, menuItemFixture } from '../../store/testing';
+import { cartLineFixture, createTestStores } from '../../store/testing';
 import type { Stores } from '../../store/types';
 import { TabBar } from './TabBar';
 
@@ -34,15 +34,17 @@ describe('TabBar', () => {
     const stores = createTestStores();
     renderAt('/', stores);
     act(() => {
-      stores.cart.add(menuItemFixture());
-      stores.cart.add(menuItemFixture({ id: 'matcha-latte', name: 'Matcha Latte' }));
+      stores.cart.add(cartLineFixture());
+      stores.cart.add(
+        cartLineFixture({ itemId: 'matcha-latte', name: 'Matcha Latte', unitPriceCents: 790 }),
+      );
     });
     expect(screen.getByRole('link', { name: /^Order, 2 in your cart/ })).toHaveTextContent('2');
   });
 
   it('shows a dot instead of a count while an order is in progress', () => {
     const stores = createTestStores();
-    stores.cart.add(menuItemFixture());
+    stores.cart.add(cartLineFixture());
     stores.orders.place(stores.cart.read(), 's');
     renderAt('/', stores);
     expect(screen.getByTestId('order-dot')).toBeInTheDocument();

@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchStore } from '../../api/client';
 import { StoresProvider } from '../../store/StoresProvider';
-import { createTestStores, menuItemFixture } from '../../store/testing';
+import { cartLineFixture, createTestStores } from '../../store/testing';
 import type { Stores } from '../../store/types';
 import { OrderPanel } from './OrderPanel';
 
@@ -24,8 +24,12 @@ const store: Store = {
   hours: { mon: hours, tue: hours, wed: hours, thu: hours, fri: hours, sat: hours, sun: hours },
 };
 
-const signature = menuItemFixture();
-const matcha = menuItemFixture({ id: 'matcha-latte', name: 'Matcha Latte', priceCents: 790 });
+const signature = cartLineFixture();
+const matcha = cartLineFixture({
+  itemId: 'matcha-latte',
+  name: 'Matcha Latte',
+  unitPriceCents: 790,
+});
 
 function renderPanel(stores: Stores = createTestStores(), compact = false) {
   render(

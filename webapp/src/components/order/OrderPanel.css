@@ -76,6 +76,11 @@
   font-variant-numeric: tabular-nums;
 }
 
+.order__recapoptions {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
 .order__summary {
   display: grid;
   gap: var(--space-3);

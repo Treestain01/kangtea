@@ -1,10 +1,20 @@
 import { OrderSchema } from '@bbt/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { STORAGE_KEYS, createLocalStores } from './local';
-import { createMemoryStorage, menuItemFixture } from './testing';
+import { cartLineFixture, createMemoryStorage } from './testing';
 
-const signature = menuItemFixture();
-const matcha = menuItemFixture({ id: 'matcha-latte', name: 'Matcha Latte', priceCents: 790 });
+const signature = cartLineFixture();
+const matcha = cartLineFixture({
+  itemId: 'matcha-latte',
+  name: 'Matcha Latte',
+  unitPriceCents: 790,
+});
+const signatureLessIce = cartLineFixture({
+  customisations: [
+    { name: 'Sugar', value: '100%' },
+    { name: 'Ice', value: 'Less ice' },
+  ],
+});
 
 describe('cart store', () => {
   it('starts empty', () => {
@@ -12,27 +22,19 @@ describe('cart store', () => {
     expect(cart.read()).toEqual([]);
   });
 
-  it('adds a line and merges repeats of the same item', () => {
+  it('adds lines and merges repeats of the same drink with the same customisations', () => {
     const { cart } = createLocalStores(createMemoryStorage());
     cart.add(signature);
     cart.add(matcha);
+    cart.add({ ...signature, quantity: 2 });
+    expect(cart.read()).toEqual([{ ...signature, quantity: 3 }, matcha]);
+  });
+
+  it('keeps the same drink with different customisations as separate lines', () => {
+    const { cart } = createLocalStores(createMemoryStorage());
     cart.add(signature);
-    expect(cart.read()).toEqual([
-      {
-        itemId: 'signature-milk-tea',
-        name: 'Signature Milk Tea',
-        unitPriceCents: 750,
-        quantity: 2,
-        customisations: [],
-      },
-      {
-        itemId: 'matcha-latte',
-        name: 'Matcha Latte',
-        unitPriceCents: 790,
-        quantity: 1,
-        customisations: [],
-      },
-    ]);
+    cart.add(signatureLessIce);
+    expect(cart.read()).toHaveLength(2);
   });
 
   it('removes a line when its quantity is set to zero', () => {
@@ -43,11 +45,12 @@ describe('cart store', () => {
     expect(cart.read().map((line) => line.itemId)).toEqual(['matcha-latte']);
   });
 
-  it('changes a quantity', () => {
+  it('changes a quantity by line key', () => {
     const { cart } = createLocalStores(createMemoryStorage());
     cart.add(signature);
-    cart.setQuantity('signature-milk-tea', 4);
-    expect(cart.read()[0]?.quantity).toBe(4);
+    cart.add(signatureLessIce);
+    cart.setQuantity('signature-milk-tea|Sugar=100%;Ice=Less ice', 4);
+    expect(cart.read().map((line) => line.quantity)).toEqual([1, 4]);
   });
 
   it('replaces every line and clears', () => {
@@ -81,6 +84,11 @@ describe('cart store', () => {
     expect(createLocalStores(storage).cart.read()).toEqual([]);
   });
 
+  it('rejects an invalid line on add', () => {
+    const { cart } = createLocalStores(createMemoryStorage());
+    expect(() => cart.add({ ...signature, quantity: 0 })).toThrow();
+  });
+
   it('notifies subscribers on every write and stops after unsubscribe', () => {
     const { cart } = createLocalStores(createMemoryStorage());
     const listener = vi.fn();
@@ -101,15 +109,7 @@ describe('cart store', () => {
 });
 
 describe('orders store', () => {
-  const lines = [
-    {
-      itemId: 'signature-milk-tea',
-      name: 'Signature Milk Tea',
-      unitPriceCents: 750,
-      quantity: 2,
-      customisations: [],
-    },
-  ];
+  const lines = [{ ...signature, quantity: 2 }];
   const now = new Date('2026-09-24T02:00:00.000Z');
 
   it('places a valid received order with the right total and a pickup code', () => {

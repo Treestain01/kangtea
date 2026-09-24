@@ -16,6 +16,16 @@ The shapes are the shared contract's `OrderLine`, `Order` and `Account`, so movi
 
 Storage keys are `kangtea.cart`, `kangtea.orders`, `kangtea.account`.
 
+## Lines and customisations
+
+`store/lines.ts` owns how a customised drink becomes a line:
+
+- `buildCartLine(item, selection)` sets `unitPriceCents` to the drink price plus its toppings and records the choices as `customisations`: `{ name: 'Sugar', value: '50%' }`, `{ name: 'Ice', value: 'Less ice' }`, one `{ name: 'Topping', value }` per topping.
+- `lineKey(line)` identifies a line by drink plus exactly its customisations. Two lines merge in the cart only when their keys match; `setQuantity` and remove address lines by key. A line with no customisations has its `itemId` as its key.
+- `summariseCustomisations(line)` renders "50% · Less ice · Pearls, Pudding" for cart rows, the order recap and History.
+
+Because names and prices are snapshots, a topping price change later does not alter a placed order.
+
 ## Lifecycle
 
 ```

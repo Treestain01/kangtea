@@ -26,6 +26,11 @@ const store = {
 
 const menu = {
   categories: [{ id: 'milk-tea', name: 'Milk Tea', sortOrder: 0 }],
+  customisations: {
+    sugarLevels: [{ id: 'sugar-100', name: '100%', isDefault: true }],
+    iceLevels: [{ id: 'ice-regular', name: 'Regular ice', isDefault: true }],
+    toppings: [{ id: 'pearls', name: 'Pearls', priceCents: 80 }],
+  },
   items: [
     {
       id: 'signature-milk-tea',

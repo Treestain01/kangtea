@@ -1,14 +1,14 @@
-import type { Account, MenuItem, Order, OrderLine, OrderStatus } from '@bbt/shared';
+import type { Account, Order, OrderLine, OrderStatus } from '@bbt/shared';
 
 /** A line in the cart has the same shape as a line in a placed order. */
 export type CartLine = OrderLine;
 
 export interface CartStore {
   read(): CartLine[];
-  /** Adds one of the item, merging with an existing line for the same item. */
-  add(item: MenuItem): void;
-  /** Sets a line's quantity. Zero removes the line. */
-  setQuantity(itemId: string, quantity: number): void;
+  /** Adds a line, merging its quantity into an existing line with the same drink and customisations. */
+  add(line: CartLine): void;
+  /** Sets a line's quantity by its lineKey. Zero removes the line. */
+  setQuantity(lineKey: string, quantity: number): void;
   /** Replaces the whole cart, used by "Order again". */
   replace(lines: CartLine[]): void;
   clear(): void;

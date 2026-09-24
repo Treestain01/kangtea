@@ -32,6 +32,13 @@
   overflow-wrap: anywhere;
 }
 
+.cartline__options {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-accent);
+  overflow-wrap: anywhere;
+}
+
 .cartline__unit {
   margin: 0;
   font-size: 0.8125rem;

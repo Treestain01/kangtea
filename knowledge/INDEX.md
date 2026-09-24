@@ -16,5 +16,6 @@ Read the document, not this index, for the facts.
   - [0007 Accent is the Kang Tea logo navy](decisions/0007-accent-is-the-kang-tea-logo-navy.md)
   - [0008 Neumorphic surface treatment](decisions/0008-neumorphic-surface-treatment.md)
   - [0009 Local first orders with the shared contract](decisions/0009-local-first-orders-with-shared-contract.md)
+  - [0010 Drink customisations as menu level options](decisions/0010-drink-customisations-as-menu-level-options.md)
 
 Project knowledge bases: `webapp/knowledge/INDEX.md`, `api/knowledge/INDEX.md`, `iosapp/knowledge/INDEX.md`.
