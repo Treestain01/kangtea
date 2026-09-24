@@ -10,6 +10,11 @@ const icons = {
       <path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />
     </svg>
   ),
+  menu: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M4 6h16M4 12h16M4 18h10" />
+    </svg>
+  ),
   order: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
       <path d="M7 4h10l-1 16H8zM9 8h6" />
@@ -50,6 +55,10 @@ export function TabBar() {
       <NavLink to="/" end className={tabClass}>
         {icons.home}
         <span className="tab__label">Home</span>
+      </NavLink>
+      <NavLink to="/menu" className={tabClass}>
+        {icons.menu}
+        <span className="tab__label">Menu</span>
       </NavLink>
       <NavLink to="/order" className={(state) => `${tabClass(state)} tab--order`}>
         <span className="tab__icon">

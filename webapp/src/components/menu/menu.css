@@ -133,6 +133,7 @@
 .drink__name {
   grid-area: name;
   margin: 0;
+  font-family: var(--font-display);
   font-size: 1.125rem;
   font-weight: 600;
   line-height: 1.25;
@@ -159,9 +160,34 @@
 
 .drink__price {
   margin: 0;
+  font-family: var(--font-display);
   font-size: 1.125rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+/* Compact card for the home screen row: square art, tighter type, no description. */
+.drink--compact {
+  padding: var(--space-3);
+  gap: var(--space-2);
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    'art'
+    'name'
+    'meta';
+}
+
+.drink--compact .drink__art {
+  aspect-ratio: 1;
+}
+
+.drink--compact .drink__name {
+  font-size: 0.9375rem;
+  min-height: 2.5em;
+}
+
+.drink--compact .drink__price {
+  font-size: 1rem;
 }
 
 /* The whole card is the button: an invisible cover sits over the content. */

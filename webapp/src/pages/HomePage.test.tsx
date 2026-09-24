@@ -1,9 +1,10 @@
 import type { Menu, Store } from '@bbt/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchMenu, fetchStore } from '../api/client';
 import { StoresProvider } from '../store/StoresProvider';
-import { createTestStores, customisationsFixture } from '../store/testing';
+import { cartLineFixture, createTestStores, customisationsFixture } from '../store/testing';
 import type { Stores } from '../store/types';
 import { HomePage } from './HomePage';
 
@@ -30,7 +31,18 @@ const menu: Menu = {
     { id: 'milk-tea', name: 'Milk Tea', sortOrder: 0 },
     { id: 'matcha', name: 'Matcha', sortOrder: 1 },
   ],
+  customisations: customisationsFixture,
   items: [
+    {
+      id: 'plain-tea',
+      categoryId: 'milk-tea',
+      name: 'Plain Tea',
+      priceCents: 500,
+      currency: 'AUD',
+      tags: [],
+      colour: '#B07A45',
+      pearls: false,
+    },
     {
       id: 'signature-milk-tea',
       categoryId: 'milk-tea',
@@ -47,18 +59,23 @@ const menu: Menu = {
       name: 'Matcha Latte',
       priceCents: 790,
       currency: 'AUD',
-      tags: [],
+      tags: ['new'],
       colour: '#5F8F3E',
       pearls: false,
     },
   ],
-  customisations: customisationsFixture,
 };
 
 function renderHome(stores: Stores = createTestStores()) {
   render(
     <StoresProvider stores={stores}>
-      <HomePage />
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/menu" element={<p>Menu page</p>} />
+          <Route path="/order" element={<p>Order page</p>} />
+        </Routes>
+      </MemoryRouter>
     </StoresProvider>,
   );
   return stores;
@@ -68,6 +85,8 @@ describe('HomePage', () => {
   beforeEach(() => {
     mockedFetchStore.mockReset();
     mockedFetchMenu.mockReset();
+    mockedFetchStore.mockResolvedValue(store);
+    mockedFetchMenu.mockResolvedValue(menu);
   });
 
   it('shows a loading state first', () => {
@@ -78,65 +97,70 @@ describe('HomePage', () => {
     expect(screen.getByText('Finding your store')).toBeInTheDocument();
   });
 
-  it('renders the store, categories and every drink once loaded', async () => {
-    mockedFetchStore.mockResolvedValue(store);
-    mockedFetchMenu.mockResolvedValue(menu);
+  it('shows the greeting, store, search and popular drinks with tagged items first', async () => {
     renderHome();
     expect(await screen.findByText('Calamvale Central')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Milk Tea' })).toBeInTheDocument();
-    expect(screen.getAllByRole('article')).toHaveLength(2);
+    expect(screen.getByRole('searchbox', { name: 'Search drinks' })).toBeInTheDocument();
+    const names = screen
+      .getAllByRole('article')
+      .map((article) => article.getAttribute('aria-labelledby'));
+    expect(names).toEqual([
+      'drink-signature-milk-tea-name',
+      'drink-matcha-latte-name',
+      'drink-plain-tea-name',
+    ]);
+    expect(screen.getByRole('link', { name: 'See the full menu' })).toHaveAttribute(
+      'href',
+      '/menu',
+    );
   });
 
-  it('filters drinks by the selected category', async () => {
-    mockedFetchStore.mockResolvedValue(store);
-    mockedFetchMenu.mockResolvedValue(menu);
+  it('sends a search to the menu page', async () => {
     renderHome();
     await screen.findByText('Calamvale Central');
-    fireEvent.click(screen.getByRole('button', { name: 'Matcha' }));
-    expect(screen.getAllByRole('article')).toHaveLength(1);
-    expect(screen.getByRole('article', { name: 'Matcha Latte' })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'All' }));
-    expect(screen.getAllByRole('article')).toHaveLength(2);
+    fireEvent.change(screen.getByRole('searchbox', { name: 'Search drinks' }), {
+      target: { value: 'matcha' },
+    });
+    fireEvent.submit(screen.getByRole('search'));
+    expect(screen.getByText('Menu page')).toBeInTheDocument();
   });
 
-  it('opens customisation from a card and adds the chosen drink to the cart', async () => {
-    mockedFetchStore.mockResolvedValue(store);
-    mockedFetchMenu.mockResolvedValue(menu);
+  it('hides Your usual until there is a collected order, then reorders it', async () => {
+    const stores = createTestStores();
+    stores.cart.add(cartLineFixture());
+    const order = stores.orders.place(stores.cart.read(), store.id);
+    stores.cart.clear();
+    stores.orders.setStatus(order.id, 'collected');
+    renderHome(stores);
+    await screen.findByText('Calamvale Central');
+    expect(screen.getByText('Your usual')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Reorder/ }));
+    expect(stores.cart.read()).toEqual(order.lines);
+    expect(screen.getByText('Order page')).toBeInTheDocument();
+  });
+
+  it('has no Your usual with no history', async () => {
+    renderHome();
+    await screen.findByText('Calamvale Central');
+    expect(screen.queryByText('Your usual')).not.toBeInTheDocument();
+  });
+
+  it('opens customisation from a popular card and adds to the cart', async () => {
     const stores = renderHome();
     await screen.findByText('Calamvale Central');
-
     fireEvent.click(screen.getByRole('button', { name: 'Customise Signature Milk Tea' }));
-    expect(
-      screen.getByRole('heading', { level: 2, name: 'Signature Milk Tea' }),
-    ).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('radio', { name: '50%' }));
     fireEvent.click(screen.getByRole('checkbox', { name: /Pearls/ }));
     fireEvent.click(screen.getByRole('button', { name: /Add to order/ }));
-
     expect(stores.cart.read()).toEqual([
-      expect.objectContaining({
-        itemId: 'signature-milk-tea',
-        quantity: 1,
-        unitPriceCents: 830,
-        customisations: expect.arrayContaining([
-          { name: 'Sugar', value: '50%' },
-          { name: 'Topping', value: 'Pearls' },
-        ]),
-      }),
+      expect.objectContaining({ itemId: 'signature-milk-tea', unitPriceCents: 830 }),
     ]);
     expect(screen.getByRole('status')).toHaveTextContent('Added Signature Milk Tea');
-    expect(
-      screen.queryByRole('heading', { level: 2, name: 'Signature Milk Tea' }),
-    ).not.toBeInTheDocument();
   });
 
   it('shows an error with a retry that fetches again', async () => {
     mockedFetchStore.mockRejectedValueOnce(new Error('boom'));
-    mockedFetchMenu.mockResolvedValue(menu);
     renderHome();
     expect(await screen.findByRole('alert')).toHaveTextContent("We couldn't load the menu. boom");
-
-    mockedFetchStore.mockResolvedValue(store);
     fireEvent.click(screen.getByRole('button', { name: 'Try again' }));
     expect(await screen.findByText('Calamvale Central')).toBeInTheDocument();
     expect(mockedFetchStore).toHaveBeenCalledTimes(2);

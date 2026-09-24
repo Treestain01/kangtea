@@ -1,34 +1,47 @@
-.home {
+.menu {
   display: grid;
-  gap: var(--space-5);
-  padding-bottom: var(--space-6);
+  gap: var(--space-4);
+  padding-block: var(--space-4) var(--space-6);
+}
+
+.menu__top {
+  display: grid;
+  gap: var(--space-3);
 }
 
 @media (min-width: 768px) {
-  .home {
-    gap: var(--space-6);
+  .menu__top {
+    grid-template-columns: 1fr 320px;
+    align-items: center;
   }
 }
 
-.home__loading,
-.home__error {
+.menu__heading {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.menu__loading,
+.menu__error,
+.menu__empty {
   padding-block: var(--space-6);
   text-align: center;
   color: var(--color-text-muted);
 }
 
-.home__error {
+.menu__error,
+.menu__empty {
   display: grid;
   gap: var(--space-3);
   justify-items: center;
 }
 
-.home__error p {
+.menu__error p,
+.menu__empty p {
   margin: 0;
 }
 
-/* Raised pill with accent text. Presses in on tap. */
-.home__retry {
+.menu__retry {
   min-height: var(--tap-target);
   padding: 0 var(--space-5);
   border: 0;
@@ -39,21 +52,15 @@
   font: inherit;
   font-weight: 700;
   cursor: pointer;
-  transition:
-    box-shadow var(--motion-fast) var(--ease),
-    color var(--motion-fast) var(--ease);
+  transition: box-shadow var(--motion-fast) var(--ease);
 }
 
-.home__retry:hover {
-  color: var(--color-accent-hover);
-}
-
-.home__retry:active {
+.menu__retry:active {
   box-shadow: var(--shadow-inset);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home__retry {
+  .menu__retry {
     transition: none;
   }
 }

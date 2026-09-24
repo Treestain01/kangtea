@@ -17,9 +17,9 @@ function renderAt(path: string, stores: Stores = createTestStores()) {
 }
 
 describe('TabBar', () => {
-  it('has the four destinations', () => {
+  it('has the five destinations', () => {
     renderAt('/');
-    for (const name of ['Home', 'Order', 'History', 'Account']) {
+    for (const name of ['Home', 'Menu', 'Order', 'History', 'Account']) {
       expect(screen.getByRole('link', { name: new RegExp(`^${name}`) })).toBeInTheDocument();
     }
   });

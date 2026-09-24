@@ -5,13 +5,14 @@
 `src/router.tsx` exports `routes` (for tests) and `createAppRouter()` (for `main.tsx`).
 One layout route renders `AppShell`; its children are the pages.
 
-| Path       | Page           | Purpose                                               |
-| ---------- | -------------- | ----------------------------------------------------- |
-| `/`        | `HomePage`     | Menu and add to cart. The only page with `AppHeader`. |
-| `/order`   | `OrderPage`    | Cart, then live status.                               |
-| `/history` | `HistoryPage`  | Past orders and reorder.                              |
-| `/account` | `AccountPage`  | Profile, store card, clear data.                      |
-| `*`        | `NotFoundPage` | A link home.                                          |
+| Path       | Page           | Purpose                                                                       |
+| ---------- | -------------- | ----------------------------------------------------------------------------- |
+| `/`        | `HomePage`     | Greeting and search, Your usual, Popular now. The only page with `AppHeader`. |
+| `/menu`    | `MenuPage`     | The full catalogue with search (`?q=`) and category chips.                    |
+| `/order`   | `OrderPage`    | Cart, then live status.                                                       |
+| `/history` | `HistoryPage`  | Past orders and reorder.                                                      |
+| `/account` | `AccountPage`  | Profile, store card, clear data.                                              |
+| `*`        | `NotFoundPage` | A link home.                                                                  |
 
 React Router runs in declarative mode.
 Vercel's SPA rewrite in `vercel.json` serves `index.html` for every path, so deep links work.
@@ -39,7 +40,7 @@ Three columns: the sidebar (left, 340px), the page (middle, fluid), and the orde
 
 `components/layout/TabBar.tsx`, one component, two shapes:
 
-- Below 1024px: fixed to the bottom, four equal columns, icons over labels, `--shadow-raised`, safe area padding at the bottom.
+- Below 1024px: fixed to the bottom, five equal columns (Home, Menu, Order, History, Account), icons over labels, `--shadow-raised`, safe area padding at the bottom.
 - From 1024px: fixed to the left as a sidebar whose width is `--sidebar-width`, defined as `var(--cart-panel-width)` so the two side columns always match. The full logo lockup sits at the top and the tabs are 52px icon plus label rows at 1.0625rem.
 
 `NavLink` supplies `aria-current="page"`; the active tab is `--shadow-inset` with accent text, matching chips.

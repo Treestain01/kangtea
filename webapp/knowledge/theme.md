@@ -59,6 +59,17 @@ Rules:
 - Grids leave gap for the 14px shadow spread (`--space-4` and up) so neighbouring cards do not clip each other's shadow.
 - Dark mode has its own shadow pair. Do not invert the light pair.
 
+## Typography
+
+| Token            | Face                                             | Used for                                                                                                       |
+| ---------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| `--font-display` | Fraunces (Google Fonts), Georgia fallback        | The greeting, drink names and prices, section headings (`h1` to `h4` by default), Your usual, the pickup code. |
+| `--font-body`    | Nunito Sans (Google Fonts), system sans fallback | Everything else. Set on `:root` at 15px with 1.5 line height.                                                  |
+| Cinzel           | Google Fonts                                     | The KANGTEA wordmark only.                                                                                     |
+
+Both families load from `index.html` with `display=swap`.
+Headings carry `letter-spacing: -0.01em` and `text-wrap: balance`.
+
 ## Non-colour tokens
 
 - `--focus-outline`: `3px solid` accent at 60%. Applied globally on `:focus-visible` as an outline so it never replaces a surface's shadow.

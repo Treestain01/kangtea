@@ -28,7 +28,7 @@ describe('greetingFor', () => {
 });
 
 describe('AppHeader', () => {
-  it('shows the logo, greeting and pickup store with opening status', () => {
+  it('shows the brand, greeting and pickup store with opening status', () => {
     render(<AppHeader store={store} now={noonBrisbane} />);
     expect(screen.getByRole('img', { name: 'Kang Tea' })).toBeInTheDocument();
     expect(screen.getByText(greetingFor(noonBrisbane.getHours()))).toBeInTheDocument();
@@ -40,5 +40,10 @@ describe('AppHeader', () => {
     render(<AppHeader store={null} now={noonBrisbane} />);
     expect(screen.getByText('Finding your store')).toBeInTheDocument();
     expect(screen.queryByText(/Pick up at/)).not.toBeInTheDocument();
+  });
+
+  it('renders the actions slot beside the greeting', () => {
+    render(<AppHeader store={store} now={noonBrisbane} actions={<button>Do it</button>} />);
+    expect(screen.getByRole('button', { name: 'Do it' })).toBeInTheDocument();
   });
 });
