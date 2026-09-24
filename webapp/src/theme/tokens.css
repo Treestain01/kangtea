@@ -58,7 +58,7 @@
 
   /* Layout: the tab bar height on phones; the sidebar and order panel widths from 1024px */
   --tab-bar-height: 64px;
-  --sidebar-width: 396px;
+  --sidebar-width: 340px;
   --cart-panel-width: 340px;
 }
 
