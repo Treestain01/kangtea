@@ -109,7 +109,7 @@ export function CustomiseDrinkDialog({
 
         <header className="hero" style={heroStyle}>
           <div className="hero__art">
-            <CupIllustration colour={item.colour} pearls={item.pearls} size={170} />
+            <CupIllustration colour={item.colour} pearls={item.pearls} size={96} />
           </div>
           <div className="hero__text">
             {tag && <span className="hero__tag">{TAG_LABELS[tag]}</span>}
@@ -122,104 +122,108 @@ export function CustomiseDrinkDialog({
           </div>
         </header>
 
-        <LevelTrack
-          legend="Sugar level"
-          name="sugar"
-          levels={customisations.sugarLevels}
-          selectedId={sugarId}
-          onSelect={setSugarId}
-        />
+        <div className="customise__scroll">
+          <LevelTrack
+            legend="Sugar level"
+            name="sugar"
+            levels={customisations.sugarLevels}
+            selectedId={sugarId}
+            onSelect={setSugarId}
+          />
 
-        <LevelTrack
-          legend="Ice level"
-          name="ice"
-          levels={customisations.iceLevels}
-          selectedId={iceId}
-          onSelect={setIceId}
-        />
+          <LevelTrack
+            legend="Ice level"
+            name="ice"
+            levels={customisations.iceLevels}
+            selectedId={iceId}
+            onSelect={setIceId}
+          />
 
-        {customisations.toppings.length > 0 && (
-          <fieldset className="group">
-            <legend className="group__legend">Add toppings</legend>
-            <div className="tiles">
-              {customisations.toppings.map((topping) => {
-                const selected = toppingIds.includes(topping.id);
-                return (
-                  <label key={topping.id} className="tile">
-                    <input
-                      type="checkbox"
-                      name="toppings"
-                      value={topping.id}
-                      checked={selected}
-                      onChange={() => toggleTopping(topping.id)}
-                    />
-                    <span className="tile__face">
-                      <span className="tile__art">
-                        <ToppingIcon topping={topping} />
-                      </span>
-                      {selected && (
-                        <span className="tile__badge" aria-hidden="true">
-                          1
+          {customisations.toppings.length > 0 && (
+            <fieldset className="group">
+              <legend className="group__legend">Add toppings</legend>
+              <div className="tiles">
+                {customisations.toppings.map((topping) => {
+                  const selected = toppingIds.includes(topping.id);
+                  return (
+                    <label key={topping.id} className="tile">
+                      <input
+                        type="checkbox"
+                        name="toppings"
+                        value={topping.id}
+                        checked={selected}
+                        onChange={() => toggleTopping(topping.id)}
+                      />
+                      <span className="tile__face">
+                        <span className="tile__art">
+                          <ToppingIcon topping={topping} />
                         </span>
-                      )}
-                      <span className="tile__name">{topping.name}</span>
-                      <span className="tile__price">+{formatPrice(topping.priceCents)}</span>
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
-          </fieldset>
-        )}
+                        {selected && (
+                          <span className="tile__badge" aria-hidden="true">
+                            1
+                          </span>
+                        )}
+                        <span className="tile__name">{topping.name}</span>
+                        <span className="tile__price">+{formatPrice(topping.priceCents)}</span>
+                      </span>
+                    </label>
+                  );
+                })}
+              </div>
+            </fieldset>
+          )}
+        </div>
 
-        <section className="summary" aria-label="Order summary">
-          <div className="summary__row summary__row--head">
-            <span className="summary__item">
-              {quantity} × {item.name}
-            </span>
-            <span>{formatPrice(item.priceCents * quantity)}</span>
-          </div>
-          <p className="summary__choices">
-            {sugar.name} sugar · {ice.name}
-          </p>
-          {toppings.map((topping) => (
-            <div key={topping.id} className="summary__row summary__row--topping">
-              <span>{topping.name}</span>
-              <span>{formatPrice(topping.priceCents * quantity)}</span>
+        <div className="customise__fixed">
+          <section className="summary" aria-label="Order summary">
+            <div className="summary__row summary__row--head">
+              <span className="summary__item">
+                {quantity} × {item.name}
+              </span>
+              <span>{formatPrice(item.priceCents * quantity)}</span>
             </div>
-          ))}
-          <div className="summary__row summary__row--total">
-            <span>Subtotal</span>
-            <span>{formatPrice(total)}</span>
-          </div>
-        </section>
+            <p className="summary__choices">
+              {sugar.name} sugar · {ice.name}
+            </p>
+            {toppings.map((topping) => (
+              <div key={topping.id} className="summary__row summary__row--topping">
+                <span>{topping.name}</span>
+                <span>{formatPrice(topping.priceCents * quantity)}</span>
+              </div>
+            ))}
+            <div className="summary__row summary__row--total">
+              <span>Subtotal</span>
+              <span>{formatPrice(total)}</span>
+            </div>
+          </section>
 
-        <div className="customise__foot">
-          <div className="qty" role="group" aria-label="Quantity">
-            <button
-              type="button"
-              className="qty__step"
-              aria-label="One fewer"
-              disabled={quantity <= 1}
-              onClick={() => setQuantity((n) => Math.max(1, n - 1))}
-            >
-              −
-            </button>
-            <span className="qty__count" aria-live="polite">
-              {quantity}
-            </span>
-            <button
-              type="button"
-              className="qty__step"
-              aria-label="One more"
-              onClick={() => setQuantity((n) => n + 1)}
-            >
-              +
+          <div className="customise__foot">
+            <div className="qty" role="group" aria-label="Quantity">
+              <button
+                type="button"
+                className="qty__step"
+                aria-label="One fewer"
+                disabled={quantity <= 1}
+                onClick={() => setQuantity((n) => Math.max(1, n - 1))}
+              >
+                −
+              </button>
+              <span className="qty__count" aria-live="polite">
+                {quantity}
+              </span>
+              <button
+                type="button"
+                className="qty__step"
+                aria-label="One more"
+                onClick={() => setQuantity((n) => n + 1)}
+              >
+                +
+              </button>
+            </div>
+            <button type="button" className="customise__add" onClick={add}>
+              Add to order · {formatPrice(total)}
             </button>
           </div>
-          <button type="button" className="customise__add" onClick={add}>
-            Add to order · {formatPrice(total)}
-          </button>
         </div>
       </div>
     </dialog>
