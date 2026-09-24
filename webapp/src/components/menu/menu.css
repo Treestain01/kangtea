@@ -37,8 +37,8 @@
   white-space: nowrap;
   cursor: pointer;
   transition:
-    box-shadow 120ms ease,
-    color 120ms ease;
+    box-shadow var(--motion-fast) var(--ease),
+    color var(--motion-fast) var(--ease);
 }
 
 .chip:active,
@@ -71,8 +71,7 @@
   text-align: center;
 }
 
-/* Drink card: a raised tile with the cup sitting in a pressed-in well. */
-/* Every card shares one row plan so prices and buttons line up across the grid:
+/* Drink card: a raised tile. Every card shares one row plan so prices and buttons line up across the grid:
    art, a two line name slot, a flexible description slot, then the meta row pinned to the bottom. */
 .drink {
   height: 100%;

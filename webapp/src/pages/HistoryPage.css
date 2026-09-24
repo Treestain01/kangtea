@@ -46,7 +46,7 @@
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
-  transition: box-shadow 120ms ease;
+  transition: box-shadow var(--motion-fast) var(--ease);
 }
 
 .pastorder__again:active {

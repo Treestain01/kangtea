@@ -86,8 +86,8 @@
   font-weight: 700;
   cursor: pointer;
   transition:
-    box-shadow 120ms ease,
-    color 120ms ease;
+    box-shadow var(--motion-fast) var(--ease),
+    color var(--motion-fast) var(--ease);
 }
 
 .account__primary {

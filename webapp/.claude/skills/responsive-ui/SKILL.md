@@ -35,6 +35,7 @@ Work through every line. Do not skip a line because it "obviously" holds.
 - [ ] Grey tokens (`--color-bg`, `--color-surface*`, `--color-border`) shape surfaces. The accent (`--color-accent`) is for interactive things only. Text uses `--color-text` or `--color-text-muted`.
 - [ ] The component looks right in dark mode. Tokens switch automatically; check that nothing assumes a light background.
 - [ ] Spacing and radius come from `--space-*` and `--radius-*`.
+- [ ] Motion uses `var(--motion-fast)` or `var(--motion-slow)` with `var(--ease)`, never a literal duration or easing, and is disabled under `prefers-reduced-motion: reduce`.
 - [ ] Depth comes only from `--shadow-raised`, `--shadow-raised-sm` and `--shadow-inset`. No borders on surfaces, no ad hoc `box-shadow`. Selected or pressed states use `--shadow-inset` with accent text. Grids leave at least `--space-4` between raised cards so shadows do not clip.
 
 ### Verification

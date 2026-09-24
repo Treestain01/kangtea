@@ -55,7 +55,7 @@ Rules:
 - Text never depends on the shadows for contrast. Body and muted text keep the same contrast as before against `--color-bg`.
 - A selected control is pressed in with accent coloured text, not filled with the accent.
 - One exception: the single primary action at the end of a flow (the customise sheet's "Add to order") may be accent filled with `--color-on-accent` text, so the sheet has exactly one loud object. Never two filled buttons on one screen.
-- Press transitions are 120ms on `box-shadow` and `color`, and disabled under `prefers-reduced-motion: reduce`.
+- Every transition and animation eases in and out via `--ease`, at `--motion-fast` (160ms) for state changes and `--motion-slow` (320ms) for sheets, and is disabled under `prefers-reduced-motion: reduce`. `tokens.test.ts` fails on a literal duration or easing outside `tokens.css`.
 - Grids leave gap for the 14px shadow spread (`--space-4` and up) so neighbouring cards do not clip each other's shadow.
 - Dark mode has its own shadow pair. Do not invert the light pair.
 
@@ -65,6 +65,7 @@ Rules:
 - `--space-1` to `--space-6`: 4, 8, 12, 16, 24, 32px as rem.
 - `--radius-sm`, `--radius-md`, `--radius-lg`: 4, 8, 20px. Soft shapes need the larger radius.
 - `--tap-target`: 44px minimum height for tappable elements on phones.
+- `--ease` (`ease-in-out`), `--motion-fast` (160ms), `--motion-slow` (320ms): the only timing values used by transitions and animations.
 - `--tab-bar-height` (64px), `--cart-panel-width` (340px), `--sidebar-width` (locked to `--cart-panel-width`): the fixed layout pieces `.app` leaves room for. Change the panel width and the sidebar follows. See `navigation.md`.
 
 ## Breakpoints

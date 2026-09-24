@@ -140,8 +140,8 @@
   cursor: pointer;
   box-shadow: var(--shadow-raised-sm);
   transition:
-    box-shadow 120ms ease,
-    color 120ms ease;
+    box-shadow var(--motion-fast) var(--ease),
+    color var(--motion-fast) var(--ease);
 }
 
 .order__primary {
