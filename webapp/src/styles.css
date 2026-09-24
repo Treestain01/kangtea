@@ -46,21 +46,15 @@ a {
 }
 
 .app {
-  padding: var(--space-5) var(--space-4);
-  max-width: 40rem;
+  padding: var(--space-3) var(--space-4);
+  max-width: 72rem;
   margin: 0 auto;
 }
 
 @media (min-width: 768px) {
   .app {
-    padding: var(--space-6) var(--space-5);
+    padding: var(--space-4) var(--space-6);
   }
-}
-
-.app__header {
-  display: flex;
-  justify-content: center;
-  padding-block: var(--space-4) var(--space-5);
 }
 
 .shell-note {

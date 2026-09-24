@@ -4,7 +4,8 @@
 
 `src/theme/tokens.css` defines every colour, spacing step, radius and the focus ring as CSS custom properties.
 `src/theme/breakpoints.ts` defines the two viewport breakpoints.
-`src/theme/tokens.test.ts` fails the build if any other file under `src/` writes a colour literally, references an undefined `--color-*` token, or uses a media query width that is not a documented breakpoint.
+`src/theme/tokens.test.ts` fails the build if any other non-test file under `src/` writes a colour literally, references an undefined `--color-*` token, or uses a media query width that is not a documented breakpoint.
+Test files are exempt because their fixtures carry drink colours as data; components must still receive those at runtime rather than write them.
 
 `main.tsx` imports `tokens.css` before `styles.css` so tokens exist before anything uses them.
 

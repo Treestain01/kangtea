@@ -1,0 +1,44 @@
+.home__menu {
+  display: grid;
+  gap: var(--space-4);
+  padding-block: var(--space-4) var(--space-6);
+}
+
+.home__heading {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.home__loading,
+.home__error {
+  padding-block: var(--space-6);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.home__error {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: center;
+}
+
+.home__error p {
+  margin: 0;
+}
+
+.home__retry {
+  min-height: var(--tap-target);
+  padding: 0 var(--space-5);
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.home__retry:hover {
+  background: var(--color-accent-hover);
+}

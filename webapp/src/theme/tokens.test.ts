@@ -22,10 +22,11 @@ function walk(dir: string): string[] {
   });
 }
 
-const excluded = new Set(['theme/tokens.css', 'theme/tokens.test.ts']);
+const excluded = new Set(['theme/tokens.css']);
 
+// Test files are skipped: their fixtures carry product colours (drink tints) as data.
 const sourceFiles = walk(srcDir)
-  .filter((file) => /\.(css|ts|tsx)$/.test(file))
+  .filter((file) => /\.(css|ts|tsx)$/.test(file) && !/\.test\.(ts|tsx)$/.test(file))
   .map((file) => ({
     path: relative(srcDir, file).replace(/\\/g, '/'),
     text: readFileSync(file, 'utf8'),

@@ -1,0 +1,207 @@
+/* Category chips: one scrollable row on phones, wraps on wider screens. */
+.chips {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .chips {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
+
+.chip {
+  flex: none;
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.chip[aria-pressed='true'] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* Drink grid: 2 columns on phones, 3 from 768px, 4 from 1024px. */
+.drinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+@media (min-width: 768px) {
+  .drinks {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+}
+
+@media (min-width: 1024px) {
+  .drinks {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.drinks__empty {
+  color: var(--color-text-muted);
+  padding: var(--space-6) 0;
+  text-align: center;
+}
+
+/* Drink card */
+.drink {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  min-width: 0;
+}
+
+.drink__art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 120px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+
+.drink__tag {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  padding: 2px var(--space-2);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-success);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.drink__name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.drink__description {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.drink__price {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* CSS cup. --tea is the drink colour from the menu, --cup-size its height. */
+.cup {
+  --tea: var(--color-surface-muted);
+  --cup-size: 72px;
+  position: relative;
+  width: calc(var(--cup-size) * 0.72);
+  height: var(--cup-size);
+}
+
+.cup__lid {
+  position: absolute;
+  top: calc(var(--cup-size) * 0.08);
+  left: 0;
+  right: 0;
+  height: calc(var(--cup-size) * 0.12);
+  border-radius: calc(var(--cup-size) * 0.06);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  z-index: 2;
+}
+
+.cup__straw {
+  position: absolute;
+  top: calc(var(--cup-size) * -0.08);
+  left: 58%;
+  width: calc(var(--cup-size) * 0.08);
+  height: calc(var(--cup-size) * 0.4);
+  border-radius: 999px;
+  background: var(--color-accent);
+  transform: rotate(10deg);
+  z-index: 3;
+}
+
+.cup__body {
+  position: absolute;
+  top: calc(var(--cup-size) * 0.16);
+  left: 8%;
+  right: 8%;
+  bottom: 0;
+  border-radius: 12% 12% 28% 28%;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tea) 55%, var(--color-surface)) 0%,
+    var(--tea) 100%
+  );
+  overflow: hidden;
+}
+
+.cup__body::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 12%;
+  width: 6%;
+  height: 55%;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-surface) 45%, transparent);
+}
+
+.cup--pearls .cup__body::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 28%;
+  background:
+    radial-gradient(
+        circle at 5px 5px,
+        color-mix(in srgb, var(--tea) 25%, var(--color-text)) 4.5px,
+        transparent 5px
+      )
+      0 0 / 11px 11px,
+    radial-gradient(
+        circle at 5px 5px,
+        color-mix(in srgb, var(--tea) 35%, var(--color-text)) 4.5px,
+        transparent 5px
+      )
+      6px 6px / 11px 11px;
+}
