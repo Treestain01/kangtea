@@ -29,6 +29,11 @@
   border-radius: 0;
 }
 
+/* The totals block draws its own rule, so the last line must not draw one too. */
+.cartline--compact:last-child {
+  border-bottom: 0;
+}
+
 .cartline__info {
   grid-area: info;
   min-width: 0;

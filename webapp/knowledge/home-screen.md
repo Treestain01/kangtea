@@ -14,7 +14,7 @@ Top to bottom, following the design mockup:
    Hidden until a collected order exists; it never shows placeholder content.
 4. `PopularRow`: "Popular now" with a "See the full menu" link to `/menu`.
    Items come from `lib/popular.ts#popularItems`: best sellers first, then new, topped up in menu order to four.
-   A swipeable row of compact `DrinkCard`s (148px wide, 96px art) on phones, a single row of four (120px art) from 768px.
+   A two column grid of compact `DrinkCard`s (96px art) on phones, a single row of four (120px art) from 768px.
 5. `CustomiseDrinkDialog` and the visually hidden `role="status"` announcement, as on the menu page.
 
 The mockup's pearl loyalty card is the one element not carried over; it needs a points data source first.
@@ -35,7 +35,7 @@ Submitting the search navigates to `/menu?q=<text>`.
 | `AppHeader`       | `components/layout/AppHeader.tsx`     | Brand row (phones), greeting, store line, `actions` slot.                                                                                                                                |
 | `SearchBar`       | `components/home/SearchBar.tsx`       | Pressed-in search field. Uncontrolled with `onSubmit` on Home, controlled with `value`/`onChange` on Menu.                                                                               |
 | `UsualCard`       | `components/home/UsualCard.tsx`       | The one accent filled card on Home.                                                                                                                                                      |
-| `PopularRow`      | `components/home/PopularRow.tsx`      | Section heading with link, swipe row or grid of compact cards.                                                                                                                           |
+| `PopularRow`      | `components/home/PopularRow.tsx`      | Section heading with link, two column grid of compact cards on phones, four across from 768px.                                                                                           |
 | `CategoryChips`   | `components/menu/CategoryChips.tsx`   | "All" plus categories sorted by `sortOrder`, as `aria-pressed` buttons.                                                                                                                  |
 | `DrinkGrid`       | `components/menu/DrinkGrid.tsx`       | 2 columns on phones; from 768px as many 300px cards as fit.                                                                                                                              |
 | `DrinkCard`       | `components/menu/DrinkCard.tsx`       | Name, optional description, price, first tag, `CupIllustration`. `variant="compact"` for the home row: square art, no description. The whole card is a button when `onOpen` is provided. |

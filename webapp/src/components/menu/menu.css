@@ -261,6 +261,7 @@
   --tea: var(--color-surface-muted);
   --cup-size: 72px;
   position: relative;
+  isolation: isolate; /* keep the lid and straw layering inside the cup */
   width: calc(var(--cup-size) * 0.72);
   height: var(--cup-size);
 }
