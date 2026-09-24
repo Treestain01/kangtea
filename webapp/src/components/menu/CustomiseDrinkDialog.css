@@ -243,21 +243,24 @@
   margin-top: var(--space-2);
 }
 
-/* Stepped track: a line, a filled portion up to the chosen stop, and one radio per stop. */
+/* Stepped track: equal columns, one radio per stop, the dots centred in their columns.
+   The line runs from the first dot centre to the last, so it always meets the dots. */
 .track {
   --dot: 26px;
+  --stops: 5;
+  --half-column: calc(100% / var(--stops) / 2);
   position: relative;
-  display: flex;
-  justify-content: space-between;
-  padding: var(--space-3) var(--space-1) var(--space-2);
+  display: grid;
+  grid-template-columns: repeat(var(--stops), minmax(0, 1fr));
+  padding: var(--space-3) 0 var(--space-2);
 }
 
 .track__line,
 .track__fill {
   position: absolute;
   top: calc(var(--space-3) + var(--dot) / 2 - 2px);
-  left: calc(var(--dot) / 2 + var(--space-1));
-  right: calc(var(--dot) / 2 + var(--space-1));
+  left: var(--half-column);
+  right: var(--half-column);
   height: 4px;
   border-radius: 999px;
   background: var(--color-surface);
@@ -266,7 +269,7 @@
 
 .track__fill {
   right: auto;
-  width: calc((100% - var(--dot) - 2 * var(--space-1)) * var(--fill) / 100%);
+  width: calc((100% - 2 * var(--half-column)) * var(--fill) / 100%);
   background: var(--color-accent);
   box-shadow: none;
 }
@@ -276,7 +279,7 @@
   display: grid;
   justify-items: center;
   gap: var(--space-3);
-  min-width: var(--tap-target);
+  min-width: 0;
   min-height: 56px;
   cursor: pointer;
 }
@@ -317,7 +320,8 @@
   font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-text-muted);
-  white-space: nowrap;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .track__stop input:checked ~ .track__label {

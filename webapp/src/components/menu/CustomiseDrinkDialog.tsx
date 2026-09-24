@@ -245,7 +245,7 @@ function LevelTrack({ legend, name, levels, selectedId, onSelect }: LevelTrackPr
     levels.findIndex((level) => level.id === selectedId),
   );
   const fill = levels.length > 1 ? (selectedIndex / (levels.length - 1)) * 100 : 0;
-  const trackStyle = { '--fill': `${fill}%` } as CSSProperties;
+  const trackStyle = { '--fill': `${fill}%`, '--stops': levels.length } as CSSProperties;
   return (
     <fieldset className="group">
       <legend className="group__legend">{legend}</legend>
