@@ -54,6 +54,7 @@ Rules:
 
 - Text never depends on the shadows for contrast. Body and muted text keep the same contrast as before against `--color-bg`.
 - A selected control is pressed in with accent coloured text, not filled with the accent.
+- One exception: the single primary action at the end of a flow (the customise sheet's "Add to order") may be accent filled with `--color-on-accent` text, so the sheet has exactly one loud object. Never two filled buttons on one screen.
 - Press transitions are 120ms on `box-shadow` and `color`, and disabled under `prefers-reduced-motion: reduce`.
 - Grids leave gap for the 14px shadow spread (`--space-4` and up) so neighbouring cards do not clip each other's shadow.
 - Dark mode has its own shadow pair. Do not invert the light pair.

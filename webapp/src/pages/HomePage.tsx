@@ -107,6 +107,9 @@ export function HomePage() {
       </section>
       <CustomiseDrinkDialog
         item={customising}
+        categoryName={
+          menu.categories.find((category) => category.id === customising?.categoryId)?.name
+        }
         customisations={menu.customisations}
         onAdd={addLine}
         onClose={() => setCustomising(null)}
