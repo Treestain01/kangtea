@@ -19,7 +19,7 @@ A refresh refetches both endpoints.
 | ----------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `AppHeader`       | `components/layout/AppHeader.tsx`     | Logo, time of day greeting from the visitor's clock, "Pick up at Calamvale Central · Open until 8:00 pm" from `lib/openingHours.ts` in the store's time zone. |
 | `CategoryChips`   | `components/menu/CategoryChips.tsx`   | "All" plus categories sorted by `sortOrder`, as `aria-pressed` buttons. Scrolls horizontally on phones, wraps from 768px.                                     |
-| `DrinkGrid`       | `components/menu/DrinkGrid.tsx`       | A list of `DrinkCard`. 2 columns on phones, 3 from 768px, 4 from 1024px. Empty state text when a category has no drinks.                                      |
+| `DrinkGrid`       | `components/menu/DrinkGrid.tsx`       | A list of `DrinkCard`. 2 columns on phones; from 768px as many 300px cards as fit. Empty state text when a category has no drinks.                            |
 | `DrinkCard`       | `components/menu/DrinkCard.tsx`       | Name, optional description, price via `lib/money.ts`, first tag as a pill, and a `CupIllustration`.                                                           |
 | `CupIllustration` | `components/menu/CupIllustration.tsx` | Decorative CSS cup tinted with the item's `colour`, pearls when `pearls` is true. `aria-hidden`.                                                              |
 

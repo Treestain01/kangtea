@@ -31,7 +31,7 @@ Three columns: the sidebar (left, 340px), the page (middle, fluid), and the orde
 - Because the panel is always visible, the sidebar hides the Order tab (`.tab--order`) and `/order` redirects to `/` via `useMediaQuery(DESKTOP_QUERY)` in `OrderPage`.
   Phones keep the tab and the page.
 - Order, History and Account content columns centre themselves at 44rem inside the middle column.
-- The drink grid uses `repeat(auto-fill, minmax(200px, 1fr))` from 768px, so it shows as many cards as the middle column fits without a width-specific breakpoint.
+- The drink grid uses `repeat(auto-fill, minmax(300px, 1fr))` from 768px, so it shows as many cards as the middle column fits without a width-specific breakpoint.
 
 `useMediaQuery` (`lib/useMediaQuery.ts`) wraps `matchMedia` in `useSyncExternalStore` and is false where `matchMedia` does not exist (tests), so components default to the phone layout.
 

@@ -47,7 +47,7 @@
   color: var(--color-accent);
 }
 
-/* Drink grid: 2 columns on phones; from 768px as many 200px cards as the main column fits.
+/* Drink grid: 2 columns on phones; from 768px as many 300px cards as the main column fits.
    Gaps leave room for shadows. */
 .drinks {
   list-style: none;
@@ -60,7 +60,7 @@
 
 @media (min-width: 768px) {
   .drinks {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--space-6) var(--space-5);
   }
 }
@@ -76,8 +76,8 @@
   height: 100%;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
-  gap: var(--space-2);
-  padding: var(--space-3);
+  gap: var(--space-3);
+  padding: var(--space-4);
   background: var(--color-surface);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-raised);
@@ -88,10 +88,16 @@
   position: relative;
   display: grid;
   place-items: center;
-  height: 120px;
+  height: 150px;
   border-radius: var(--radius-md);
   background: var(--color-surface);
   box-shadow: var(--shadow-inset);
+}
+
+@media (min-width: 768px) {
+  .drink__art {
+    height: 180px;
+  }
 }
 
 .drink__tag {
@@ -110,7 +116,7 @@
 
 .drink__name {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: 600;
   line-height: 1.25;
   overflow-wrap: anywhere;
@@ -118,7 +124,7 @@
 
 .drink__description {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--color-text-muted);
   overflow-wrap: anywhere;
 }
@@ -132,14 +138,15 @@
 
 .drink__price {
   margin: 0;
+  font-size: 1.125rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 /* Raised round Add button, presses in on tap. */
 .drink__add {
-  width: var(--tap-target);
-  height: var(--tap-target);
+  width: 48px;
+  height: 48px;
   border: 0;
   border-radius: 50%;
   background: var(--color-surface);
