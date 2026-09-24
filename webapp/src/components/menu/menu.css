@@ -91,7 +91,8 @@
   min-width: 0;
 }
 
-/* Photo well. Scales with the card width; the ratio is the one dial for its height. */
+/* Image area. Flat on purpose (no neumorphic well): the cup sits on a soft disc in the
+   drink's own colour. Scales with the card width; the ratio is the one dial for its height. */
 .drink__art {
   grid-area: art;
   position: relative;
@@ -100,8 +101,20 @@
   aspect-ratio: 3 / 2;
   width: 100%;
   border-radius: var(--radius-md);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-inset);
+  overflow: hidden;
+}
+
+.drink__art::before {
+  content: '';
+  position: absolute;
+  width: 62%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--tea) 20%, transparent);
+}
+
+.drink__art > * {
+  position: relative;
 }
 
 .drink__tag {

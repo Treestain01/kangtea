@@ -1,4 +1,5 @@
 import type { MenuItem, MenuItemTag } from '@bbt/shared';
+import type { CSSProperties } from 'react';
 import { formatPrice } from '../../lib/money';
 import { CupIllustration } from './CupIllustration';
 import './menu.css';
@@ -17,6 +18,7 @@ type DrinkCardProps = {
 /** One drink on the menu. Tap anywhere on it to customise and add. */
 export function DrinkCard({ item, onOpen }: DrinkCardProps) {
   const tag = item.tags[0];
+  const artStyle = { '--tea': item.colour } as CSSProperties;
   return (
     <article className="drink" aria-labelledby={`drink-${item.id}-name`}>
       {onOpen && (
@@ -27,7 +29,7 @@ export function DrinkCard({ item, onOpen }: DrinkCardProps) {
           onClick={() => onOpen(item)}
         />
       )}
-      <div className="drink__art">
+      <div className="drink__art" style={artStyle}>
         {tag && <span className="drink__tag">{TAG_LABELS[tag]}</span>}
         <CupIllustration colour={item.colour} pearls={item.pearls} size={110} />
       </div>
