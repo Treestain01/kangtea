@@ -17,6 +17,14 @@ Nothing else constructs the app.
 One file per resource in `src/routes/`, exporting `<resource>Routes = new Hono()` with its handlers chained.
 Paths inside the router are relative; the prefix is given at mount time in `app.ts`.
 
+Current routes: `GET /health`, `GET /store`, `GET /menu`.
+
+## Static data
+
+`src/data/store.ts` and `src/data/menu.ts` are typed constants (`Store`, `Menu` from `@bbt/shared`) until there is a database.
+Routes still parse them through the schema on the way out, so a bad edit to the data fails the route test rather than reaching a client.
+The menu prices are placeholders and the file says so; replace them when the shop confirms the real menu.
+
 ## Validation
 
 - Input: `Schema.safeParse(await c.req.json())` or of `c.req.query()`.

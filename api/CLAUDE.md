@@ -20,6 +20,7 @@ Serves `webapp` only; the iOS shell never calls it directly.
 - Only `src/env.ts` reads `process.env`. Add new variables to its schema and to `.env.example`.
 - `createApp(env)` must stay pure with respect to environment so tests can construct it.
 - One router per file in `src/routes/`, mounted in `src/app.ts`.
+- Catalogue data (store, menu) lives as typed constants in `src/data/` until there is a database. Edit data there, never inline in a route.
 - Use the `add-endpoint` skill for new routes.
 - CORS origins come from `ALLOWED_ORIGINS`. Never use `*`.
 
