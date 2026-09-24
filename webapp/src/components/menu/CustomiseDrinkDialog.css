@@ -305,6 +305,12 @@
     transform 120ms ease;
 }
 
+/* Stops before the chosen one light up too, so the track reads as a level. */
+.track__stop--passed .track__dot {
+  background: var(--color-accent);
+  box-shadow: none;
+}
+
 .track__stop input:checked ~ .track__dot {
   background: var(--color-accent);
   box-shadow: 0 0 0 5px color-mix(in srgb, var(--color-accent) 20%, transparent);

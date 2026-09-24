@@ -252,8 +252,11 @@ function LevelTrack({ legend, name, levels, selectedId, onSelect }: LevelTrackPr
       <div className="track" style={trackStyle}>
         <span className="track__line" aria-hidden="true" />
         <span className="track__fill" aria-hidden="true" />
-        {levels.map((level) => (
-          <label key={level.id} className="track__stop">
+        {levels.map((level, index) => (
+          <label
+            key={level.id}
+            className={`track__stop${index < selectedIndex ? ' track__stop--passed' : ''}`}
+          >
             <input
               type="radio"
               name={name}
