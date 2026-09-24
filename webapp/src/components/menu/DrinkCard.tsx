@@ -21,7 +21,7 @@ export function DrinkCard({ item, onAdd }: DrinkCardProps) {
     <article className="drink" aria-labelledby={`drink-${item.id}-name`}>
       <div className="drink__art">
         {tag && <span className="drink__tag">{TAG_LABELS[tag]}</span>}
-        <CupIllustration colour={item.colour} pearls={item.pearls} size={150} />
+        <CupIllustration colour={item.colour} pearls={item.pearls} size={110} />
       </div>
       <h3 className="drink__name" id={`drink-${item.id}-name`}>
         {item.name}

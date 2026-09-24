@@ -84,12 +84,12 @@
   min-width: 0;
 }
 
-/* Portrait well, sized for tall drink photos. Scales with the card width. */
+/* Photo well. Scales with the card width; the ratio is the one dial for its height. */
 .drink__art {
   position: relative;
   display: grid;
   place-items: center;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 3 / 2;
   width: 100%;
   border-radius: var(--radius-md);
   background: var(--color-surface);
