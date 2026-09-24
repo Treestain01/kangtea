@@ -1,9 +1,10 @@
-import type { Menu, Store } from '@bbt/shared';
+import type { Menu, MenuItem, Store } from '@bbt/shared';
 import { useCallback, useEffect, useState } from 'react';
 import { fetchMenu, fetchStore } from '../api/client';
 import { AppHeader } from '../components/layout/AppHeader';
 import { CategoryChips } from '../components/menu/CategoryChips';
 import { DrinkGrid } from '../components/menu/DrinkGrid';
+import { useStores } from '../store/StoresProvider';
 import './HomePage.css';
 
 type Catalogue =
@@ -11,11 +12,15 @@ type Catalogue =
   | { kind: 'error'; message: string }
   | { kind: 'ready'; store: Store; menu: Menu };
 
-/** The home screen: header, category filter, drink grid. */
+const ANNOUNCEMENT_MS = 2000;
+
+/** The home screen: header, category filter, drink grid with add to cart. */
 export function HomePage() {
+  const { cart } = useStores();
   const [catalogue, setCatalogue] = useState<Catalogue>({ kind: 'loading' });
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
+  const [announcement, setAnnouncement] = useState('');
 
   useEffect(() => {
     let cancelled = false;
@@ -37,7 +42,21 @@ export function HomePage() {
     };
   }, [attempt]);
 
+  useEffect(() => {
+    if (!announcement) return;
+    const timer = setTimeout(() => setAnnouncement(''), ANNOUNCEMENT_MS);
+    return () => clearTimeout(timer);
+  }, [announcement]);
+
   const retry = useCallback(() => setAttempt((n) => n + 1), []);
+
+  const addToCart = useCallback(
+    (item: MenuItem) => {
+      cart.add(item);
+      setAnnouncement(`Added ${item.name}`);
+    },
+    [cart],
+  );
 
   if (catalogue.kind === 'error') {
     return (
@@ -82,8 +101,11 @@ export function HomePage() {
           selected={selectedCategory}
           onSelect={setSelectedCategory}
         />
-        <DrinkGrid items={items} />
+        <DrinkGrid items={items} onAdd={addToCart} />
       </section>
+      <p className="visually-hidden" role="status">
+        {announcement}
+      </p>
     </>
   );
 }

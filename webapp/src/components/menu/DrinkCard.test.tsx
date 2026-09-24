@@ -1,6 +1,6 @@
 import type { MenuItem } from '@bbt/shared';
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { DrinkCard } from './DrinkCard';
 
 const signature: MenuItem = {
@@ -33,5 +33,17 @@ describe('DrinkCard', () => {
   it('labels a new item', () => {
     render(<DrinkCard item={{ ...signature, tags: ['new'] }} />);
     expect(screen.getByText('New')).toBeInTheDocument();
+  });
+
+  it('offers an Add button that reports the item', () => {
+    const onAdd = vi.fn();
+    render(<DrinkCard item={signature} onAdd={onAdd} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Add Signature Milk Tea' }));
+    expect(onAdd).toHaveBeenCalledWith(signature);
+  });
+
+  it('has no Add button without a handler', () => {
+    render(<DrinkCard item={signature} />);
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 });

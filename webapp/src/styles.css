@@ -44,15 +44,25 @@ a {
   min-height: var(--tap-target);
 }
 
+/* Page container. Leaves room for the fixed tab bar on phones and the sidebar on desktop. */
 .app {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--space-4)
+    calc(var(--tab-bar-height) + env(safe-area-inset-bottom) + var(--space-5));
   max-width: 72rem;
   margin: 0 auto;
 }
 
 @media (min-width: 768px) {
   .app {
-    padding: var(--space-4) var(--space-6);
+    padding-inline: var(--space-6);
+    padding-top: var(--space-4);
+  }
+}
+
+@media (min-width: 1024px) {
+  .app {
+    margin-left: var(--sidebar-width);
+    padding-bottom: var(--space-6);
   }
 }
 

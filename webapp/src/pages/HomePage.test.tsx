@@ -2,6 +2,9 @@ import type { Menu, Store } from '@bbt/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchMenu, fetchStore } from '../api/client';
+import { StoresProvider } from '../store/StoresProvider';
+import { createTestStores } from '../store/testing';
+import type { Stores } from '../store/types';
 import { HomePage } from './HomePage';
 
 vi.mock('../api/client', () => ({ fetchStore: vi.fn(), fetchMenu: vi.fn() }));
@@ -51,6 +54,15 @@ const menu: Menu = {
   ],
 };
 
+function renderHome(stores: Stores = createTestStores()) {
+  render(
+    <StoresProvider stores={stores}>
+      <HomePage />
+    </StoresProvider>,
+  );
+  return stores;
+}
+
 describe('HomePage', () => {
   beforeEach(() => {
     mockedFetchStore.mockReset();
@@ -60,7 +72,7 @@ describe('HomePage', () => {
   it('shows a loading state first', () => {
     mockedFetchStore.mockReturnValue(new Promise<never>(() => {}));
     mockedFetchMenu.mockReturnValue(new Promise<never>(() => {}));
-    render(<HomePage />);
+    renderHome();
     expect(screen.getByRole('status')).toHaveTextContent('Loading the menu');
     expect(screen.getByText('Finding your store')).toBeInTheDocument();
   });
@@ -68,7 +80,7 @@ describe('HomePage', () => {
   it('renders the store, categories and every drink once loaded', async () => {
     mockedFetchStore.mockResolvedValue(store);
     mockedFetchMenu.mockResolvedValue(menu);
-    render(<HomePage />);
+    renderHome();
     expect(await screen.findByText('Calamvale Central')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Milk Tea' })).toBeInTheDocument();
     expect(screen.getAllByRole('article')).toHaveLength(2);
@@ -77,7 +89,7 @@ describe('HomePage', () => {
   it('filters drinks by the selected category', async () => {
     mockedFetchStore.mockResolvedValue(store);
     mockedFetchMenu.mockResolvedValue(menu);
-    render(<HomePage />);
+    renderHome();
     await screen.findByText('Calamvale Central');
     fireEvent.click(screen.getByRole('button', { name: 'Matcha' }));
     expect(screen.getAllByRole('article')).toHaveLength(1);
@@ -86,10 +98,22 @@ describe('HomePage', () => {
     expect(screen.getAllByRole('article')).toHaveLength(2);
   });
 
+  it('adds a drink to the cart and announces it', async () => {
+    mockedFetchStore.mockResolvedValue(store);
+    mockedFetchMenu.mockResolvedValue(menu);
+    const stores = renderHome();
+    await screen.findByText('Calamvale Central');
+    fireEvent.click(screen.getByRole('button', { name: 'Add Signature Milk Tea' }));
+    expect(stores.cart.read()).toEqual([
+      expect.objectContaining({ itemId: 'signature-milk-tea', quantity: 1 }),
+    ]);
+    expect(screen.getByRole('status')).toHaveTextContent('Added Signature Milk Tea');
+  });
+
   it('shows an error with a retry that fetches again', async () => {
     mockedFetchStore.mockRejectedValueOnce(new Error('boom'));
     mockedFetchMenu.mockResolvedValue(menu);
-    render(<HomePage />);
+    renderHome();
     expect(await screen.findByRole('alert')).toHaveTextContent("We couldn't load the menu. boom");
 
     mockedFetchStore.mockResolvedValue(store);
