@@ -105,6 +105,11 @@
     color: var(--color-accent);
   }
 
+  /* The order panel is always visible on desktop, so the Order tab is redundant. */
+  .tab--order {
+    display: none;
+  }
+
   .tab {
     grid-template-columns: auto 1fr;
     justify-items: start;

@@ -4,14 +4,21 @@ import './order.css';
 
 type CartLineRowProps = {
   line: CartLine;
+  /** Keeps the two row layout at every width, for the narrow desktop panel. */
+  compact?: boolean;
   onChangeQuantity: (itemId: string, quantity: number) => void;
   onRemove: (itemId: string) => void;
 };
 
 /** One line in the cart with quantity controls. Every control is a 44px target. */
-export function CartLineRow({ line, onChangeQuantity, onRemove }: CartLineRowProps) {
+export function CartLineRow({
+  line,
+  compact = false,
+  onChangeQuantity,
+  onRemove,
+}: CartLineRowProps) {
   return (
-    <li className="cartline">
+    <li className={`cartline${compact ? ' cartline--compact' : ''}`}>
       <div className="cartline__info">
         <p className="cartline__name">{line.name}</p>
         <p className="cartline__unit">{formatPrice(line.unitPriceCents)} each</p>

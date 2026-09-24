@@ -5,10 +5,21 @@
   max-width: 40rem;
 }
 
+/* Inside the desktop side panel: tighter, no page padding, fills the panel. */
+.order--compact {
+  padding-block: 0;
+  max-width: none;
+  gap: var(--space-3);
+}
+
 .order__heading {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
+}
+
+.order--compact .order__heading {
+  font-size: 1.25rem;
 }
 
 .order__empty {
@@ -22,6 +33,10 @@
 
 .order__empty p {
   margin: 0;
+}
+
+.order__hint {
+  font-size: 0.875rem;
 }
 
 .order__link {
@@ -44,6 +59,10 @@
   padding: var(--space-2) 0;
   display: grid;
   gap: var(--space-4);
+}
+
+.order--compact .order__lines {
+  gap: var(--space-3);
 }
 
 .order__recap {
@@ -100,6 +119,10 @@
   font-variant-numeric: tabular-nums;
 }
 
+.order--compact .order__code {
+  font-size: 2rem;
+}
+
 .order__primary,
 .order__secondary {
   min-height: var(--tap-target);
@@ -138,6 +161,13 @@
   box-shadow: none;
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+@media (min-width: 1024px) {
+  .order:not(.order--compact) {
+    margin-inline: auto;
+    max-width: 44rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

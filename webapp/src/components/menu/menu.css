@@ -47,7 +47,8 @@
   color: var(--color-accent);
 }
 
-/* Drink grid: 2 columns on phones, 3 from 768px, 4 from 1024px. Gaps leave room for shadows. */
+/* Drink grid: 2 columns on phones; from 768px as many 200px cards as the main column fits.
+   Gaps leave room for shadows. */
 .drinks {
   list-style: none;
   margin: 0;
@@ -59,14 +60,8 @@
 
 @media (min-width: 768px) {
   .drinks {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--space-6) var(--space-5);
-  }
-}
-
-@media (min-width: 1024px) {
-  .drinks {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 

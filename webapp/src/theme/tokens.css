@@ -56,9 +56,10 @@
   /* Minimum touch target on mobile */
   --tap-target: 44px;
 
-  /* Layout: the tab bar height on phones and the sidebar width from 1024px */
+  /* Layout: the tab bar height on phones; the sidebar and order panel widths from 1024px */
   --tab-bar-height: 64px;
   --sidebar-width: 220px;
+  --cart-panel-width: 340px;
 }
 
 @media (prefers-color-scheme: dark) {

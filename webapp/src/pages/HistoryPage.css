@@ -11,6 +11,13 @@
   font-weight: 600;
 }
 
+@media (min-width: 1024px) {
+  .history {
+    margin-inline: auto;
+    max-width: 44rem;
+  }
+}
+
 .history__empty {
   display: grid;
   gap: var(--space-3);

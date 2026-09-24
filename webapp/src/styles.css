@@ -59,10 +59,12 @@ a {
   }
 }
 
+/* Desktop: the page fills the space between the sidebar and the order panel. */
 @media (min-width: 1024px) {
   .app {
-    margin-left: var(--sidebar-width);
-    padding-bottom: var(--space-6);
+    max-width: none;
+    margin: 0 var(--cart-panel-width) 0 var(--sidebar-width);
+    padding: var(--space-5) var(--space-6) var(--space-6);
   }
 }
 

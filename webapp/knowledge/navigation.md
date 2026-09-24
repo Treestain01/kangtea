@@ -18,9 +18,22 @@ Vercel's SPA rewrite in `vercel.json` serves `index.html` for every path, so dee
 
 ## AppShell
 
-`components/layout/AppShell.tsx` renders the hidden document `h1`, `<main class="app">` with the `Outlet`, the iOS shell note, and `TabBar`.
-`.app` in `styles.css` owns the gutters and leaves room for the tab bar: bottom padding of `--tab-bar-height` plus the safe area on phones, a left margin of `--sidebar-width` from 1024px.
-Both layout tokens live in `tokens.css`.
+`components/layout/AppShell.tsx` renders the hidden document `h1`, `<main class="app">` with the `Outlet`, the iOS shell note, the desktop order panel, and `TabBar`.
+`.app` in `styles.css` owns the gutters and leaves room for the fixed pieces: bottom padding of `--tab-bar-height` plus the safe area on phones; from 1024px a left margin of `--sidebar-width`, a right margin of `--cart-panel-width`, and no max width, so the page fills the middle column.
+The three layout tokens live in `tokens.css`.
+
+## Desktop layout (1024px and up)
+
+Three columns: the sidebar (left, 220px), the page (middle, fluid), and the order panel (right, 340px).
+
+- The order panel (`<aside class="orderpanel">`, `AppShell.css`) is fixed, full height, scrolls on its own, and renders `OrderPanel` in compact mode.
+  It is always present, empty or not, so the layout never shifts.
+- Because the panel is always visible, the sidebar hides the Order tab (`.tab--order`) and `/order` redirects to `/` via `useMediaQuery(DESKTOP_QUERY)` in `OrderPage`.
+  Phones keep the tab and the page.
+- Order, History and Account content columns centre themselves at 44rem inside the middle column.
+- The drink grid uses `repeat(auto-fill, minmax(200px, 1fr))` from 768px, so it shows as many cards as the middle column fits without a width-specific breakpoint.
+
+`useMediaQuery` (`lib/useMediaQuery.ts`) wraps `matchMedia` in `useSyncExternalStore` and is false where `matchMedia` does not exist (tests), so components default to the phone layout.
 
 ## TabBar
 

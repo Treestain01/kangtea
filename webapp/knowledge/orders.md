@@ -41,7 +41,8 @@ When the API owns orders, replace this file with polling (or a push) and delete 
 
 ## Pages
 
-- `/order` (`pages/OrderPage.tsx`): the cart while no order is active, the status view while one is. Placing needs the store id from `/store`, so the button stays disabled until that loads.
+- `components/order/OrderPanel.tsx`: the cart while no order is active, the status view while one is. Placing needs the store id from `/store`, so the button stays disabled until that loads. `compact` stacks every line for the narrow desktop panel and swaps the "Browse the menu" link for a hint.
+- `/order` (`pages/OrderPage.tsx`): renders `OrderPanel` on phones. On desktop the same panel is always on the right of every page, so the route redirects to `/`.
 - `/history` (`pages/HistoryPage.tsx`): `pastOrders` with date, status pill, `summariseLines`, total, and "Order again" which calls `cart.replace(order.lines)` and navigates to `/order`.
 - `/account` (`pages/AccountPage.tsx`): the profile form validated with `AccountSchema`, the store card from `/store`, and "Clear my data" behind a confirmation. Clearing empties all three stores.
 

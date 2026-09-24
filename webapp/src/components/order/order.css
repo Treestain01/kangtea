@@ -14,7 +14,7 @@
 }
 
 @media (min-width: 768px) {
-  .cartline {
+  .cartline:not(.cartline--compact) {
     grid-template-columns: 1fr auto auto auto;
     grid-template-areas: 'info qty total remove';
     gap: var(--space-4);

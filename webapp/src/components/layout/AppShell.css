@@ -1,0 +1,19 @@
+/* The order panel exists only on desktop. On phones the Order tab and page do the job. */
+.orderpanel {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .orderpanel {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--cart-panel-width);
+    padding: var(--space-5) var(--space-4) calc(var(--space-5) + env(safe-area-inset-bottom));
+    overflow-y: auto;
+    background: var(--color-surface);
+    box-shadow: var(--shadow-raised);
+  }
+}

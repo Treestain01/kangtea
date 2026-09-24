@@ -11,6 +11,13 @@
   font-weight: 600;
 }
 
+@media (min-width: 1024px) {
+  .account {
+    margin-inline: auto;
+    max-width: 44rem;
+  }
+}
+
 .account__form {
   display: grid;
   gap: var(--space-4);

@@ -51,7 +51,7 @@ export function TabBar() {
         {icons.home}
         <span className="tab__label">Home</span>
       </NavLink>
-      <NavLink to="/order" className={tabClass}>
+      <NavLink to="/order" className={(state) => `${tabClass(state)} tab--order`}>
         <span className="tab__icon">
           {icons.order}
           {inProgress && <span className="tab__dot" data-testid="order-dot" />}
