@@ -33,6 +33,14 @@ describe('GET /menu', () => {
     expect(names).toEqual(['Milk Tea', 'Milk Foam', 'Fruit Tea', 'Yakult', 'Milo', 'Matcha']);
   });
 
+  it('offers sugar and ice levels with one default each, and priced toppings', async () => {
+    const menu = MenuSchema.parse(await (await app.request('/menu')).json());
+    expect(menu.customisations.sugarLevels.filter((level) => level.isDefault)).toHaveLength(1);
+    expect(menu.customisations.iceLevels.filter((level) => level.isDefault)).toHaveLength(1);
+    expect(menu.customisations.toppings.length).toBeGreaterThan(0);
+    expect(menu.customisations.toppings.every((topping) => topping.priceCents > 0)).toBe(true);
+  });
+
   it('has unique item ids', async () => {
     const menu = MenuSchema.parse(await (await app.request('/menu')).json());
     const ids = menu.items.map((item) => item.id);

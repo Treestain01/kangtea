@@ -30,6 +30,32 @@ const item = (
 });
 
 export const menu: Menu = {
+  /**
+   * PLACEHOLDER OPTIONS. Typical Taiwanese tea shop choices; confirm Kang Tea's actual
+   * sugar and ice levels, topping list and topping prices before launch.
+   */
+  customisations: {
+    sugarLevels: [
+      { id: 'sugar-0', name: '0%', isDefault: false },
+      { id: 'sugar-25', name: '25%', isDefault: false },
+      { id: 'sugar-50', name: '50%', isDefault: false },
+      { id: 'sugar-75', name: '75%', isDefault: false },
+      { id: 'sugar-100', name: '100%', isDefault: true },
+    ],
+    iceLevels: [
+      { id: 'ice-none', name: 'No ice', isDefault: false },
+      { id: 'ice-less', name: 'Less ice', isDefault: false },
+      { id: 'ice-regular', name: 'Regular ice', isDefault: true },
+    ],
+    toppings: [
+      { id: 'pearls', name: 'Pearls', priceCents: 80 },
+      { id: 'grass-jelly', name: 'Grass jelly', priceCents: 80 },
+      { id: 'coconut-jelly', name: 'Coconut jelly', priceCents: 80 },
+      { id: 'pudding', name: 'Pudding', priceCents: 100 },
+      { id: 'red-bean', name: 'Red bean', priceCents: 100 },
+      { id: 'cheese-foam', name: 'Cheese foam', priceCents: 150 },
+    ],
+  },
   categories: [
     { id: 'milk-tea', name: 'Milk Tea', sortOrder: 0 },
     { id: 'milk-foam', name: 'Milk Foam', sortOrder: 1 },

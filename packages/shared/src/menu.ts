@@ -27,10 +27,43 @@ export const MenuItemSchema = z.object({
 });
 export type MenuItem = z.infer<typeof MenuItemSchema>;
 
+/** One choice in a single-select group such as sugar or ice. */
+export const OptionLevelSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  isDefault: z.boolean(),
+});
+export type OptionLevel = z.infer<typeof OptionLevelSchema>;
+
+const oneDefault = (levels: OptionLevel[]) =>
+  levels.filter((level) => level.isDefault).length === 1;
+
+const OptionLevelsSchema = z
+  .array(OptionLevelSchema)
+  .min(1)
+  .refine(oneDefault, { message: 'exactly one level must be the default' });
+
+/** An add-on with its own price, folded into the line's unit price when chosen. */
+export const ToppingSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  priceCents: z.number().int().nonnegative(),
+});
+export type Topping = z.infer<typeof ToppingSchema>;
+
+/** Choices offered on every drink. Per-drink exceptions can be added later without breaking this shape. */
+export const MenuCustomisationsSchema = z.object({
+  sugarLevels: OptionLevelsSchema,
+  iceLevels: OptionLevelsSchema,
+  toppings: z.array(ToppingSchema),
+});
+export type MenuCustomisations = z.infer<typeof MenuCustomisationsSchema>;
+
 export const MenuSchema = z
   .object({
     categories: z.array(MenuCategorySchema).min(1),
     items: z.array(MenuItemSchema),
+    customisations: MenuCustomisationsSchema,
   })
   .refine(
     (menu) => {
