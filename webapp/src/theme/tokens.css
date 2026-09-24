@@ -48,7 +48,7 @@
   /* Radius */
   --radius-sm: 4px;
   --radius-md: 8px;
-  --radius-lg: 20px;
+  --radius-lg: 16px;
 
   /* Type: Fraunces for the things people read first (greeting, names, prices, headings),
      Nunito Sans for everything else. Cinzel is reserved for the KANGTEA wordmark. */

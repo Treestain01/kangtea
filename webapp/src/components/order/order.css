@@ -21,6 +21,14 @@
   }
 }
 
+/* In the desktop order panel, lines are plain rows separated by hairlines, as in the mockup. */
+.cartline--compact {
+  padding: var(--space-3) 0;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+}
+
 .cartline__info {
   grid-area: info;
   min-width: 0;

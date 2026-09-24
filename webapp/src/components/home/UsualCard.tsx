@@ -33,7 +33,7 @@ export function UsualCard({ order, art, onReorder }: UsualCardProps) {
         </div>
       )}
       <button type="button" className="usual__btn" onClick={() => onReorder(order)}>
-        Reorder · {formatPrice(order.totalCents)}
+        Reorder <span className="usual__price">{formatPrice(order.totalCents)}</span>
       </button>
     </section>
   );

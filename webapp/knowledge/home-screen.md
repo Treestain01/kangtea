@@ -13,8 +13,8 @@ Top to bottom, following the design mockup:
 3. `UsualCard`: the most recent collected order as "Your usual", with the first drink's name, its customisation summary, the drink's cup illustration (when the menu still has that drink), and "Reorder · $X" which calls `cart.replace(order.lines)` and navigates to `/order`.
    Hidden until a collected order exists; it never shows placeholder content.
 4. `PopularRow`: "Popular now" with a "See the full menu" link to `/menu`.
-   Items come from `lib/popular.ts#popularItems`: best sellers first, then new, topped up in menu order to six.
-   A swipeable row of compact `DrinkCard`s (148px wide, 96px art) on phones, a grid from 768px.
+   Items come from `lib/popular.ts#popularItems`: best sellers first, then new, topped up in menu order to four.
+   A swipeable row of compact `DrinkCard`s (148px wide, 96px art) on phones, a single row of four (120px art) from 768px.
 5. `CustomiseDrinkDialog` and the visually hidden `role="status"` announcement, as on the menu page.
 
 The mockup's pearl loyalty card is the one element not carried over; it needs a points data source first.

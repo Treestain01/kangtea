@@ -62,7 +62,7 @@ describe('UsualCard', () => {
     render(<UsualCard order={order} onReorder={vi.fn()} />);
     expect(screen.getByText('Signature Milk Tea + 1 more')).toBeInTheDocument();
     expect(screen.getByText('50% · Less ice · Pearls')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Reorder · $16.20' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Reorder $16.20' })).toBeInTheDocument();
   });
 
   it('reorders the order', () => {

@@ -109,6 +109,7 @@ describe('HomePage', () => {
       'drink-matcha-latte-name',
       'drink-plain-tea-name',
     ]);
+    expect(names.length).toBeLessThanOrEqual(4);
     expect(screen.getByRole('link', { name: 'See the full menu' })).toHaveAttribute(
       'href',
       '/menu',

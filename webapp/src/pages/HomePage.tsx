@@ -95,7 +95,7 @@ export function HomePage() {
           onReorder={reorder}
         />
       )}
-      <PopularRow items={popularItems(menu)} onOpen={setCustomising} />
+      <PopularRow items={popularItems(menu, 4)} onOpen={setCustomising} />
       <CustomiseDrinkDialog
         item={customising}
         categoryName={

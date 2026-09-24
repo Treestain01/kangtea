@@ -1,4 +1,6 @@
-import { NavLink } from 'react-router';
+import type { Store } from '@bbt/shared';
+import { Link, NavLink } from 'react-router';
+import { describeOpeningStatus, openingStatus } from '../../lib/openingHours';
 import { useCart, useOrders } from '../../store/hooks';
 import { activeOrder } from '../../store/orders';
 import { KangTeaLogo } from '../brand/KangTeaLogo';
@@ -35,11 +37,16 @@ const icons = {
   ),
 };
 
+type TabBarProps = {
+  /** Shown as the pickup card at the foot of the desktop sidebar, when known. */
+  store?: Store | null;
+};
+
 /**
  * Primary navigation. A fixed bottom bar on phones, a left sidebar from 1024px.
  * The Order tab carries the cart count, or a dot while an order is in progress.
  */
-export function TabBar() {
+export function TabBar({ store = null }: TabBarProps) {
   const cart = useCart();
   const orders = useOrders();
   const inProgress = activeOrder(orders) !== null;
@@ -84,6 +91,14 @@ export function TabBar() {
         {icons.account}
         <span className="tab__label">Account</span>
       </NavLink>
+      {store && (
+        <div className="tabbar__store">
+          <span className="tabbar__store-label">Picking up at</span>
+          <strong>{store.shortName}</strong>
+          <span>{describeOpeningStatus(openingStatus(store))}</span>
+          <Link to="/account">Store details</Link>
+        </div>
+      )}
     </nav>
   );
 }

@@ -42,6 +42,40 @@ describe('TabBar', () => {
     expect(screen.getByRole('link', { name: /^Order, 2 in your cart/ })).toHaveTextContent('2');
   });
 
+  it('shows the pickup store card when a store is known', () => {
+    const hours = { open: '00:00', close: '23:59' };
+    render(
+      <StoresProvider stores={createTestStores()}>
+        <MemoryRouter initialEntries={['/']}>
+          <TabBar
+            store={{
+              id: 'calamvale-central',
+              name: 'Kang Tea Calamvale Central',
+              shortName: 'Calamvale Central',
+              addressLines: ['662 Compton Road'],
+              suburb: 'Calamvale',
+              state: 'QLD',
+              postcode: '4116',
+              timezone: 'Australia/Brisbane',
+              hours: {
+                mon: hours,
+                tue: hours,
+                wed: hours,
+                thu: hours,
+                fri: hours,
+                sat: hours,
+                sun: hours,
+              },
+            }}
+          />
+        </MemoryRouter>
+      </StoresProvider>,
+    );
+    expect(screen.getByText('Picking up at')).toBeInTheDocument();
+    expect(screen.getByText('Calamvale Central')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Store details' })).toHaveAttribute('href', '/account');
+  });
+
   it('shows a dot instead of a count while an order is in progress', () => {
     const stores = createTestStores();
     stores.cart.add(cartLineFixture());

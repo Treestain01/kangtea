@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router';
+import { useStoreInfo } from '../../api/useStoreInfo';
 import { isInIosShell } from '../../platform';
 import { OrderPanel } from '../order/OrderPanel';
 import { TabBar } from './TabBar';
@@ -9,6 +10,7 @@ import './AppShell.css';
  * and on desktop a persistent order panel on the right.
  */
 export function AppShell() {
+  const store = useStoreInfo();
   return (
     <>
       <h1 className="visually-hidden">Kang Tea</h1>
@@ -19,7 +21,7 @@ export function AppShell() {
       <aside className="orderpanel" aria-label="Your order">
         <OrderPanel compact />
       </aside>
-      <TabBar />
+      <TabBar store={store} />
     </>
   );
 }

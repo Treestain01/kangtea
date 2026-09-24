@@ -43,7 +43,8 @@ Three columns: the sidebar (left, 340px), the page (middle, fluid), and the orde
 - Below 1024px: fixed to the bottom, five equal columns (Home, Menu, Order, History, Account), icons over labels, `--shadow-raised`, safe area padding at the bottom.
 - From 1024px: fixed to the left as a sidebar whose width is `--sidebar-width`, defined as `var(--cart-panel-width)` so the two side columns always match. The full logo lockup sits at the top and the tabs are 52px icon plus label rows at 1.0625rem.
 
-`NavLink` supplies `aria-current="page"`; the active tab is `--shadow-inset` with accent text, matching chips.
+`NavLink` supplies `aria-current="page"`; the active tab is accent text on phones and a white bordered row with accent text in the sidebar.
+The sidebar ends with the pickup card from the mockup (store name, today's hours, a Store details link to `/account`), fed by `api/useStoreInfo.ts` through `AppShell`.
 The Order tab shows the cart line count as a badge, or a dot while an order is active.
 Both states also have visually hidden text so the link name reads "Order, 2 in your cart" or "Order, order in progress".
 
