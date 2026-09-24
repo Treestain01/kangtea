@@ -6,3 +6,5 @@
 - [API client](api-client.md) - how the webapp calls api using the shared contract.
 - [Theme](theme.md) - every design token, its role in light and dark mode, the breakpoints, and how to add a token.
 - [Home screen](home-screen.md) - how the home page is composed, its data flow and states, and what is deliberately absent.
+- [Navigation](navigation.md) - routes, the app shell, the tab bar, and how to add a page.
+- [Orders](orders.md) - the local store layer, the order lifecycle, the simulated kitchen, and the Order, History and Account pages.

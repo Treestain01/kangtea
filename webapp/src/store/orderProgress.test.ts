@@ -2,9 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { startOrderProgress } from './orderProgress';
 import { createTestStores } from './testing';
 
-const lines = [
-  { itemId: 'a', name: 'A', unitPriceCents: 700, quantity: 1, customisations: [] },
-];
+const lines = [{ itemId: 'a', name: 'A', unitPriceCents: 700, quantity: 1, customisations: [] }];
 const schedule = { makingAfterMs: 20_000, readyAfterMs: 60_000 };
 
 describe('startOrderProgress', () => {

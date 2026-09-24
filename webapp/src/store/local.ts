@@ -85,7 +85,12 @@ function createKeyStore<T>(storage: Storage, key: string, schema: z.ZodType<T>, 
 }
 
 function createCartStore(storage: Storage): CartStore {
-  const store = createKeyStore<CartLine[]>(storage, STORAGE_KEYS.cart, z.array(OrderLineSchema), []);
+  const store = createKeyStore<CartLine[]>(
+    storage,
+    STORAGE_KEYS.cart,
+    z.array(OrderLineSchema),
+    [],
+  );
   return {
     read: store.read,
     subscribe: store.subscribe,

@@ -1,7 +1,7 @@
 # Home Screen
 
-The first and only screen so far.
-`src/pages/HomePage.tsx` composes it from three components and owns all of its state.
+The `/` route.
+`src/pages/HomePage.tsx` composes it from three components and owns its catalogue state; the cart lives in the store layer (see `orders.md`).
 
 ## Data flow
 
@@ -23,10 +23,16 @@ A refresh refetches both endpoints.
 | `DrinkCard`       | `components/menu/DrinkCard.tsx`       | Name, optional description, price via `lib/money.ts`, first tag as a pill, and a `CupIllustration`.                                                           |
 | `CupIllustration` | `components/menu/CupIllustration.tsx` | Decorative CSS cup tinted with the item's `colour`, pearls when `pearls` is true. `aria-hidden`.                                                              |
 
+## Adding to the cart
+
+Each `DrinkCard` has an Add button (`aria-label="Add {name}"`, 44px, raised) when `onAdd` is provided.
+`HomePage` passes `cart.add` from `useStores()` and announces "Added {name}" in a visually hidden `role="status"` region for two seconds.
+The Order tab's badge updates at once because it reads the same store.
+
 ## Deliberately absent
 
-- Add to order buttons: there is no cart yet, and a button that does nothing is worse than none. `DrinkCard` grows an action when the cart exists.
-- Search, the reorder card, loyalty stamps, the tab bar: each needs accounts or a second screen first.
+- Search, the reorder card, loyalty stamps: each needs accounts or search behaviour first.
+- Drink customisation (size, sugar, ice): the `OrderLine.customisations` field is ready for it.
 
 ## Layout rules in play
 
