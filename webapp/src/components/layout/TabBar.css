@@ -93,15 +93,15 @@
     grid-template-columns: 1fr;
     grid-auto-rows: max-content;
     align-content: start;
-    gap: var(--space-2);
-    padding: var(--space-5) var(--space-4);
+    gap: var(--space-3);
+    padding: var(--space-6) var(--space-5);
     box-shadow: var(--shadow-raised);
   }
 
   .tabbar__brand {
     display: flex;
     justify-content: center;
-    padding-bottom: var(--space-4);
+    padding-bottom: var(--space-5);
     color: var(--color-accent);
   }
 
@@ -110,19 +110,22 @@
     display: none;
   }
 
+  /* Wider sidebar, so the tabs grow with it: taller rows, larger type and icons. */
   .tab {
     grid-template-columns: auto 1fr;
     justify-items: start;
     align-items: center;
-    gap: var(--space-3);
-    padding: 0 var(--space-3);
-    font-size: 0.9375rem;
+    gap: var(--space-4);
+    min-height: 60px;
+    padding: 0 var(--space-5);
+    border-radius: var(--radius-lg);
+    font-size: 1.25rem;
     font-weight: 600;
     letter-spacing: 0;
   }
 
   .tab svg {
-    width: 20px;
-    height: 20px;
+    width: 28px;
+    height: 28px;
   }
 }

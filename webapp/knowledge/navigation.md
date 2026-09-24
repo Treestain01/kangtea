@@ -24,7 +24,7 @@ The three layout tokens live in `tokens.css`.
 
 ## Desktop layout (1024px and up)
 
-Three columns: the sidebar (left, 440px), the page (middle, fluid), and the order panel (right, 340px).
+Three columns: the sidebar (left, 396px), the page (middle, fluid), and the order panel (right, 340px).
 
 - The order panel (`<aside class="orderpanel">`, `AppShell.css`) is fixed, full height, scrolls on its own, and renders `OrderPanel` in compact mode.
   It is always present, empty or not, so the layout never shifts.
@@ -40,7 +40,7 @@ Three columns: the sidebar (left, 440px), the page (middle, fluid), and the orde
 `components/layout/TabBar.tsx`, one component, two shapes:
 
 - Below 1024px: fixed to the bottom, four equal columns, icons over labels, `--shadow-raised`, safe area padding at the bottom.
-- From 1024px: fixed to the left as a 440px sidebar (`--sidebar-width`) with the logo mark at the top and icon plus label rows.
+- From 1024px: fixed to the left as a 396px sidebar (`--sidebar-width`) with the full logo lockup at the top and 60px icon plus label rows at 1.25rem, sized for the wider column.
 
 `NavLink` supplies `aria-current="page"`; the active tab is `--shadow-inset` with accent text, matching chips.
 The Order tab shows the cart line count as a badge, or a dot while an order is active.
