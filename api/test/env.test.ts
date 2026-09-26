@@ -17,7 +17,11 @@ describe('parseAllowedOrigins', () => {
 
 describe('loadEnv', () => {
   it('applies development defaults when variables are absent', () => {
-    expect(loadEnv({})).toEqual({ ALLOWED_ORIGINS: 'http://localhost:5173', PORT: 3000 });
+    expect(loadEnv({})).toEqual({
+      ALLOWED_ORIGINS: 'http://localhost:5173',
+      PORT: 3000,
+      DATABASE_URL: undefined,
+    });
   });
 
   it('coerces PORT to a number', () => {
@@ -26,5 +30,14 @@ describe('loadEnv', () => {
 
   it('rejects a non numeric PORT', () => {
     expect(() => loadEnv({ PORT: 'abc' })).toThrow();
+  });
+
+  it('keeps DATABASE_URL when set', () => {
+    const url = 'postgresql://user:pw@db.example/kangtea?sslmode=require';
+    expect(loadEnv({ DATABASE_URL: url }).DATABASE_URL).toBe(url);
+  });
+
+  it('treats an empty DATABASE_URL as unset', () => {
+    expect(loadEnv({ DATABASE_URL: '' }).DATABASE_URL).toBeUndefined();
   });
 });

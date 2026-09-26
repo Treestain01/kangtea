@@ -10,14 +10,15 @@ Each project builds and deploys independently.
 
 ## Repo map
 
-| Path                | What                                           | Read first                  |
-| ------------------- | ---------------------------------------------- | --------------------------- |
-| `webapp/`           | React + TypeScript site on Vercel              | `webapp/CLAUDE.md`          |
-| `api/`              | Hono + TypeScript backend on Vercel            | `api/CLAUDE.md`             |
-| `packages/shared/`  | Zod schemas and types shared by webapp and api | `packages/shared/CLAUDE.md` |
-| `iosapp/`           | SwiftUI WKWebView shell, XcodeGen project      | `iosapp/CLAUDE.md`          |
-| `knowledge/`        | Durable facts about the whole repo             | `knowledge/INDEX.md`        |
-| `docs/superpowers/` | Design specs and implementation plans          | latest spec                 |
+| Path                | What                                            | Read first                  |
+| ------------------- | ----------------------------------------------- | --------------------------- |
+| `webapp/`           | React + TypeScript site on Vercel               | `webapp/CLAUDE.md`          |
+| `api/`              | Hono + TypeScript backend on Vercel             | `api/CLAUDE.md`             |
+| `packages/shared/`  | Zod schemas and types shared by webapp and api  | `packages/shared/CLAUDE.md` |
+| `seed.json`         | Base catalogue (store, menu) for every database | `api/knowledge/database.md` |
+| `iosapp/`           | SwiftUI WKWebView shell, XcodeGen project       | `iosapp/CLAUDE.md`          |
+| `knowledge/`        | Durable facts about the whole repo              | `knowledge/INDEX.md`        |
+| `docs/superpowers/` | Design specs and implementation plans           | latest spec                 |
 
 ## Who does the work
 
@@ -58,6 +59,7 @@ Say so in your report when doing iOS work rather than silently improvising.
 - If you changed how something works, update the relevant `knowledge/` document in the same change. Use the `update-knowledge` skill.
 - API shape changes start in `packages/shared`, then `api`, then `webapp`.
 - Record non-obvious decisions as ADRs with the `record-decision` skill.
+- Menu and store changes are edits to `seed.json`, followed by the `db-seed` skill per environment. Never edit database rows by hand.
 - Never commit `*.xcodeproj`, `.vercel/`, `.env` files, `node_modules` or `dist`.
 - Report verification faithfully: if a check failed or could not be run (iOS on Windows), say so.
 - Follow Tristan's global instructions: no em dashes, one sentence per line in long Markdown, no agent co-author lines in commits.
@@ -67,5 +69,5 @@ Say so in your report when doing iOS work rather than silently improvising.
 - How the pieces connect: `knowledge/architecture.md`.
 - Conventions: `knowledge/conventions.md`.
 - Why things are the way they are: `knowledge/decisions/`.
-- Repo-level skills: `.claude/skills/` (`verify-all`, `record-decision`, `update-knowledge`).
+- Repo-level skills: `.claude/skills/` (`verify-all`, `record-decision`, `update-knowledge`, `db-seed`, `db-wipe`).
 - Hooks: `.claude/settings.json` registers `.claude/hooks/responsive-ui-reminder.mjs`, which reminds you to run `webapp:responsive-ui` after editing any webapp `.tsx` or `.css` file.

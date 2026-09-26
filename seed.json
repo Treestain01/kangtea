@@ -1,0 +1,310 @@
+{
+  "store": {
+    "id": "calamvale-central",
+    "name": "Kang Tea Calamvale Central",
+    "shortName": "Calamvale Central",
+    "addressLines": ["Shop 29a, Calamvale Central", "662 Compton Road"],
+    "suburb": "Calamvale",
+    "state": "QLD",
+    "postcode": "4116",
+    "phone": "07 3711 4663",
+    "timezone": "Australia/Brisbane",
+    "hours": {
+      "mon": {
+        "open": "11:30",
+        "close": "20:00"
+      },
+      "tue": {
+        "open": "11:30",
+        "close": "20:00"
+      },
+      "wed": {
+        "open": "11:30",
+        "close": "20:00"
+      },
+      "thu": {
+        "open": "11:30",
+        "close": "20:00"
+      },
+      "fri": {
+        "open": "11:30",
+        "close": "20:30"
+      },
+      "sat": {
+        "open": "11:30",
+        "close": "20:30"
+      },
+      "sun": {
+        "open": "11:30",
+        "close": "20:30"
+      }
+    }
+  },
+  "menu": {
+    "customisations": {
+      "sugarLevels": [
+        {
+          "id": "sugar-0",
+          "name": "0%",
+          "isDefault": false
+        },
+        {
+          "id": "sugar-25",
+          "name": "25%",
+          "isDefault": false
+        },
+        {
+          "id": "sugar-50",
+          "name": "50%",
+          "isDefault": false
+        },
+        {
+          "id": "sugar-75",
+          "name": "75%",
+          "isDefault": false
+        },
+        {
+          "id": "sugar-100",
+          "name": "100%",
+          "isDefault": true
+        }
+      ],
+      "iceLevels": [
+        {
+          "id": "ice-none",
+          "name": "No ice",
+          "isDefault": false
+        },
+        {
+          "id": "ice-less",
+          "name": "Less ice",
+          "isDefault": false
+        },
+        {
+          "id": "ice-regular",
+          "name": "Regular ice",
+          "isDefault": true
+        }
+      ],
+      "toppings": [
+        {
+          "id": "pearls",
+          "name": "Pearls",
+          "priceCents": 80
+        },
+        {
+          "id": "grass-jelly",
+          "name": "Grass jelly",
+          "priceCents": 80
+        },
+        {
+          "id": "coconut-jelly",
+          "name": "Coconut jelly",
+          "priceCents": 80
+        },
+        {
+          "id": "pudding",
+          "name": "Pudding",
+          "priceCents": 100
+        },
+        {
+          "id": "red-bean",
+          "name": "Red bean",
+          "priceCents": 100
+        },
+        {
+          "id": "cheese-foam",
+          "name": "Cheese foam",
+          "priceCents": 150
+        }
+      ]
+    },
+    "categories": [
+      {
+        "id": "milk-tea",
+        "name": "Milk Tea",
+        "sortOrder": 0
+      },
+      {
+        "id": "milk-foam",
+        "name": "Milk Foam",
+        "sortOrder": 1
+      },
+      {
+        "id": "fruit-tea",
+        "name": "Fruit Tea",
+        "sortOrder": 2
+      },
+      {
+        "id": "yakult",
+        "name": "Yakult",
+        "sortOrder": 3
+      },
+      {
+        "id": "milo",
+        "name": "Milo",
+        "sortOrder": 4
+      },
+      {
+        "id": "matcha",
+        "name": "Matcha",
+        "sortOrder": 5
+      }
+    ],
+    "items": [
+      {
+        "id": "signature-milk-tea",
+        "categoryId": "milk-tea",
+        "name": "Signature Milk Tea",
+        "priceCents": 750,
+        "currency": "AUD",
+        "tags": ["best-seller"],
+        "colour": "#B07A45",
+        "pearls": true,
+        "description": "House black tea with fresh milk and pearls"
+      },
+      {
+        "id": "ruby-milk-tea",
+        "categoryId": "milk-tea",
+        "name": "Ruby Milk Tea",
+        "priceCents": 790,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#A2553B",
+        "pearls": true
+      },
+      {
+        "id": "jasmine-green-milk-tea",
+        "categoryId": "milk-tea",
+        "name": "Jasmine Green Milk Tea",
+        "priceCents": 750,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#B8C48A",
+        "pearls": false
+      },
+      {
+        "id": "black-tea-boba",
+        "categoryId": "milk-tea",
+        "name": "Black Tea Boba",
+        "priceCents": 720,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#6E4A2F",
+        "pearls": true
+      },
+      {
+        "id": "winter-melon-milk-foam",
+        "categoryId": "milk-foam",
+        "name": "Winter Melon Tea with Milk Foam",
+        "priceCents": 790,
+        "currency": "AUD",
+        "tags": ["best-seller"],
+        "colour": "#C9A86A",
+        "pearls": false
+      },
+      {
+        "id": "oolong-milk-foam",
+        "categoryId": "milk-foam",
+        "name": "Oolong Tea with Milk Foam",
+        "priceCents": 790,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#A0743D",
+        "pearls": false
+      },
+      {
+        "id": "signature-fruit-tea",
+        "categoryId": "fruit-tea",
+        "name": "Signature Fruit Tea",
+        "priceCents": 890,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#E0912D",
+        "pearls": false,
+        "description": "Kiwi, pineapple, orange and passionfruit"
+      },
+      {
+        "id": "orange-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Orange Green Tea",
+        "priceCents": 790,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#F0A640",
+        "pearls": false
+      },
+      {
+        "id": "lychee-agar-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Lychee Agar Green Tea",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#E8B7C0",
+        "pearls": false
+      },
+      {
+        "id": "orange-grapefruit-yakult",
+        "categoryId": "yakult",
+        "name": "Orange Grapefruit Yakult",
+        "priceCents": 920,
+        "currency": "AUD",
+        "tags": ["new"],
+        "colour": "#F28C6A",
+        "pearls": false
+      },
+      {
+        "id": "pineapple-yakult",
+        "categoryId": "yakult",
+        "name": "Pineapple Yakult",
+        "priceCents": 950,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#F2D06A",
+        "pearls": false
+      },
+      {
+        "id": "iced-milo",
+        "categoryId": "milo",
+        "name": "Iced Milo",
+        "priceCents": 690,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#6B4A3A",
+        "pearls": false
+      },
+      {
+        "id": "milo-dinosaur",
+        "categoryId": "milo",
+        "name": "Milo Dinosaur",
+        "priceCents": 790,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#5A3D30",
+        "pearls": false,
+        "description": "Iced Milo topped with a mountain of Milo powder"
+      },
+      {
+        "id": "matcha-latte",
+        "categoryId": "matcha",
+        "name": "Matcha Latte",
+        "priceCents": 790,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#5F8F3E",
+        "pearls": false
+      },
+      {
+        "id": "strawberry-matcha-latte",
+        "categoryId": "matcha",
+        "name": "Strawberry Matcha Latte",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": ["new"],
+        "colour": "#7FA35A",
+        "pearls": false
+      }
+    ]
+  }
+}

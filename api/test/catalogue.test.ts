@@ -1,8 +1,12 @@
 import { MenuSchema, StoreSchema } from '@bbt/shared';
 import { describe, expect, it } from 'vitest';
 import { createApp } from '../src/app';
+import { createSeedCatalogue, loadSeed } from '../src/catalogue/seed';
 
-const app = createApp({ ALLOWED_ORIGINS: 'http://localhost:5173', PORT: 3000 });
+const app = createApp(
+  { ALLOWED_ORIGINS: 'http://localhost:5173', PORT: 3000, DATABASE_URL: undefined },
+  { catalogue: createSeedCatalogue(loadSeed()) },
+);
 
 describe('GET /store', () => {
   it('returns the Calamvale Central store matching the shared contract', async () => {
@@ -45,5 +49,22 @@ describe('GET /menu', () => {
     const menu = MenuSchema.parse(await (await app.request('/menu')).json());
     const ids = menu.items.map((item) => item.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+describe('when the catalogue fails', () => {
+  it('answers 500 with the standard error shape and no internals', async () => {
+    const failing = createApp(
+      { ALLOWED_ORIGINS: 'http://localhost:5173', PORT: 3000, DATABASE_URL: undefined },
+      {
+        catalogue: {
+          getStore: () => Promise.reject(new Error('connection refused')),
+          getMenu: () => Promise.reject(new Error('connection refused')),
+        },
+      },
+    );
+    const res = await failing.request('/menu');
+    expect(res.status).toBe(500);
+    expect(await res.json()).toEqual({ error: 'Internal server error' });
   });
 });

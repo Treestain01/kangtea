@@ -18,5 +18,6 @@ Read the document, not this index, for the facts.
   - [0009 Local first orders with the shared contract](decisions/0009-local-first-orders-with-shared-contract.md)
   - [0010 Drink customisations as menu level options](decisions/0010-drink-customisations-as-menu-level-options.md)
   - [0011 Flat surfaces, faithful to the mockup](decisions/0011-flat-surfaces-faithful-to-the-mockup.md)
+  - [0012 Postgres on Vercel with Drizzle and a seed file](decisions/0012-postgres-on-vercel-with-drizzle-and-a-seed-file.md)
 
 Project knowledge bases: `webapp/knowledge/INDEX.md`, `api/knowledge/INDEX.md`, `iosapp/knowledge/INDEX.md`.

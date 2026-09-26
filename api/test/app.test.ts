@@ -1,8 +1,12 @@
 import { HealthResponseSchema } from '@bbt/shared';
 import { describe, expect, it } from 'vitest';
 import { createApp } from '../src/app';
+import { createSeedCatalogue, loadSeed } from '../src/catalogue/seed';
 
-const app = createApp({ ALLOWED_ORIGINS: 'http://localhost:5173', PORT: 3000 });
+const app = createApp(
+  { ALLOWED_ORIGINS: 'http://localhost:5173', PORT: 3000, DATABASE_URL: undefined },
+  { catalogue: createSeedCatalogue(loadSeed()) },
+);
 
 describe('GET /health', () => {
   it('returns a response that satisfies the shared contract', async () => {

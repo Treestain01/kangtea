@@ -10,27 +10,30 @@
  |  UA: ... BBTiOS/x|               |    +------------------+
  +------------------+               |
                                     v
-                          +------------------+        +------------------+
-                          | webapp (Vercel)  | -----> | api (Vercel)     |
-                          | React + Vite     |  CORS  | Hono             |
-                          +------------------+        +------------------+
-                                    ^                          ^
-                                    |   packages/shared        |
-                                    +------- Zod contract -----+
+                          +------------------+        +------------------+        +------------------+
+                          | webapp (Vercel)  | -----> | api (Vercel)     | -----> | Postgres (Neon   |
+                          | React + Vite     |  CORS  | Hono + Drizzle   |   pg   |  via Vercel)     |
+                          +------------------+        +------------------+        +------------------+
+                                    ^                          ^                          ^
+                                    |   packages/shared        |                          |
+                                    +------- Zod contract -----+          seed.json ------+
 ```
 
 - `webapp` is a static site. It calls `api` over HTTPS using the base URL in `VITE_API_URL`.
 - `api` is one Vercel serverless function. Every route is mounted on a single Hono app.
+- `api` reads the catalogue from Postgres when `DATABASE_URL` is set and from `seed.json` at the repository root otherwise. See `api/knowledge/database.md`.
+- `seed.json` is the base template for every database environment. The root skills `db-seed` and `db-wipe` load and empty a database.
 - `packages/shared` is TypeScript source consumed directly by both. There is no build step.
 - `iosapp` loads `webapp` from `WEBAPP_URL`. It never calls `api` directly and never bundles web assets.
 
 ## URL configuration flow
 
-| Consumer | Setting                                                               | Development value       | Production value       |
-| -------- | --------------------------------------------------------------------- | ----------------------- | ---------------------- |
-| `webapp` | `VITE_API_URL` (Vercel env var, `.env` locally)                       | `http://localhost:3000` | deployed api URL       |
-| `api`    | `ALLOWED_ORIGINS` (Vercel env var, `.env` locally)                    | `http://localhost:5173` | deployed webapp origin |
-| `iosapp` | `WEBAPP_URL` in `Config/Debug.xcconfig` and `Config/Release.xcconfig` | `http://localhost:5173` | deployed webapp URL    |
+| Consumer | Setting                                                               | Development value         | Production value              |
+| -------- | --------------------------------------------------------------------- | ------------------------- | ----------------------------- |
+| `webapp` | `VITE_API_URL` (Vercel env var, `.env` locally)                       | `http://localhost:3000`   | deployed api URL              |
+| `api`    | `ALLOWED_ORIGINS` (Vercel env var, `.env` locally)                    | `http://localhost:5173`   | deployed webapp origin        |
+| `api`    | `DATABASE_URL` (set by the Vercel Neon integration, `.env` locally)   | unset, serves `seed.json` | pooled Neon connection string |
+| `iosapp` | `WEBAPP_URL` in `Config/Debug.xcconfig` and `Config/Release.xcconfig` | `http://localhost:5173`   | deployed webapp URL           |
 
 `WEBAPP_URL` flows from the xcconfig into `Info.plist` as `$(WEBAPP_URL)` and is read at runtime by `AppConfig.load()`.
 xcconfig treats `//` as a comment, so URLs are written `https:/$()/host`.

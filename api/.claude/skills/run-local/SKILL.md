@@ -8,6 +8,7 @@ description: Use when you need the api running locally to test against, from the
 ## Steps
 
 1. Optional: copy `api/.env.example` to `api/.env` and edit. Defaults are `ALLOWED_ORIGINS=http://localhost:5173`, `PORT=3000`.
+   Without `DATABASE_URL` the api serves `seed.json` and logs one warning; set it (see the `db-seed` skill) to run against a real database.
 
 2. Start in the background from the repo root.
    Use `pnpm.cmd`, not `pnpm`; the bare name resolves to a `.ps1` shim that `Start-Process` cannot launch.
