@@ -1,6 +1,6 @@
 import { MenuSchema, StoreSchema } from '@bbt/shared';
 import { describe, expect, it } from 'vitest';
-import { createApp } from '../src/app';
+import { createApp } from '../src/create-app';
 import { createSeedCatalogue, loadSeed } from '../src/catalogue/seed';
 
 const app = createApp(

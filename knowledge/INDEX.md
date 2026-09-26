@@ -10,7 +10,7 @@ Read the document, not this index, for the facts.
   - [0001 Monorepo with pnpm workspaces](decisions/0001-monorepo-with-pnpm-workspaces.md)
   - [0002 iOS shell loads the remote webapp](decisions/0002-ios-shell-loads-remote-webapp.md)
   - [0003 XcodeGen for the iOS project](decisions/0003-xcodegen-for-ios-project.md)
-  - [0004 Hono on Vercel for the api](decisions/0004-hono-on-vercel-for-api.md)
+  - [0004 Hono on Vercel for the api](decisions/0004-hono-on-vercel-for-api.md) (superseded by 0013)
   - [0005 Shared contract package](decisions/0005-shared-contract-package.md)
   - [0006 CSS custom property theme with a test guard](decisions/0006-css-custom-property-theme-with-test-guard.md)
   - [0007 Accent is the Kang Tea logo navy](decisions/0007-accent-is-the-kang-tea-logo-navy.md)
@@ -19,5 +19,6 @@ Read the document, not this index, for the facts.
   - [0010 Drink customisations as menu level options](decisions/0010-drink-customisations-as-menu-level-options.md)
   - [0011 Flat surfaces, faithful to the mockup](decisions/0011-flat-surfaces-faithful-to-the-mockup.md)
   - [0012 Postgres on Vercel with Drizzle and a seed file](decisions/0012-postgres-on-vercel-with-drizzle-and-a-seed-file.md)
+  - [0013 Deploy the api with Vercel's Hono preset](decisions/0013-deploy-the-api-with-vercels-hono-preset.md)
 
 Project knowledge bases: `webapp/knowledge/INDEX.md`, `api/knowledge/INDEX.md`, `iosapp/knowledge/INDEX.md`.

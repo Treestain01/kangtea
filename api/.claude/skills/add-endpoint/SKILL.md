@@ -33,12 +33,12 @@ description: Use when adding or changing an api route. Contract-first, test-firs
 3. Run `pnpm --filter @bbt/api test` and confirm the new test fails for the right reason.
 
 4. Create `api/src/routes/<resource>.ts` exporting `export const <resource>Routes = new Hono()...`.
-   If the route needs data, make it a factory that takes what it reads from (`(catalogue: Catalogue) => new Hono()...`) and add that dependency to `AppDeps` in `src/app.ts`.
+   If the route needs data, make it a factory that takes what it reads from (`(catalogue: Catalogue) => new Hono()...`) and add that dependency to `AppDeps` in `src/create-app.ts`.
    New tables go in `src/db/schema.ts` followed by `pnpm db:generate --name <change>`; see `knowledge/database.md`.
    Validate input with `schema.safeParse` and return `c.json({ error: ... }, 400)` on failure.
    Build the response as the inferred type and return `c.json(ResponseSchema.parse(body))`.
 
-5. Mount it in `api/src/app.ts`: `app.route('/things', thingRoutes(deps.catalogue))`.
+5. Mount it in `api/src/create-app.ts`: `app.route('/things', thingRoutes(deps.catalogue))`.
 
 6. Run `pnpm --filter @bbt/api test`, `lint`, `typecheck`.
 

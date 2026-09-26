@@ -3,11 +3,13 @@
 ## Vercel project
 
 - Import the git repository into Vercel and set **Root Directory** to `api`.
-- Framework preset: Other.
-- Vercel detects the pnpm workspace and installs from the repository root, so `@bbt/shared` resolves.
-- Build command: leave empty. There is no `build` script on purpose.
-  Vercel compiles `api/api/index.ts` (the `api/` folder inside the project) into one Node serverless function.
-- `vercel.json` rewrites every path to `/api/index`, so Hono sees the full path.
+- Framework preset: **Hono**. Vercel selects it automatically and `vercel.json` pins it with `"framework": "hono"`.
+- Vercel detects the pnpm workspace and installs from the repository root, so `@bbt/shared` and `seed.json` resolve.
+- Build command and output directory: leave empty. There is no `build` script on purpose.
+- The preset looks for the first of `app`, `index`, `server`, `src/app`, `src/index`, `src/server` (`.ts` or `.js`) that imports `hono` and serves its default export.
+  Ours is `index.ts` at the project root; it default exports the Hono app and nothing else in that list imports `hono`.
+- Every request is routed to the app by the preset, so `vercel.json` has no rewrites.
+  Static files, if ever needed, go in `public/`.
 
 ## Environment variables
 

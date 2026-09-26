@@ -1,7 +1,7 @@
 # 0004 Hono on Vercel for the api
 
 Date: 2026-09-23
-Status: Accepted
+Status: Superseded by 0013
 
 ## Context
 

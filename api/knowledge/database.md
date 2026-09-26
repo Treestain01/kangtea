@@ -22,7 +22,7 @@ Routes read through the `Catalogue` interface (`src/catalogue/types.ts`): `getSt
 | `createSeedCatalogue`     | `src/catalogue/seed.ts`     | `DATABASE_URL` is unset. Local dev without a database and tests. |
 
 `createCatalogue(env)` in `src/catalogue/index.ts` picks one and logs a warning when it falls back to the seed.
-The entrypoints (`src/server.ts`, `api/index.ts`) pass the result into `createApp(env, { catalogue })`.
+The entrypoints (`src/server.ts` locally, `index.ts` on Vercel) pass the result into `createApp(env, { catalogue })`.
 Tests pass the seed catalogue or a fake.
 
 ## Schema and migrations

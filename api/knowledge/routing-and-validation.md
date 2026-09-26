@@ -2,20 +2,20 @@
 
 ## Assembly
 
-`createApp(env)` in `src/app.ts`:
+`createApp(env, deps)` in `src/create-app.ts`:
 
 1. registers CORS for the origins in `env.ALLOWED_ORIGINS`;
 2. mounts each router from `src/routes/` at its path prefix;
 3. sets a JSON `notFound` handler (`404 { error: 'Not found' }`);
 4. sets a JSON `onError` handler (`500 { error: 'Internal server error' }`) that logs the error.
 
-`src/server.ts` and `api/index.ts` both call `createApp(env, { catalogue: createCatalogue(env) })`.
+`src/server.ts` (local) and `index.ts` (Vercel) both call `createApp(env, { catalogue: createCatalogue(env) })`.
 Nothing else constructs the app.
 
 ## Routers
 
 One file per resource in `src/routes/`, exporting `<resource>Routes = new Hono()` with its handlers chained.
-Paths inside the router are relative; the prefix is given at mount time in `app.ts`.
+Paths inside the router are relative; the prefix is given at mount time in `create-app.ts`.
 
 Current routes: `GET /health`, `GET /store`, `GET /menu`.
 

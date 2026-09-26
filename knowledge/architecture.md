@@ -65,5 +65,5 @@ The shell has no bundled content.
 ## Extension points
 
 - JavaScript to Swift bridge: `WebView.makeUIView` has a marked spot to add a `WKScriptMessageHandler`. Define the message schema in `packages/shared` first.
-- New API routes: create a router in `api/src/routes/`, mount it in `api/src/app.ts`, define the schema in `packages/shared`.
+- New API routes: create a router in `api/src/routes/`, mount it in `api/src/create-app.ts`, define the schema in `packages/shared`.
 - Second JS package: add it to `pnpm-workspace.yaml` and extend `tsconfig.base.json`.
