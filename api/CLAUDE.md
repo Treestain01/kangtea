@@ -12,7 +12,7 @@ Serves `webapp` only; the iOS shell never calls it directly.
 - `pnpm db:generate`, `db:migrate`, `db:seed`, `db:wipe` - Drizzle migrations and the catalogue data. See `knowledge/database.md` and the root `db-seed` and `db-wipe` skills.
 - `pnpm test` - Vitest, in process via `app.request()`. No port is opened.
 - `pnpm lint`, `pnpm typecheck` - ESLint and `tsc --noEmit`.
-- There is intentionally no `build` script. Vercel's Hono preset compiles `index.ts` (the project root entrypoint) itself.
+- `pnpm build` - esbuild bundles `index.ts` into `dist/index.js`, the file Vercel's Hono preset serves. `dist/` is git ignored.
 
 ## Rules
 

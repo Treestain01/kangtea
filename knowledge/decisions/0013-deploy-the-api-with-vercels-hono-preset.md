@@ -1,7 +1,7 @@
 # 0013 Deploy the api with Vercel's Hono preset
 
 Date: 2026-09-26
-Status: Accepted
+Status: Superseded by 0015
 
 ## Context
 
