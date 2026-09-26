@@ -1,18 +1,19 @@
 # Stack
 
-| Piece                       | Role                                      | Configured in                                                          |
-| --------------------------- | ----------------------------------------- | ---------------------------------------------------------------------- |
-| Hono                        | router and middleware                     | `src/create-app.ts`                                                    |
-| `hono/cors`                 | CORS allowlist                            | `src/create-app.ts` from `ALLOWED_ORIGINS`                             |
-| Vercel Hono preset          | serves the default export as one function | `index.ts`, `vercel.json` (`"framework": "hono"`)                      |
-| `@hono/node-server` + `tsx` | local dev server with reload              | `src/server.ts`, `dev` script                                          |
-| Zod                         | environment and boundary validation       | `src/env.ts`, routes                                                   |
-| `@bbt/shared`               | contract schemas                          | workspace dependency                                                   |
-| Drizzle ORM + `pg`          | Postgres access and migrations            | `src/db/`, `drizzle.config.ts`, `drizzle/`                             |
-| drizzle-kit                 | generates SQL migrations                  | `db:generate` script                                                   |
-| PGlite                      | in process Postgres for tests             | `test/db.test.ts`                                                      |
-| TypeScript (strict)         | types                                     | `tsconfig.json` extends `../tsconfig.base.json` with `types: ["node"]` |
-| Vitest                      | tests via `app.request()`                 | default config, `test/**/*.test.ts`                                    |
+| Piece                       | Role                                    | Configured in                                                          |
+| --------------------------- | --------------------------------------- | ---------------------------------------------------------------------- |
+| Hono                        | router and middleware                   | `src/create-app.ts`                                                    |
+| `hono/cors`                 | CORS allowlist                          | `src/create-app.ts` from `ALLOWED_ORIGINS`                             |
+| esbuild                     | bundles `index.ts` into `dist/index.js` | `build` script in `package.json`                                       |
+| Vercel Hono preset          | serves `dist/index.js` as one function  | `vercel.json` (`"framework": "hono"`, `"outputDirectory": "dist"`)     |
+| `@hono/node-server` + `tsx` | local dev server with reload            | `src/server.ts`, `dev` script                                          |
+| Zod                         | environment and boundary validation     | `src/env.ts`, routes                                                   |
+| `@bbt/shared`               | contract schemas                        | workspace dependency                                                   |
+| Drizzle ORM + `pg`          | Postgres access and migrations          | `src/db/`, `drizzle.config.ts`, `drizzle/`                             |
+| drizzle-kit                 | generates SQL migrations                | `db:generate` script                                                   |
+| PGlite                      | in process Postgres for tests           | `test/db.test.ts`                                                      |
+| TypeScript (strict)         | types                                   | `tsconfig.json` extends `../tsconfig.base.json` with `types: ["node"]` |
+| Vitest                      | tests via `app.request()`               | default config, `test/**/*.test.ts`                                    |
 
 ## Notes
 

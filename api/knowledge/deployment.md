@@ -5,9 +5,10 @@
 - Import the git repository into Vercel and set **Root Directory** to `api`.
 - Framework preset: **Hono**. Vercel selects it automatically and `vercel.json` pins it with `"framework": "hono"`.
 - Vercel detects the pnpm workspace and installs from the repository root, so `@bbt/shared` and `seed.json` resolve.
-- Build command and output directory: leave empty. There is no `build` script on purpose.
-- The preset looks for the first of `app`, `index`, `server`, `src/app`, `src/index`, `src/server` (`.ts` or `.js`) that imports `hono` and serves its default export.
-  Ours is `index.ts` at the project root; it default exports the Hono app and nothing else in that list imports `hono`.
+- Build command and output directory: leave empty in the dashboard. `vercel.json` sets `"outputDirectory": "dist"` and the preset runs the package's `build` script, which bundles `index.ts` into `dist/index.js` with esbuild (ADR 0015).
+- The preset looks in the output directory, then the project root, for the first of `app`, `index`, `server`, `src/app`, `src/index`, `src/server` that imports `hono`, and serves its default export.
+  Ours is `dist/index.js`, built from `index.ts`; nothing else in that list imports `hono`.
+- Dependencies are left external by the bundle and traced from `node_modules`; `@bbt/shared` and `seed.json` are bundled in, so the function does not depend on how Vercel compiles workspace TypeScript.
 - Every request is routed to the app by the preset, so `vercel.json` has no rewrites.
   Static files, if ever needed, go in `public/`.
 
