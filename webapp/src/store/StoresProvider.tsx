@@ -8,7 +8,7 @@ type StoresProviderProps = {
   children: ReactNode;
 };
 
-/** Makes the cart, orders and account stores available to every page. Tests inject in memory stores. */
+/** Makes the cart, orders, account and preferences stores available to every page. Tests inject in memory stores. */
 export function StoresProvider({ stores, children }: StoresProviderProps) {
   return <StoresContext.Provider value={stores}>{children}</StoresContext.Provider>;
 }

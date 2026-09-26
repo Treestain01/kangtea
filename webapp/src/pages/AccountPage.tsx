@@ -3,15 +3,23 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { fetchStore } from '../api/client';
 import { describeOpeningStatus, openingStatus } from '../lib/openingHours';
 import { useStores } from '../store/StoresProvider';
-import { useAccount } from '../store/hooks';
+import { useAccount, usePreferences } from '../store/hooks';
+import type { ThemePreference } from '../store/preferences';
 import './AccountPage.css';
 
 type FieldErrors = Partial<Record<'displayName' | 'email' | 'phone', string>>;
 
-/** Local profile, the store card, and clearing everything on this device. */
+const THEME_OPTIONS: ReadonlyArray<{ value: ThemePreference; label: string }> = [
+  { value: 'system', label: 'System' },
+  { value: 'light', label: 'Light' },
+  { value: 'dark', label: 'Dark' },
+];
+
+/** Local profile, appearance, the store card, and clearing everything on this device. */
 export function AccountPage() {
   const stores = useStores();
   const account = useAccount();
+  const preferences = usePreferences();
 
   const [displayName, setDisplayName] = useState(account?.displayName ?? '');
   const [email, setEmail] = useState(account?.email ?? '');
@@ -60,6 +68,10 @@ export function AccountPage() {
     stores.account.save(result.data);
     setErrors({});
     setMessage('Saved');
+  };
+
+  const chooseTheme = (theme: ThemePreference) => {
+    stores.preferences.save({ ...preferences, theme });
   };
 
   const clearEverything = () => {
@@ -159,6 +171,28 @@ export function AccountPage() {
           {message}
         </p>
       </form>
+
+      <fieldset className="appearance">
+        <legend className="appearance__legend">Appearance</legend>
+        <p className="appearance__copy">
+          System follows your device setting. Saved on this device.
+        </p>
+        <div className="appearance__options">
+          {THEME_OPTIONS.map(({ value, label }) => (
+            <label key={value} className="appearance__option">
+              <input
+                className="appearance__radio"
+                type="radio"
+                name="theme"
+                value={value}
+                checked={preferences.theme === value}
+                onChange={() => chooseTheme(value)}
+              />
+              <span>{label}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
 
       <section className="storecard" aria-labelledby="storecard-heading">
         <h3 id="storecard-heading" className="storecard__heading">

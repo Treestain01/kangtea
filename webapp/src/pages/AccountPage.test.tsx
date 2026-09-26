@@ -112,4 +112,44 @@ describe('AccountPage', () => {
     expect(screen.getByLabelText('Name')).toHaveValue('');
     expect(screen.getByRole('status')).toHaveTextContent('Your data has been cleared');
   });
+
+  describe('appearance', () => {
+    it('offers System, Light and Dark with System chosen by default', () => {
+      renderAccount();
+      const group = screen.getByRole('group', { name: 'Appearance' });
+      expect(group).toBeInTheDocument();
+      expect(screen.getByRole('radio', { name: 'System' })).toBeChecked();
+      expect(screen.getByRole('radio', { name: 'Light' })).not.toBeChecked();
+      expect(screen.getByRole('radio', { name: 'Dark' })).not.toBeChecked();
+    });
+
+    it('saves the choice to the preferences store as soon as it is made', () => {
+      const stores = renderAccount();
+      fireEvent.click(screen.getByRole('radio', { name: 'Dark' }));
+      expect(stores.preferences.read().theme).toBe('dark');
+      expect(screen.getByRole('radio', { name: 'Dark' })).toBeChecked();
+
+      fireEvent.click(screen.getByRole('radio', { name: 'Light' }));
+      expect(stores.preferences.read().theme).toBe('light');
+      expect(screen.getByRole('radio', { name: 'Light' })).toBeChecked();
+      expect(screen.getByRole('radio', { name: 'Dark' })).not.toBeChecked();
+    });
+
+    it('starts from the saved choice', () => {
+      const stores = createTestStores();
+      stores.preferences.save({ theme: 'dark' });
+      renderAccount(stores);
+      expect(screen.getByRole('radio', { name: 'Dark' })).toBeChecked();
+    });
+
+    it('keeps the theme when the person clears their data', () => {
+      const stores = createTestStores();
+      stores.preferences.save({ theme: 'dark' });
+      renderAccount(stores);
+      fireEvent.click(screen.getByRole('button', { name: 'Clear my data' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Yes, clear everything' }));
+      expect(stores.preferences.read().theme).toBe('dark');
+      expect(screen.getByRole('radio', { name: 'Dark' })).toBeChecked();
+    });
+  });
 });

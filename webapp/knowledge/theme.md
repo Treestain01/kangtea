@@ -83,11 +83,18 @@ Headings carry `letter-spacing: -0.01em` and `text-wrap: balance`.
 Mobile first: write phone styles as the base and add `@media (min-width: 768px)` blocks on top.
 These two numbers are the only widths allowed in media queries.
 
-## Dark mode
+## Dark mode and the theme choice
 
-Tokens switch under `@media (prefers-color-scheme: dark)`.
-`index.html` declares `color-scheme: light dark`, so native controls follow too.
+By default tokens switch under `@media (prefers-color-scheme: dark)`, and `index.html` declares `color-scheme: light dark` so native controls follow too.
+The Account page lets the person choose System, Light or Dark.
+The choice lives in the `preferences` store (`store/preferences.ts`, key `kangtea.preferences`) and `src/theme/theme.ts` reflects it on `<html>`: `data-theme="light"` or `data-theme="dark"` for an explicit choice, no attribute for System.
+`bindTheme(stores.preferences)` in `main.tsx` applies it before the first render and after every change.
+
+In `tokens.css` the dark palette appears twice and must stay identical: once under the media query for `:root:not([data-theme='light'])`, and once unconditionally for `:root[data-theme='dark']`.
+Each dark block also sets `color-scheme: dark`, and `:root[data-theme='light']` sets `color-scheme: light`, so form controls and scrollbars follow the choice.
+`tokens.test.ts` fails if the two dark blocks differ, if a light colour token has no dark value, or if any stylesheet other than `tokens.css` mentions `prefers-color-scheme` or `data-theme`.
 Components never check the scheme themselves; they read tokens and get the right value.
+See ADR 0016.
 
 ## Using tokens
 
@@ -116,7 +123,7 @@ Components never check the scheme themselves; they read tokens and get the right
 
 ## Adding a token
 
-1. Add it to both the `:root` block and, if it is a colour, the dark block in `tokens.css`.
+1. Add it to the `:root` block and, if it is a colour, to both dark blocks in `tokens.css` (the guard test reports a miss).
 2. Document it in the matching table above with its role.
 3. Prefer a new semantic token (`--color-text-muted`) over exposing a raw shade.
 4. If it changes the brand palette, record why with the `record-decision` skill.

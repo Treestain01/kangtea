@@ -7,7 +7,9 @@ import { BREAKPOINTS } from './breakpoints';
  * Guards the theme contract:
  * - every colour in the app comes from src/theme/tokens.css,
  * - every var(--color-*) reference resolves to a defined token,
- * - every CSS media query uses a documented breakpoint.
+ * - every CSS media query uses a documented breakpoint,
+ * - the dark palette is written once for the system and once for the explicit choice, identically,
+ * - no stylesheet outside tokens.css checks the colour scheme itself.
  */
 
 // Vitest runs with the package directory as cwd. import.meta.url is an http URL under jsdom.
@@ -40,6 +42,19 @@ const functionalColour = /\b(?:rgb|hsl)a?\(/gi;
 const namedColourValue =
   /:\s*(?:white|black|red|blue|green|gray|grey|orange|yellow|purple|pink|silver|navy|teal)\b/gi;
 
+/** The declarations inside the first `selector { ... }` block, one per line, trimmed. */
+function declarationsOf(css: string, selector: string): string[] {
+  const start = css.indexOf(`${selector} {`);
+  expect(start, `${selector} block missing from tokens.css`).toBeGreaterThanOrEqual(0);
+  const open = css.indexOf('{', start);
+  const close = css.indexOf('}', open);
+  return css
+    .slice(open + 1, close)
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+}
+
 describe('theme tokens', () => {
   it('defines the brand colours', () => {
     expect(tokensCss).toMatch(/--color-brand:\s*#cbc6c3/i);
@@ -65,6 +80,33 @@ describe('theme tokens', () => {
     );
     const unknown = referenced.filter((entry) => !defined.has(entry.split(': ')[1] ?? ''));
     expect(unknown, 'undefined token referenced').toEqual([]);
+  });
+
+  it('writes the dark palette identically for the system default and the explicit choice', () => {
+    const system = declarationsOf(tokensCss, ":root:not([data-theme='light'])");
+    const chosen = declarationsOf(tokensCss, ":root[data-theme='dark']");
+    expect(system.length).toBeGreaterThan(5);
+    expect(chosen).toEqual(system);
+  });
+
+  it('overrides every light colour token in the dark palette', () => {
+    const light = declarationsOf(tokensCss, ':root')
+      .map((line) => line.match(/^(--color-[\w-]+):/)?.[1])
+      .filter((name): name is string => name !== undefined && name !== '--color-brand');
+    const dark = new Set(
+      declarationsOf(tokensCss, ":root[data-theme='dark']").map(
+        (line) => line.match(/^(--color-[\w-]+):/)?.[1],
+      ),
+    );
+    const missing = light.filter((name) => !dark.has(name));
+    expect(missing, 'every colour token except the brand grey needs a dark value').toEqual([]);
+  });
+
+  it('leaves colour scheme detection to tokens.css', () => {
+    const offenders = cssFiles
+      .filter((file) => /prefers-color-scheme|data-theme/.test(file.text))
+      .map((file) => file.path);
+    expect(offenders, 'components read tokens; only tokens.css switches palettes').toEqual([]);
   });
 
   it('takes every transition and animation timing from the motion tokens', () => {

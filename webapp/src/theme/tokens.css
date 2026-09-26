@@ -72,8 +72,16 @@
   --sidebar-width: var(--cart-panel-width);
 }
 
+/*
+ * Dark palette. The person's choice on the Account page is reflected as data-theme on <html>
+ * (src/theme/theme.ts). No attribute means "system": the media query decides. "light" opts out
+ * of the media query; "dark" applies the palette regardless of the device.
+ * The two dark blocks must stay identical; tokens.test.ts checks that they are.
+ */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+
     --color-accent: #6ba0e0;
     --color-accent-hover: #8fb8ec;
     --color-on-accent: #0b2440;
@@ -89,4 +97,28 @@
     --color-warning: #e0a04a;
     --color-danger: #ef7b74;
   }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-accent: #6ba0e0;
+  --color-accent-hover: #8fb8ec;
+  --color-on-accent: #0b2440;
+
+  --color-bg: #1b1917;
+  --color-surface: #262321;
+  --color-surface-muted: #322e2b;
+  --color-border: #4a4541;
+  --color-text: #edeae8;
+  --color-text-muted: #a8a19c;
+
+  --color-success: #5fc78f;
+  --color-warning: #e0a04a;
+  --color-danger: #ef7b74;
+}
+
+/* An explicit light choice also tells native controls to stay light. */
+:root[data-theme='light'] {
+  color-scheme: light;
 }

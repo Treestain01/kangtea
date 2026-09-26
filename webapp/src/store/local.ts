@@ -9,12 +9,21 @@ import {
 } from '@bbt/shared';
 import { z } from 'zod';
 import { lineKey } from './lines';
-import type { AccountStore, CartLine, CartStore, OrdersStore, Stores } from './types';
+import { DEFAULT_PREFERENCES, PreferencesSchema, type Preferences } from './preferences';
+import type {
+  AccountStore,
+  CartLine,
+  CartStore,
+  OrdersStore,
+  PreferencesStore,
+  Stores,
+} from './types';
 
 export const STORAGE_KEYS = {
   cart: 'kangtea.cart',
   orders: 'kangtea.orders',
   account: 'kangtea.account',
+  preferences: 'kangtea.preferences',
 } as const;
 
 /** No 0, O, 1 or I, so a code read over the counter cannot be misheard. */
@@ -175,11 +184,28 @@ function createAccountStore(storage: Storage): AccountStore {
   };
 }
 
-/** All three stores backed by one Storage. Production passes window.localStorage. */
+function createPreferencesStore(storage: Storage): PreferencesStore {
+  const store = createKeyStore<Preferences>(
+    storage,
+    STORAGE_KEYS.preferences,
+    PreferencesSchema,
+    DEFAULT_PREFERENCES,
+  );
+  return {
+    read: store.read,
+    subscribe: store.subscribe,
+    save(preferences) {
+      store.write(PreferencesSchema.parse(preferences));
+    },
+  };
+}
+
+/** All four stores backed by one Storage. Production passes window.localStorage. */
 export function createLocalStores(storage: Storage): Stores {
   return {
     cart: createCartStore(storage),
     orders: createOrdersStore(storage),
     account: createAccountStore(storage),
+    preferences: createPreferencesStore(storage),
   };
 }

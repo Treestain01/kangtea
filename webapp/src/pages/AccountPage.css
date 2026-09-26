@@ -121,7 +121,8 @@
 }
 
 .storecard,
-.danger {
+.danger,
+.appearance {
   display: grid;
   gap: var(--space-2);
   padding: var(--space-4);
@@ -131,10 +132,82 @@
 }
 
 .storecard__heading,
-.danger__heading {
+.danger__heading,
+.appearance__legend {
   margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
+}
+
+/* Appearance: a fieldset styled as a card, with the three choices as chips. */
+.appearance {
+  margin: 0;
+  min-width: 0;
+}
+
+.appearance__legend {
+  /* Floating a legend opts out of the notch-in-the-border rendering, so it sits inside the card
+     like the other headings. The grid container then lays it out as an ordinary item. */
+  float: left;
+  width: 100%;
+  padding: 0;
+  font-family: var(--font-display);
+}
+
+.appearance__copy {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.appearance__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.appearance__option {
+  position: relative;
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background var(--motion-fast) var(--ease),
+    color var(--motion-fast) var(--ease),
+    border-color var(--motion-fast) var(--ease);
+}
+
+.appearance__option:hover {
+  border-color: var(--color-accent);
+}
+
+.appearance__option:has(input:checked) {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.appearance__option:has(input:focus-visible) {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
+/* The native radio stays in the tree for the keyboard and screen readers; the chip is its face. */
+.appearance__radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .storecard__name {
@@ -186,7 +259,8 @@
 @media (prefers-reduced-motion: reduce) {
   .account__primary,
   .account__secondary,
-  .danger__yes {
+  .danger__yes,
+  .appearance__option {
     transition: none;
   }
 }
