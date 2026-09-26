@@ -11,7 +11,8 @@
 
 - Prettier formats every JS, TS, JSON, CSS, YAML and Markdown file outside `iosapp/`. Run `pnpm format`.
 - ESLint uses the single root `eslint.config.mjs`. Do not add per-package ESLint configs.
-- TypeScript is strict. Every package extends `tsconfig.base.json` and overrides only `lib`, `types`, `jsx` and `include`.
+- TypeScript is strict. Every package extends `tsconfig.base.json` and overrides only `lib`, `types`, `jsx`, `include` and, for `api` and `packages/shared`, `module` and `moduleResolution`.
+- In `api` and `packages/shared`, relative imports name the compiled file: `./env.js`, `./catalogue/index.js`. Vercel runs them as native Node ES modules without bundling, and `NodeNext` resolution makes the omission a type error (ADR 0014). `webapp` files stay extensionless because Vite bundles them.
 - TypeScript stays on the newest major that `typescript-eslint` supports. Check its peer range before upgrading.
 - Swift uses 4 space indentation and Swift 5.10 with strict concurrency.
 

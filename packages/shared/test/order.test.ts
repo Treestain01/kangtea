@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { OrderLineSchema, OrderSchema, orderLinesTotalCents } from '../src/index';
+import { OrderLineSchema, OrderSchema, orderLinesTotalCents } from '../src/index.js';
 
 const signature = {
   itemId: 'signature-milk-tea',

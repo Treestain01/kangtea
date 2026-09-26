@@ -1,7 +1,7 @@
 import type { Hono } from 'hono';
-import { createCatalogue } from './src/catalogue';
-import { createApp } from './src/create-app';
-import { loadEnv } from './src/env';
+import { createCatalogue } from './src/catalogue/index.js';
+import { createApp } from './src/create-app.js';
+import { loadEnv } from './src/env.js';
 
 /**
  * Vercel entrypoint. The Hono framework preset looks for the first of

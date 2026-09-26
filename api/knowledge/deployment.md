@@ -13,17 +13,18 @@
 
 ## Environment variables
 
-| Name              | Purpose                        | Production value                                                   |
-| ----------------- | ------------------------------ | ------------------------------------------------------------------ |
-| `ALLOWED_ORIGINS` | comma separated CORS allowlist | the deployed webapp origin, for example `https://bbt.vercel.app`   |
-| `DATABASE_URL`    | Postgres connection string     | set by the Neon integration (Storage tab of the `bbt-api` project) |
+| Name                       | Purpose                             | Production value                                                                                                  |
+| -------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `ALLOWED_ORIGINS`          | comma separated CORS allowlist      | the deployed webapp origin, for example `https://bbt.vercel.app`                                                  |
+| `KANG_TEA_DB_DATABASE_URL` | Postgres connection string (pooled) | installed by the Neon integration with the `KANG_TEA_DB_` prefix; the api reads this name or plain `DATABASE_URL` |
 
 `PORT` is ignored on Vercel.
-Without `DATABASE_URL` the function serves `seed.json` and logs a warning on every cold start; treat that as a misconfiguration in production.
+Without a database URL the function serves `seed.json` and logs a warning on every cold start; treat that as a misconfiguration in production.
+The integration marks its variables sensitive, so neither the dashboard API nor `vercel env pull` can read them back. Copy the connection string from the database's page under the Storage tab when you need it locally.
 
 ## Database
 
-1. In the Vercel project, open Storage and create or connect a Neon Postgres database. Accept the default `DATABASE_URL` variable name.
+1. In the Vercel project, open Storage and create or connect a Neon Postgres database. The database `kangtea-db` is connected to `kangtea-api` with the variable prefix `KANG_TEA_DB_`.
 2. Neon creates a branch per Vercel environment when the integration is set that way, so preview and production do not share data.
 3. Load each environment with the root `db-seed` skill before pointing traffic at it. Migrations are never run at request time.
 4. `seed.json` is imported from the repository root, one level above the project root directory. Vercel includes files outside the root directory for workspaces, which is also how `@bbt/shared` is resolved.

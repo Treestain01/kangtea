@@ -3,12 +3,12 @@ import { sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/pglite';
 import { migrate } from 'drizzle-orm/pglite/migrator';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { createPostgresCatalogue } from '../src/catalogue/postgres';
-import { loadSeed } from '../src/catalogue/seed';
-import { migrationsFolder } from '../src/db/client';
-import * as schema from '../src/db/schema';
-import { seedDatabase } from '../src/db/seed';
-import { wipeDatabase } from '../src/db/wipe';
+import { createPostgresCatalogue } from '../src/catalogue/postgres.js';
+import { loadSeed } from '../src/catalogue/seed.js';
+import { migrationsFolder } from '../src/db/client.js';
+import * as schema from '../src/db/schema.js';
+import { seedDatabase } from '../src/db/seed.js';
+import { wipeDatabase } from '../src/db/wipe.js';
 
 /**
  * Runs the real migrations, seed, catalogue reads and wipe against PGlite, an in process

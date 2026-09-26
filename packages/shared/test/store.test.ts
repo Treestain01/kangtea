@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { LocalTimeSchema, StoreSchema } from '../src/index';
+import { LocalTimeSchema, StoreSchema } from '../src/index.js';
 
 const open = { open: '11:30', close: '20:00' };
 

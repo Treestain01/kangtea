@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { AccountSchema } from '../src/index';
+import { AccountSchema } from '../src/index.js';
 
 const account = {
   displayName: 'Tristan',

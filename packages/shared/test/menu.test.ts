@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { MenuCustomisationsSchema, MenuItemSchema, MenuSchema } from '../src/index';
+import { MenuCustomisationsSchema, MenuItemSchema, MenuSchema } from '../src/index.js';
 
 const milkTea = { id: 'milk-tea', name: 'Milk Tea', sortOrder: 0 };
 

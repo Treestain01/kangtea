@@ -1,7 +1,7 @@
 import { serve } from '@hono/node-server';
-import { createApp } from './create-app';
-import { createCatalogue } from './catalogue';
-import { loadDotEnv, loadEnv } from './env';
+import { createApp } from './create-app.js';
+import { createCatalogue } from './catalogue/index.js';
+import { loadDotEnv, loadEnv } from './env.js';
 
 loadDotEnv();
 const env = loadEnv();

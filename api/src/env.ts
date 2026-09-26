@@ -1,21 +1,32 @@
 import { existsSync } from 'node:fs';
 import { z } from 'zod';
 
+/**
+ * The Vercel Neon integration installs its variables with the `KANG_TEA_DB_` prefix chosen when the
+ * database was connected. The api reads that name as well as the plain one, so no duplicate variable
+ * has to be maintained by hand on Vercel.
+ */
+export const DATABASE_URL_KEYS = ['DATABASE_URL', 'KANG_TEA_DB_DATABASE_URL'] as const;
+
 const EnvSchema = z.object({
   ALLOWED_ORIGINS: z.string().default('http://localhost:5173'),
   PORT: z.coerce.number().int().positive().default(3000),
   /** Postgres connection string. Absent means "serve the catalogue from seed.json". */
-  DATABASE_URL: z
-    .string()
-    .optional()
-    .transform((value) => (value ? value : undefined)),
+  DATABASE_URL: z.string().min(1).optional(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
 
 /** Parses and validates environment variables. The only place that reads process.env. */
 export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
-  return EnvSchema.parse(source);
+  const databaseUrl = DATABASE_URL_KEYS.map((key) => source[key]).find(
+    (value) => value !== undefined && value !== '',
+  );
+  return EnvSchema.parse({
+    ALLOWED_ORIGINS: source.ALLOWED_ORIGINS,
+    PORT: source.PORT,
+    DATABASE_URL: databaseUrl,
+  });
 }
 
 /**

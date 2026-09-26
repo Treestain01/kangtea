@@ -16,7 +16,7 @@
 
 ## Notes
 
-- `type: module` and `moduleResolution: Bundler`. Relative imports have no extensions; tsx, Vitest and Vercel's bundler all resolve them.
+- `type: module` with `module` and `moduleResolution` set to `NodeNext`. Relative imports carry a `.js` suffix because Vercel runs the compiled files as native Node ES modules without bundling; tsx and Vitest map them back to `.ts` locally. See ADR 0014.
 - `Env` is the parsed shape of `process.env`. `createApp(env, deps)` takes it and the storage as parameters so tests never touch `process.env` or a network.
 - `drizzle.config.ts` is read by drizzle-kit only and holds no credentials; `src/env.ts` remains the only reader of `process.env`.
 - Logging middleware is intentionally absent. Vercel records requests. Add `hono/logger` only if local debugging needs it.

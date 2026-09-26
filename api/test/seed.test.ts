@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createSeedCatalogue, loadSeed } from '../src/catalogue/seed';
+import { createSeedCatalogue, loadSeed } from '../src/catalogue/seed.js';
 
 describe('seed.json', () => {
   it('parses against the shared contract', () => {

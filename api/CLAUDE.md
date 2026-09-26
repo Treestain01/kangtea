@@ -21,6 +21,7 @@ Serves `webapp` only; the iOS shell never calls it directly.
 - Only `src/env.ts` reads `process.env`. Add new variables to its schema and to `.env.example`.
 - `createApp(env, deps)` must stay pure with respect to environment and storage so tests can construct it with the seed catalogue or a fake.
 - One router per file in `src/routes/`, mounted in `src/create-app.ts`.
+- Relative imports end in `.js` (`./env.js`, `./catalogue/index.js`). Vercel runs the compiled files as native ES modules; `tsc` rejects extensionless imports here.
 - `index.ts` is the only file allowed to default export the app, and no other file named `app`, `index` or `server` (at the root or in `src/`) may import `hono`. The Vercel Hono preset picks its entrypoint by those names.
 - Routes read data only through the `Catalogue` interface in `src/catalogue/`. Never query the database from a route.
 - Catalogue content lives in `seed.json` at the repository root and in Postgres. Never hardcode menu data in `api`.

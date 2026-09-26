@@ -15,17 +15,11 @@ Orders and accounts live in the browser and are not touched.
    Ask which environment if the request does not say: `development` (your own branch database), `preview`, or `production`.
    Never assume production.
 
-2. Get `DATABASE_URL` for that environment into `api/.env`.
-   The Vercel Neon integration sets it on the `bbt-api` Vercel project.
-
-   ```powershell
-   Set-Location api
-   pnpm dlx vercel env pull .env --environment=<development|preview|production>
-   ```
-
-   The first run asks you to log in and link the project.
-   Choose the existing `bbt-api` project; do not create a new one.
-   `api/.env` is git ignored.
+2. Get the connection string for that environment into `api/.env` as `DATABASE_URL=...`.
+   The Neon integration marks its variables sensitive, so `vercel env pull` and the dashboard API cannot read them back.
+   Open the `kangtea-api` project on Vercel, Storage tab, database `kangtea-db`, and copy `DATABASE_URL` (the pooled one) from the `.env.local` snippet, or copy it from the Neon console.
+   Production and preview share the integration's variables unless Neon branches per environment were enabled.
+   `api/.env` is git ignored; never paste the string into a commit, a doc or a chat log.
 
 3. Check the seed is valid before touching the database:
 

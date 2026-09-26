@@ -1,7 +1,7 @@
 import { MenuSchema, StoreSchema } from '@bbt/shared';
 import { z } from 'zod';
 import seedJson from '../../../seed.json' with { type: 'json' };
-import type { Catalogue } from './types';
+import type { Catalogue } from './types.js';
 
 /** Shape of `seed.json` at the repository root: the base template for the database. */
 export const SeedSchema = z.object({

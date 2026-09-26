@@ -1,7 +1,7 @@
 import { MenuSchema, StoreSchema } from '@bbt/shared';
 import { describe, expect, it } from 'vitest';
-import { createApp } from '../src/create-app';
-import { createSeedCatalogue, loadSeed } from '../src/catalogue/seed';
+import { createApp } from '../src/create-app.js';
+import { createSeedCatalogue, loadSeed } from '../src/catalogue/seed.js';
 
 const app = createApp(
   { ALLOWED_ORIGINS: 'http://localhost:5173', PORT: 3000, DATABASE_URL: undefined },

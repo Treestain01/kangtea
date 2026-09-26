@@ -1,6 +1,6 @@
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
-import { migrationsFolder, type Db } from '../src/db/client';
-import { runDbScript } from './lib';
+import { migrationsFolder, type Db } from '../src/db/client.js';
+import { runDbScript } from './lib.js';
 
 /** Applies every migration in `api/drizzle` that the database has not seen yet. */
 export async function migrateDatabase(db: Db): Promise<void> {

@@ -69,6 +69,7 @@ The `Db` type is the common supertype of the `pg` and PGlite Drizzle databases, 
 
 ## Environment
 
-`DATABASE_URL` is the pooled connection string the Vercel Neon integration provides.
+`DATABASE_URL` is the pooled connection string.
+On Vercel the Neon integration installs it as `KANG_TEA_DB_DATABASE_URL` (its variables carry the prefix chosen when the database was connected), and `loadEnv` accepts either name, preferring the plain one; see `DATABASE_URL_KEYS` in `src/env.ts`.
 Locally, `src/server.ts` and the scripts call `loadDotEnv()`, which reads `api/.env` when present.
 An empty value counts as unset.

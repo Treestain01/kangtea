@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import type { Db } from './client';
+import type { Db } from './client.js';
 
 /**
  * Drops every table, type and migration record so the database is as new.

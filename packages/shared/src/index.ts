@@ -1,8 +1,8 @@
-export { HealthResponseSchema } from './health';
-export type { HealthResponse } from './health';
+export { HealthResponseSchema } from './health.js';
+export type { HealthResponse } from './health.js';
 
-export { LocalTimeSchema, OpeningHoursSchema, StoreSchema, WeekdaySchema } from './store';
-export type { OpeningHours, Store, Weekday } from './store';
+export { LocalTimeSchema, OpeningHoursSchema, StoreSchema, WeekdaySchema } from './store.js';
+export type { OpeningHours, Store, Weekday } from './store.js';
 
 export {
   MenuCategorySchema,
@@ -12,7 +12,7 @@ export {
   MenuSchema,
   OptionLevelSchema,
   ToppingSchema,
-} from './menu';
+} from './menu.js';
 export type {
   Menu,
   MenuCategory,
@@ -21,7 +21,7 @@ export type {
   MenuItemTag,
   OptionLevel,
   Topping,
-} from './menu';
+} from './menu.js';
 
 export {
   CustomisationSchema,
@@ -30,8 +30,8 @@ export {
   OrderStatusSchema,
   PickupCodeSchema,
   orderLinesTotalCents,
-} from './order';
-export type { Customisation, Order, OrderLine, OrderStatus } from './order';
+} from './order.js';
+export type { Customisation, Order, OrderLine, OrderStatus } from './order.js';
 
-export { AccountSchema } from './account';
-export type { Account } from './account';
+export { AccountSchema } from './account.js';
+export type { Account } from './account.js';

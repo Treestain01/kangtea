@@ -1,7 +1,7 @@
-import { loadSeed } from '../src/catalogue/seed';
-import { seedDatabase } from '../src/db/seed';
-import { runDbScript } from './lib';
-import { migrateDatabase } from './migrate';
+import { loadSeed } from '../src/catalogue/seed.js';
+import { seedDatabase } from '../src/db/seed.js';
+import { runDbScript } from './lib.js';
+import { migrateDatabase } from './migrate.js';
 
 /** Migrates, then replaces the catalogue with `seed.json` from the repository root. */
 await runDbScript({ action: 'Migrating and seeding the catalogue', confirm: true }, async (db) => {

@@ -20,5 +20,6 @@ Read the document, not this index, for the facts.
   - [0011 Flat surfaces, faithful to the mockup](decisions/0011-flat-surfaces-faithful-to-the-mockup.md)
   - [0012 Postgres on Vercel with Drizzle and a seed file](decisions/0012-postgres-on-vercel-with-drizzle-and-a-seed-file.md)
   - [0013 Deploy the api with Vercel's Hono preset](decisions/0013-deploy-the-api-with-vercels-hono-preset.md)
+  - [0014 Explicit ESM specifiers in api and shared](decisions/0014-explicit-esm-specifiers-in-api-and-shared.md)
 
 Project knowledge bases: `webapp/knowledge/INDEX.md`, `api/knowledge/INDEX.md`, `iosapp/knowledge/INDEX.md`.

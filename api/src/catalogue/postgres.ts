@@ -1,8 +1,8 @@
 import { MenuSchema, StoreSchema } from '@bbt/shared';
 import { asc, eq } from 'drizzle-orm';
-import type { Db } from '../db/client';
-import { menuCategories, menuItems, optionLevels, stores, toppings } from '../db/schema';
-import type { Catalogue } from './types';
+import type { Db } from '../db/client.js';
+import { menuCategories, menuItems, optionLevels, stores, toppings } from '../db/schema.js';
+import type { Catalogue } from './types.js';
 
 /** Reads the catalogue from Postgres and parses it into the shared contract. */
 export function createPostgresCatalogue(db: Db): Catalogue {

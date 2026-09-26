@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { HealthResponseSchema } from '../src/index';
+import { HealthResponseSchema } from '../src/index.js';
 
 const valid = {
   status: 'ok',

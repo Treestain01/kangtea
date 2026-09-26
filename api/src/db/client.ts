@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import type { PgDatabase, PgQueryResultHKT } from 'drizzle-orm/pg-core';
 import { Pool } from 'pg';
-import * as schema from './schema';
+import * as schema from './schema.js';
 
 /**
  * Any Drizzle Postgres database over our schema: the `pg` pool in production and scripts,

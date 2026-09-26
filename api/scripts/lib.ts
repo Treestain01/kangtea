@@ -1,5 +1,5 @@
-import { connect, type Db } from '../src/db/client';
-import { loadDotEnv, loadEnv } from '../src/env';
+import { connect, type Db } from '../src/db/client.js';
+import { loadDotEnv, loadEnv } from '../src/env.js';
 
 interface ScriptOptions {
   /** What the script is about to do, shown with the target before running. */

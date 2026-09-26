@@ -1,6 +1,6 @@
-import type { Seed } from '../catalogue/seed';
-import type { Db } from './client';
-import { menuCategories, menuItems, optionLevels, stores, toppings } from './schema';
+import type { Seed } from '../catalogue/seed.js';
+import type { Db } from './client.js';
+import { menuCategories, menuItems, optionLevels, stores, toppings } from './schema.js';
 
 /**
  * Replaces the whole catalogue with the seed, in one transaction.

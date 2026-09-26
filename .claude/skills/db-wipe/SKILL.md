@@ -15,14 +15,8 @@ Run the `db-seed` skill next to rebuild it.
    Ask which environment if the request does not say: `development`, `preview`, or `production`.
    For `production`, quote the host you are about to wipe back to the user and wait for their confirmation in this conversation before step 4.
 
-2. Get `DATABASE_URL` for that environment into `api/.env`:
-
-   ```powershell
-   Set-Location api
-   pnpm dlx vercel env pull .env --environment=<development|preview|production>
-   ```
-
-   Choose the existing `bbt-api` Vercel project if asked to link.
+2. Get the connection string for that environment into `api/.env` as `DATABASE_URL=...`.
+   The Neon integration marks its variables sensitive, so `vercel env pull` cannot read them; copy it from the `kangtea-db` database page under the Storage tab of the `kangtea-api` Vercel project.
 
 3. Dry run. The script prints the target host and refuses without `--yes`:
 

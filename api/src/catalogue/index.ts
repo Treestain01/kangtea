@@ -1,10 +1,10 @@
-import { connect } from '../db/client';
-import type { Env } from '../env';
-import { createPostgresCatalogue } from './postgres';
-import { createSeedCatalogue, loadSeed } from './seed';
-import type { Catalogue } from './types';
+import { connect } from '../db/client.js';
+import type { Env } from '../env.js';
+import { createPostgresCatalogue } from './postgres.js';
+import { createSeedCatalogue, loadSeed } from './seed.js';
+import type { Catalogue } from './types.js';
 
-export type { Catalogue } from './types';
+export type { Catalogue } from './types.js';
 
 /** Postgres when `DATABASE_URL` is set, otherwise the committed seed from memory. */
 export function createCatalogue(env: Env): Catalogue {
