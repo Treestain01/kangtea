@@ -53,6 +53,12 @@ The option lists come from `seed.json` at the repository root, transcribed from 
 - Every colour is a token; drink tints arrive as data through the `--tea` custom property.
 - Display type (`--font-display`, Fraunces) is used for the greeting, drink names, prices and headings; body type is Nunito Sans.
 
+## Planned: the live cup and the pearl loyalty card
+
+`src/assets/art/cup-parts.svg` holds the SVG part library for two coming features: a cup in the customise sheet that builds itself as sugar, ice and toppings change, and the pearl loyalty card from the mockup.
+The README beside it lists every part, its tint variable and how each choice maps onto the cup.
+The interactive preview is the Cup Lab artifact (link in the ADR index once the features land).
+
 ## Deliberately absent
 
 - Loyalty stamps and sizes: each needs a data source or a menu change first.

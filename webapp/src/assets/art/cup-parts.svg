@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">
+  <!--
+    Kang Tea cup part library. Every part is a <symbol> sized in the cup's own 120 x 200 space
+    (or 24 x 24 for a topping piece). Compose them with <use href="#kt-..."> and tint with CSS
+    custom properties; each has a fallback so the file also renders on its own.
+
+      --tea          the drink colour from the menu (MenuItem.colour)
+      --cup-line     outline colour, normally var(--color-text) at low opacity or the accent
+      --cup-surface  lid and cup wall fill, normally var(--color-surface)
+      --straw        straw colour, normally var(--color-accent)
+      --pearl        tapioca colour, normally var(--color-text)
+      --pearl-mini   mini pearl colour, a lighter tea shade
+      --jelly        jelly cube colour, normally the drink colour lightened
+      --foam         milk foam and ice cream colour, normally var(--color-surface)
+      --ice          ice cube fill, normally white at high opacity
+
+    The liquid is not a symbol: draw a <rect> filled with var(--tea) inside clip-path="url(#kt-cup-inner)"
+    and move its top edge to set the level. See README.md for how sugar, ice and toppings map onto parts.
+  -->
+  <defs>
+    <clipPath id="kt-cup-inner">
+      <path d="M22 36 H98 L88 187 Q86.5 194 79 194 H41 Q33.5 194 32 187 Z" />
+    </clipPath>
+    <linearGradient id="kt-tea-depth" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.35" />
+      <stop offset="0.35" stop-color="#ffffff" stop-opacity="0" />
+      <stop offset="1" stop-color="#000000" stop-opacity="0.12" />
+    </linearGradient>
+  </defs>
+
+  <!-- Cup -->
+  <symbol id="kt-cup-body" viewBox="0 0 120 200">
+    <path d="M18 30 H102 L91 188 Q89.5 197 80 197 H40 Q30.5 197 29 188 Z"
+      fill="var(--cup-surface, #ffffff)" fill-opacity="0.25"
+      stroke="var(--cup-line, currentColor)" stroke-width="3" stroke-linejoin="round" />
+    <path d="M30 42 L26 170" stroke="#ffffff" stroke-opacity="0.55" stroke-width="4" stroke-linecap="round" />
+  </symbol>
+
+  <symbol id="kt-cup-lid" viewBox="0 0 120 200">
+    <path d="M16 31 Q16 13 60 13 Q104 13 104 31 Z"
+      fill="var(--cup-surface, #ffffff)" stroke="var(--cup-line, currentColor)" stroke-width="3" stroke-linejoin="round" />
+    <rect x="12" y="28" width="96" height="7" rx="3.5" fill="var(--cup-line, currentColor)" />
+  </symbol>
+
+  <symbol id="kt-straw" viewBox="0 0 120 200">
+    <rect x="61" y="-8" width="11" height="118" rx="5.5" fill="var(--straw, currentColor)" transform="rotate(8 66.5 51)" />
+    <rect x="61" y="-8" width="4" height="118" rx="2" fill="#ffffff" fill-opacity="0.35" transform="rotate(8 66.5 51)" />
+  </symbol>
+
+  <!-- Surface sheen laid over the liquid so every tea reads as glass -->
+  <symbol id="kt-tea-sheen" viewBox="0 0 120 200">
+    <rect x="18" y="30" width="84" height="170" fill="url(#kt-tea-depth)" />
+  </symbol>
+
+  <!-- Warm drink: two wisps of steam above the lid -->
+  <symbol id="kt-steam" viewBox="0 0 120 200">
+    <path d="M48 10 C44 4 52 0 48 -6" fill="none" stroke="var(--cup-line, currentColor)" stroke-opacity="0.5" stroke-width="3" stroke-linecap="round" />
+    <path d="M72 12 C68 6 76 2 72 -4" fill="none" stroke="var(--cup-line, currentColor)" stroke-opacity="0.5" stroke-width="3" stroke-linecap="round" />
+  </symbol>
+
+  <!-- Ice -->
+  <symbol id="kt-ice-cube" viewBox="0 0 24 24">
+    <rect x="2" y="2" width="20" height="20" rx="5" fill="var(--ice, #ffffff)" fill-opacity="0.82" stroke="#ffffff" stroke-width="2" />
+    <path d="M7 16.5 L16.5 7" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" />
+  </symbol>
+
+  <!-- Toppings that sink: drawn at the bottom of the cup -->
+  <symbol id="kt-pearl" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="var(--pearl, #2b2826)" />
+    <circle cx="8.5" cy="8.5" r="3" fill="#ffffff" fill-opacity="0.35" />
+  </symbol>
+
+  <symbol id="kt-pearl-mini" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="6.5" fill="var(--pearl-mini, #8a5a3c)" />
+    <circle cx="10" cy="10" r="2" fill="#ffffff" fill-opacity="0.4" />
+  </symbol>
+
+  <symbol id="kt-taro-ball" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9" fill="var(--taro, #b48fd0)" />
+    <circle cx="9" cy="9" r="2.6" fill="#ffffff" fill-opacity="0.45" />
+  </symbol>
+
+  <symbol id="kt-agar-ball" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="9" fill="#ffffff" fill-opacity="0.55" stroke="#ffffff" stroke-width="1.5" />
+    <circle cx="9" cy="9" r="2.4" fill="#ffffff" fill-opacity="0.9" />
+  </symbol>
+
+  <!-- Toppings that float in the middle -->
+  <symbol id="kt-jelly-cube" viewBox="0 0 24 24">
+    <rect x="3" y="3" width="18" height="18" rx="4" fill="var(--jelly, #f2c24a)" fill-opacity="0.85" stroke="#ffffff" stroke-opacity="0.7" stroke-width="1.5" />
+    <path d="M8 15 L15 8" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" />
+  </symbol>
+
+  <symbol id="kt-popping-ball" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="8" fill="var(--popping, #f28c6a)" fill-opacity="0.9" />
+    <circle cx="12" cy="12" r="8" fill="none" stroke="#ffffff" stroke-opacity="0.8" stroke-width="1.5" />
+    <circle cx="9.5" cy="9" r="2.2" fill="#ffffff" fill-opacity="0.7" />
+  </symbol>
+
+  <!-- Toppings that sit on top -->
+  <symbol id="kt-foam-cap" viewBox="0 0 120 60">
+    <path d="M22 44 C10 44 8 26 22 24 C22 10 44 6 52 18 C60 4 84 6 86 20 C102 18 110 36 96 44 Z"
+      fill="var(--foam, #ffffff)" stroke="var(--cup-line, currentColor)" stroke-opacity="0.25" stroke-width="2" />
+  </symbol>
+
+  <symbol id="kt-ice-cream-scoop" viewBox="0 0 120 60">
+    <circle cx="60" cy="34" r="24" fill="var(--foam, #ffffff)" stroke="var(--cup-line, currentColor)" stroke-opacity="0.25" stroke-width="2" />
+    <circle cx="50" cy="26" r="6" fill="#ffffff" fill-opacity="0.7" />
+  </symbol>
+
+  <symbol id="kt-brulee" viewBox="0 0 120 60">
+    <path d="M24 40 Q60 20 96 40 L96 48 Q60 56 24 48 Z" fill="var(--brulee, #c9812c)" />
+    <path d="M32 40 Q60 28 88 40" fill="none" stroke="#ffffff" stroke-opacity="0.45" stroke-width="3" stroke-linecap="round" />
+  </symbol>
+
+  <symbol id="kt-pudding" viewBox="0 0 24 24">
+    <path d="M5 17 C5 10 8 6 12 6 C16 6 19 10 19 17 A2 2 0 0 1 17 19 H7 A2 2 0 0 1 5 17 Z" fill="var(--pudding, #f0c060)" />
+    <rect x="8" y="5" width="8" height="4" rx="2" fill="var(--brulee, #c9812c)" fill-opacity="0.8" />
+  </symbol>
+
+  <!-- Loyalty card stamps, 40 x 40 -->
+  <symbol id="kt-stamp-empty" viewBox="0 0 40 40">
+    <path d="M9 10 H31 L28 32 Q27.5 34.5 25 34.5 H15 Q12.5 34.5 12 32 Z"
+      fill="none" stroke="var(--cup-line, currentColor)" stroke-opacity="0.45" stroke-width="2.5" stroke-linejoin="round" stroke-dasharray="3 3" />
+  </symbol>
+
+  <symbol id="kt-stamp-full" viewBox="0 0 40 40">
+    <path d="M9 10 H31 L28 32 Q27.5 34.5 25 34.5 H15 Q12.5 34.5 12 32 Z"
+      fill="var(--tea, currentColor)" stroke="var(--cup-line, currentColor)" stroke-width="2.5" stroke-linejoin="round" />
+    <circle cx="16" cy="29" r="2.4" fill="var(--pearl, #2b2826)" />
+    <circle cx="21" cy="30" r="2.4" fill="var(--pearl, #2b2826)" />
+    <circle cx="25" cy="28" r="2.4" fill="var(--pearl, #2b2826)" />
+    <rect x="21" y="4" width="3" height="16" rx="1.5" fill="var(--straw, currentColor)" transform="rotate(8 22.5 12)" />
+  </symbol>
+
+  <symbol id="kt-stamp-free" viewBox="0 0 40 40">
+    <path d="M9 10 H31 L28 32 Q27.5 34.5 25 34.5 H15 Q12.5 34.5 12 32 Z"
+      fill="var(--straw, currentColor)" stroke="var(--straw, currentColor)" stroke-width="2.5" stroke-linejoin="round" />
+    <path d="M20 14 L22.2 19 L27.5 19.4 L23.4 22.8 L24.7 28 L20 25.2 L15.3 28 L16.6 22.8 L12.5 19.4 L17.8 19 Z" fill="#ffffff" />
+  </symbol>
+</svg>
