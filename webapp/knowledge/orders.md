@@ -48,6 +48,7 @@ At most one order is active (`received`, `making` or `ready`) at a time; `active
 `src/store/orderProgress.ts` is the one fake behaviour in the product.
 `startOrderProgress(orders)` runs once from `main.tsx`.
 It advances the active order to `making` 20 seconds after `placedAt` and to `ready` at 60 seconds, measured from `placedAt` so a reload resumes correctly.
+The timings come from `src/config.ts#KITCHEN_SCHEDULE`, read from `VITE_KITCHEN_MAKING_SECONDS` and `VITE_KITCHEN_READY_SECONDS`; for development put small numbers in `webapp/.env.local` (git ignored, Vite restarts when it changes). Ready never comes before making.
 It never collects; that is the customer's action.
 When the API owns orders, replace this file with polling (or a push) and delete nothing else.
 

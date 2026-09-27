@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router';
+import { KITCHEN_SCHEDULE } from './config';
 import { CatalogueProvider } from './api/CatalogueProvider';
 import { AuthProvider } from './auth/AuthProvider';
 import { apiAuthClient } from './auth/apiAuthClient';
@@ -23,7 +24,7 @@ const stores = createLocalStores(window.localStorage);
 // Reflect the saved theme choice on <html> before the first render, then keep it in step.
 bindTheme(stores.preferences);
 // Simulated kitchen: advances a placed order to making and ready. See store/orderProgress.ts.
-startOrderProgress(stores.orders);
+startOrderProgress(stores.orders, KITCHEN_SCHEDULE);
 
 createRoot(rootElement).render(
   <StrictMode>
