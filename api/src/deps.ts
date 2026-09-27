@@ -5,6 +5,8 @@ import { createSeedCatalogue, loadSeed } from './catalogue/seed.js';
 import type { AppDeps } from './create-app.js';
 import { connect } from './db/client.js';
 import type { Env } from './env.js';
+import { createPostgresLoyalty } from './loyalty/postgres.js';
+import { createUnavailableLoyalty } from './loyalty/unavailable.js';
 
 /**
  * Builds everything the routes read from and write to, over one database connection.
@@ -18,11 +20,13 @@ export function createDeps(env: Env): AppDeps {
     return {
       catalogue: createSeedCatalogue(loadSeed()),
       accounts: createUnavailableAccounts(),
+      loyalty: createUnavailableLoyalty(),
     };
   }
   const { db } = connect(env.DATABASE_URL);
   return {
     catalogue: createPostgresCatalogue(db),
     accounts: createPostgresAccounts(db),
+    loyalty: createPostgresLoyalty(db),
   };
 }

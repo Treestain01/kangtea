@@ -4,6 +4,8 @@ import { RouterProvider } from 'react-router';
 import { CatalogueProvider } from './api/CatalogueProvider';
 import { AuthProvider } from './auth/AuthProvider';
 import { apiAuthClient } from './auth/apiAuthClient';
+import { apiLoyaltyClient } from './loyalty/apiLoyaltyClient';
+import { LoyaltyProvider } from './loyalty/LoyaltyProvider';
 import { createAppRouter } from './router';
 import { StoresProvider } from './store/StoresProvider';
 import { createLocalStores } from './store/local';
@@ -28,7 +30,9 @@ createRoot(rootElement).render(
     <StoresProvider stores={stores}>
       <CatalogueProvider>
         <AuthProvider client={apiAuthClient}>
-          <RouterProvider router={createAppRouter()} />
+          <LoyaltyProvider client={apiLoyaltyClient}>
+            <RouterProvider router={createAppRouter()} />
+          </LoyaltyProvider>
         </AuthProvider>
       </CatalogueProvider>
     </StoresProvider>

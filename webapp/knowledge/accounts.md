@@ -44,7 +44,7 @@ That is acceptable while the webapp loads no third party script; a hosted provid
 - Signed in without a mobile yet (a fresh account): `ProfileForm` first, headed "Hi <name>, finish your details". Saving a mobile switches to the summary.
   This is deliberate: Kang Tea wants a mobile number for every account, so the summary is withheld until one is saved. Do not show the summary for an account without a mobile.
 - Editing: the same `ProfileForm` headed "Edit your details", prefilled, with `Save` and `Cancel`. It saves name, mobile and the marketing opt in through `updateAccount`. Email is shown read only in both views and cannot be changed here; that would be a provider method and a route of its own.
-- Appearance, the store card and `Your data` are the same for both. `Clear my data` empties cart and orders and signs out; the theme choice stays.
+- The pearl card (`loyalty.md`), Appearance, the store card and `Your data` are the same for both. `Clear my data` empties cart and orders and signs out; the theme choice stays.
 
 ## Testing
 

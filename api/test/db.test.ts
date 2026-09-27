@@ -35,8 +35,10 @@ afterAll(async () => {
 });
 
 describe('migrations', () => {
-  it('create the catalogue and account tables', async () => {
+  it('create the catalogue, account and loyalty tables', async () => {
     expect(await tableNames()).toEqual([
+      'loyalty_redemptions',
+      'loyalty_stamps',
       'menu_categories',
       'menu_items',
       'option_levels',

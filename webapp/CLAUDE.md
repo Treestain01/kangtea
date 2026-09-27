@@ -35,6 +35,7 @@ It runs in any browser and inside the `iosapp` WKWebView, and must behave identi
 - `knowledge/theme.md` - every token and what it is for.
 - `knowledge/orders.md` - cart, orders, the simulated kitchen and the History page.
 - `knowledge/accounts.md` - sign in, the session, `AuthClient` and the Account page.
+- `knowledge/loyalty.md` - the pearl card, `LoyaltyClient`, `useLoyalty()` and stamping on collect.
 - `knowledge/navigation.md` - routes, shell and tab bar.
 - Skills: `.claude/skills/add-feature`, `.claude/skills/responsive-ui`, `.claude/skills/check`.
 - Agency agent: `front-end-engineer` (see root `CLAUDE.md`).

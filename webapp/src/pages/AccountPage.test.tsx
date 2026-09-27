@@ -1,11 +1,10 @@
 import type { Store } from '@bbt/shared';
-import { CatalogueProvider } from '../api/CatalogueProvider';
+import { TestProviders } from '../test/providers';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchMenu, fetchStore } from '../api/client';
-import { AuthProvider } from '../auth/AuthProvider';
 import { createFakeAuthClient } from '../auth/testing';
-import { StoresProvider } from '../store/StoresProvider';
 import {
   cartLineFixture,
   createTestStores,
@@ -48,13 +47,11 @@ function renderAccount(
   fake = createFakeAuthClient(),
 ): { stores: Stores; fake: ReturnType<typeof createFakeAuthClient> } {
   render(
-    <StoresProvider stores={stores}>
-      <CatalogueProvider storage={null}>
-        <AuthProvider client={fake.client}>
-          <AccountPage />
-        </AuthProvider>
-      </CatalogueProvider>
-    </StoresProvider>,
+    <TestProviders stores={stores} auth={fake.client}>
+      <MemoryRouter initialEntries={['/account']}>
+        <AccountPage />
+      </MemoryRouter>
+    </TestProviders>,
   );
   return { stores, fake };
 }

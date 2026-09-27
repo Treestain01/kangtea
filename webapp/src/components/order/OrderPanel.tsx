@@ -2,6 +2,7 @@ import type { Order } from '@bbt/shared';
 import { Link } from 'react-router';
 import { useStoreInfo } from '../../api/useStoreInfo';
 import { formatPrice } from '../../lib/money';
+import { useLoyalty } from '../../loyalty/LoyaltyProvider';
 import { useStores } from '../../store/StoresProvider';
 import { useCart, useOrders } from '../../store/hooks';
 import { lineKey, summariseCustomisations } from '../../store/lines';
@@ -34,6 +35,7 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
   const orders = useOrders();
   const active = activeOrder(orders);
   const store = useStoreInfo();
+  const loyalty = useLoyalty();
 
   const className = `order${compact ? ' order--compact' : ''}`;
 
@@ -42,7 +44,11 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
       <ActiveOrderView
         className={className}
         order={active}
-        onCollect={() => ordersStore.setStatus(active.id, 'collected')}
+        onCollect={() => {
+          ordersStore.setStatus(active.id, 'collected');
+          // Stamps are a bonus: a failed call must never block collecting the drink.
+          void loyalty.earnFromOrder(active).catch(() => undefined);
+        }}
         onCancel={() => ordersStore.setStatus(active.id, 'cancelled')}
       />
     );

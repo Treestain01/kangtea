@@ -8,4 +8,5 @@
 - [Home screen and menu](home-screen.md) - the landing screen (greeting, search, your usual, popular) and the full menu page, their data flow and components.
 - [Navigation](navigation.md) - routes, the app shell, the tab bar, and how to add a page.
 - [Orders](orders.md) - the local store layer, the order lifecycle, the simulated kitchen, and the Order and History pages.
+- [Pearl loyalty card](loyalty.md) - `LoyaltyClient`, `LoyaltyProvider`, `useLoyalty()`, the card component, and stamping on collect.
 - [Accounts](accounts.md) - `AuthClient`, `AuthProvider` and `useAuth()`, the session store, and the Account page's sign in and profile forms.

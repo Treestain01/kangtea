@@ -1,10 +1,9 @@
 import type { Menu, Store } from '@bbt/shared';
-import { CatalogueProvider } from '../api/CatalogueProvider';
+import { TestProviders } from '../test/providers';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchMenu, fetchStore } from '../api/client';
-import { StoresProvider } from '../store/StoresProvider';
 import { cartLineFixture, createTestStores, customisationsFixture } from '../store/testing';
 import type { Stores } from '../store/types';
 import { HomePage } from './HomePage';
@@ -69,17 +68,15 @@ const menu: Menu = {
 
 function renderHome(stores: Stores = createTestStores()) {
   render(
-    <StoresProvider stores={stores}>
-      <CatalogueProvider storage={null}>
-        <MemoryRouter initialEntries={['/']}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/menu" element={<p>Menu page</p>} />
-            <Route path="/order" element={<p>Order page</p>} />
-          </Routes>
-        </MemoryRouter>
-      </CatalogueProvider>
-    </StoresProvider>,
+    <TestProviders stores={stores}>
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/menu" element={<p>Menu page</p>} />
+          <Route path="/order" element={<p>Order page</p>} />
+        </Routes>
+      </MemoryRouter>
+    </TestProviders>,
   );
   return stores;
 }

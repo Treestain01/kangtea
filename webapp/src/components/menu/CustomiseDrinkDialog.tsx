@@ -14,7 +14,6 @@ import {
   unitPriceCents,
   type ToppingChoice,
 } from '../../store/lines';
-import { CupSprite } from '../cup/CupSprite';
 import { LiveCup } from '../cup/LiveCup';
 import './CustomiseDrinkDialog.css';
 
@@ -120,7 +119,6 @@ export function CustomiseDrinkDialog({
       }}
     >
       <div className="customise__body">
-        <CupSprite />
         <button type="button" className="customise__close" aria-label="Close" onClick={onClose}>
           ×
         </button>

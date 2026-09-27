@@ -1,9 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { CatalogueProvider } from '../../api/CatalogueProvider';
+import { TestProviders } from '../../test/providers';
 import { RouterProvider, createMemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 import { NotFoundPage } from '../../pages/NotFoundPage';
-import { StoresProvider } from '../../store/StoresProvider';
 import { createTestStores } from '../../store/testing';
 import { AppShell } from './AppShell';
 
@@ -26,11 +25,9 @@ function renderShell(path: string) {
     { initialEntries: [path] },
   );
   return render(
-    <StoresProvider stores={createTestStores()}>
-      <CatalogueProvider storage={null}>
-        <RouterProvider router={router} />
-      </CatalogueProvider>
-    </StoresProvider>,
+    <TestProviders stores={createTestStores()}>
+      <RouterProvider router={router} />
+    </TestProviders>,
   );
 }
 

@@ -6,6 +6,7 @@ import { migrate } from 'drizzle-orm/pglite/migrator';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createPostgresAccounts, SESSION_TTL_MS } from '../src/accounts/postgres.js';
 import { createUnavailableAccounts } from '../src/accounts/unavailable.js';
+import { createUnavailableLoyalty } from '../src/loyalty/unavailable.js';
 import { createSeedCatalogue, loadSeed } from '../src/catalogue/seed.js';
 import { createApp } from '../src/create-app.js';
 import { migrationsFolder } from '../src/db/client.js';
@@ -18,7 +19,11 @@ const db = drizzle({ client, schema });
 let clock = new Date('2026-09-27T01:00:00.000Z');
 const accounts = createPostgresAccounts(db, () => clock);
 const env = { ALLOWED_ORIGINS: 'http://localhost:5173', PORT: 3000, DATABASE_URL: undefined };
-const app = createApp(env, { catalogue: createSeedCatalogue(loadSeed()), accounts });
+const app = createApp(env, {
+  catalogue: createSeedCatalogue(loadSeed()),
+  accounts,
+  loyalty: createUnavailableLoyalty(),
+});
 
 const credentials = { email: 'tristan@example.com', password: 'correct horse battery' };
 
@@ -189,6 +194,7 @@ describe('without a database', () => {
     const offline = createApp(env, {
       catalogue: createSeedCatalogue(loadSeed()),
       accounts: createUnavailableAccounts(),
+      loyalty: createUnavailableLoyalty(),
     });
     const res = await offline.request('/auth/sign-in', {
       method: 'POST',

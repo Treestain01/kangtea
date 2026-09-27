@@ -54,3 +54,11 @@ export type {
   SignUpRequest,
   User,
 } from './auth.js';
+
+export {
+  EarnStampsRequestSchema,
+  LoyaltyCardSchema,
+  STAMPS_PER_CARD,
+  StampSchema,
+} from './loyalty.js';
+export type { EarnStampsRequest, LoyaltyCard, Stamp } from './loyalty.js';

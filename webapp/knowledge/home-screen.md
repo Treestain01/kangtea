@@ -12,12 +12,11 @@ Top to bottom, following the design mockup:
 2. `CategoryChips` under the search, as in the mockup. On Home nothing is selected; tapping a chip navigates to `/menu?category=<id>`, which the menu page reads as its initial category.
 3. `UsualCard`: the most recent collected order as "Your usual", with the first drink's name, its customisation summary, the drink's cup illustration (when the menu still has that drink), and "Reorder · $X" which calls `cart.replace(order.lines)` and navigates to `/order`.
    Hidden until a collected order exists; it never shows placeholder content.
-4. `PopularRow`: "Popular now" with a "See the full menu" link to `/menu`.
+4. `LoyaltyCard`: the pearl card, an invitation to sign in when signed out, the stamps and free drink when signed in (see `loyalty.md`).
+5. `PopularRow`: "Popular now" with a "See the full menu" link to `/menu`.
    Items come from `lib/popular.ts#popularItems`: best sellers first, then new, topped up in menu order to four.
    A two column grid of compact `DrinkCard`s (96px art) on phones, a single row of four (120px art) from 768px.
-5. `CustomiseDrinkDialog` and the visually hidden `role="status"` announcement, as on the menu page.
-
-The mockup's pearl loyalty card is the one element not carried over; it needs a points data source first.
+6. `CustomiseDrinkDialog` and the visually hidden `role="status"` announcement, as on the menu page.
 
 Submitting the search navigates to `/menu?q=<text>`.
 
@@ -58,10 +57,10 @@ The option lists come from `seed.json` at the repository root, transcribed from 
 
 ## The cup art
 
-`src/assets/art/cup-parts.svg` holds the SVG part library for the live cup (shipped in the customise sheet) and for the pearl loyalty card (planned).
+`src/assets/art/cup-parts.svg` holds the SVG part library for the live cup in the customise sheet and for the pearl loyalty card.
 The README beside it lists every part, its tint variable and how each choice maps onto the cup; the Cup Lab artifact linked there is the interactive reference.
-`components/cup/CupSprite.tsx` puts the library into the document; render it once wherever a `LiveCup` appears.
+`components/cup/CupSprite.tsx` puts the library into the document once, from `AppShell`, because the live cup and the loyalty stamps both draw from it.
 
 ## Deliberately absent
 
-- Loyalty stamps and sizes: each needs a data source or a menu change first.
+- Sizes: they need a menu change first.

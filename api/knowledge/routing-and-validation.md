@@ -17,11 +17,11 @@ Nothing else constructs the app.
 One file per resource in `src/routes/`, exporting `<resource>Routes = new Hono()` with its handlers chained.
 Paths inside the router are relative; the prefix is given at mount time in `create-app.ts`.
 
-Current routes: `GET /health`, `GET /store`, `GET /menu`, and under `/auth`: `POST /sign-up`, `POST /sign-in`, `POST /sign-out`, `GET /me`, `PATCH /me` (see `accounts.md`).
+Current routes: `GET /health`, `GET /store`, `GET /menu`, and under `/auth`: `POST /sign-up`, `POST /sign-in`, `POST /sign-out`, `GET /me`, `PATCH /me` (see `accounts.md`), and under `/loyalty`: `GET /card`, `POST /stamps`, `POST /redeem` (see `loyalty.md`).
 
 ## Data access
 
-Routers that need data are factories taking what they read from (`storeRoutes(catalogue)`, `menuRoutes(catalogue)`, `authRoutes(accounts)`), so they never import a database module.
+Routers that need data are factories taking what they read from (`storeRoutes(catalogue)`, `menuRoutes(catalogue)`, `authRoutes(accounts)`, `loyaltyRoutes(accounts, loyalty, catalogue)`), so they never import a database module.
 `createDeps(env)` in `src/deps.ts` builds those dependencies over one database connection.
 The catalogue comes from Postgres or from `seed.json`; see `database.md`.
 Routes still parse the result through the schema on the way out, so a bad row fails the route rather than reaching a client.

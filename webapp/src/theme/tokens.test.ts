@@ -27,7 +27,12 @@ function walk(dir: string): string[] {
 // Test files and the test fixture module are skipped: their fixtures carry drink tints as data.
 // components/cup/cupParts.ts holds product colours for the cup art (tapioca, cream, topping tints),
 // fixed in both themes like the drink colours in seed.json; see src/assets/art/README.md.
-const excluded = new Set(['theme/tokens.css', 'store/testing.ts', 'components/cup/cupParts.ts']);
+const excluded = new Set([
+  'theme/tokens.css',
+  'store/testing.ts',
+  'loyalty/testing.ts',
+  'components/cup/cupParts.ts',
+]);
 
 const sourceFiles = walk(srcDir)
   .filter((file) => /\.(css|ts|tsx)$/.test(file) && !/\.test\.(ts|tsx)$/.test(file))

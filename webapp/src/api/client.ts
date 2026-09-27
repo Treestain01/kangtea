@@ -1,14 +1,18 @@
 import {
   AccountSchema,
   AuthSessionSchema,
+  EarnStampsRequestSchema,
   HealthResponseSchema,
+  LoyaltyCardSchema,
   MeResponseSchema,
   MenuSchema,
   StoreSchema,
   type Account,
   type AccountUpdate,
   type AuthSession,
+  type EarnStampsRequest,
   type HealthResponse,
+  type LoyaltyCard,
   type MeResponse,
   type Menu,
   type SignInRequest,
@@ -127,4 +131,31 @@ export function updateAccount(
     token,
     fetchImpl,
   });
+}
+
+export function fetchLoyaltyCard(
+  token: string,
+  fetchImpl: typeof fetch = fetch,
+): Promise<LoyaltyCard> {
+  return requestJson('/loyalty/card', LoyaltyCardSchema, { token, fetchImpl });
+}
+
+export function earnStamps(
+  token: string,
+  request: EarnStampsRequest,
+  fetchImpl: typeof fetch = fetch,
+): Promise<LoyaltyCard> {
+  return requestJson('/loyalty/stamps', LoyaltyCardSchema, {
+    method: 'POST',
+    body: EarnStampsRequestSchema.parse(request),
+    token,
+    fetchImpl,
+  });
+}
+
+export function redeemFreeDrink(
+  token: string,
+  fetchImpl: typeof fetch = fetch,
+): Promise<LoyaltyCard> {
+  return requestJson('/loyalty/redeem', LoyaltyCardSchema, { method: 'POST', token, fetchImpl });
 }

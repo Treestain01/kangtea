@@ -5,6 +5,9 @@ import {
   fetchMe,
   fetchMenu,
   fetchStore,
+  earnStamps,
+  fetchLoyaltyCard,
+  redeemFreeDrink,
   signIn,
   signOut,
   signUp,
@@ -176,5 +179,52 @@ describe('auth calls', () => {
     }) as unknown as typeof fetch;
     await expect(signOut('opaque', impl)).resolves.toBeUndefined();
     expect(lastCall(impl).init.headers).toMatchObject({ authorization: 'Bearer opaque' });
+  });
+});
+
+describe('loyalty calls', () => {
+  const card = {
+    stampsPerCard: 10,
+    earned: 2,
+    redeemed: 0,
+    available: 0,
+    complete: false,
+    stamps: [
+      { id: 's1', itemName: 'Milo', colour: '#6B4A3A', earnedAt: '2026-09-27T01:00:00.000Z' },
+      { id: 's2', itemName: 'Milo', colour: '#6B4A3A', earnedAt: '2026-09-27T01:00:01.000Z' },
+    ],
+  };
+
+  it('fetchLoyaltyCard reads /loyalty/card with the token', async () => {
+    const impl = fakeFetch(200, card);
+    await expect(fetchLoyaltyCard('opaque', impl)).resolves.toEqual(card);
+    const { url, init } = lastCall(impl);
+    expect(url).toBe('http://localhost:3000/loyalty/card');
+    expect(init.headers).toMatchObject({ authorization: 'Bearer opaque' });
+  });
+
+  it('earnStamps posts the collected order', async () => {
+    const impl = fakeFetch(200, card);
+    const request = { orderId: 'o1', lines: [{ itemId: 'milo', name: 'Milo', quantity: 2 }] };
+    await expect(earnStamps('opaque', request, impl)).resolves.toEqual(card);
+    const { url, init } = lastCall(impl);
+    expect(url).toBe('http://localhost:3000/loyalty/stamps');
+    expect(init.method).toBe('POST');
+    expect(JSON.parse(String(init.body))).toEqual(request);
+  });
+
+  it('redeemFreeDrink posts to /loyalty/redeem and surfaces a 409 message', async () => {
+    const impl = fakeFetch(200, card);
+    await expect(redeemFreeDrink('opaque', impl)).resolves.toEqual(card);
+    expect(lastCall(impl).url).toBe('http://localhost:3000/loyalty/redeem');
+    await expect(
+      redeemFreeDrink('opaque', fakeFetch(409, { error: 'No free drink to use yet' })),
+    ).rejects.toMatchObject({ status: 409, message: 'No free drink to use yet' });
+  });
+
+  it('rejects a card that breaks the contract', async () => {
+    await expect(
+      fetchLoyaltyCard('opaque', fakeFetch(200, { ...card, complete: true })),
+    ).rejects.toThrow();
   });
 });

@@ -2,6 +2,7 @@ import { AccountUpdateSchema, SignInRequestSchema, SignUpRequestSchema } from '@
 import { useState, type FormEvent } from 'react';
 import { ApiError } from '../api/client';
 import { useStoreInfo } from '../api/useStoreInfo';
+import { LoyaltyCard } from '../components/loyalty/LoyaltyCard';
 import { useAuth } from '../auth/AuthProvider';
 import { describeOpeningStatus, openingStatus } from '../lib/openingHours';
 import { useStores } from '../store/StoresProvider';
@@ -65,6 +66,8 @@ export function AccountPage() {
       </h2>
 
       {auth.session ? <SignedInAccount /> : <SignInCard />}
+
+      <LoyaltyCard />
 
       <fieldset className="appearance">
         <legend className="appearance__legend">Appearance</legend>

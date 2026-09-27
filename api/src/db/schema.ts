@@ -1,5 +1,14 @@
 import type { Store } from '@bbt/shared';
-import { boolean, integer, jsonb, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  integer,
+  jsonb,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uniqueIndex,
+} from 'drizzle-orm/pg-core';
 
 /**
  * Catalogue tables. Column shapes mirror the shared contract so the Postgres catalogue can
@@ -84,4 +93,33 @@ export const sessions = pgTable('sessions', {
     .references(() => users.id, { onDelete: 'cascade' }),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull(),
   expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
+});
+
+/**
+ * Loyalty. One stamp per drink collected, one redemption per free drink used.
+ * Owned by the Postgres loyalty provider (src/loyalty/postgres.ts). The seed never touches these.
+ */
+export const loyaltyStamps = pgTable(
+  'loyalty_stamps',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    /** `<orderId>:<lineIndex>:<n>`, so re-sending a collected order never stamps twice. */
+    stampKey: text('stamp_key').notNull(),
+    itemId: text('item_id').notNull(),
+    itemName: text('item_name').notNull(),
+    colour: text('colour').notNull(),
+    earnedAt: timestamp('earned_at', { withTimezone: true }).notNull(),
+  },
+  (table) => [uniqueIndex('loyalty_stamps_user_key').on(table.userId, table.stampKey)],
+);
+
+export const loyaltyRedemptions = pgTable('loyalty_redemptions', {
+  id: text('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  redeemedAt: timestamp('redeemed_at', { withTimezone: true }).notNull(),
 });

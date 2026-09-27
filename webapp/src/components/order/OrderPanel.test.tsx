@@ -1,10 +1,11 @@
 import type { Store } from '@bbt/shared';
-import { CatalogueProvider } from '../../api/CatalogueProvider';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { TestProviders } from '../../test/providers';
+import { createFakeAuthClient } from '../../auth/testing';
+import { createFakeLoyaltyClient } from '../../loyalty/testing';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchMenu, fetchStore } from '../../api/client';
-import { StoresProvider } from '../../store/StoresProvider';
 import {
   cartLineFixture,
   createTestStores,
@@ -46,13 +47,11 @@ const matcha = cartLineFixture({
 
 function renderPanel(stores: Stores = createTestStores(), compact = false) {
   render(
-    <StoresProvider stores={stores}>
-      <CatalogueProvider storage={null}>
-        <MemoryRouter initialEntries={['/order']}>
-          <OrderPanel compact={compact} />
-        </MemoryRouter>
-      </CatalogueProvider>
-    </StoresProvider>,
+    <TestProviders stores={stores}>
+      <MemoryRouter initialEntries={['/order']}>
+        <OrderPanel compact={compact} />
+      </MemoryRouter>
+    </TestProviders>,
   );
   return stores;
 }
@@ -174,5 +173,63 @@ describe('OrderPanel active order', () => {
     fireEvent.click(screen.getByRole('button', { name: "I've picked it up" }));
     expect(stores.orders.read()[0]?.status).toBe('collected');
     expect(screen.getByText('Your order is empty.')).toBeInTheDocument();
+  });
+});
+
+describe('OrderPanel and the pearl card', () => {
+  beforeEach(() => {
+    mockedFetchStore.mockReset();
+    mockedFetchStore.mockResolvedValue(store);
+    mockedFetchMenu.mockReset();
+    mockedFetchMenu.mockResolvedValue(menuFixture);
+  });
+
+  it('earns one stamp per drink when a signed in person collects their order', async () => {
+    const auth = createFakeAuthClient();
+    const loyalty = createFakeLoyaltyClient();
+    const stores = createTestStores();
+    stores.session.save(
+      await auth.client.signUp({
+        email: 't@example.com',
+        password: 'correct horse',
+        displayName: 'T',
+      }),
+    );
+    stores.cart.add({ ...signature, quantity: 2 });
+    stores.cart.add(matcha);
+    const order = stores.orders.place(stores.cart.read(), 's');
+    stores.orders.setStatus(order.id, 'ready');
+    render(
+      <TestProviders stores={stores} auth={auth.client} loyalty={loyalty.client}>
+        <MemoryRouter initialEntries={['/order']}>
+          <OrderPanel />
+        </MemoryRouter>
+      </TestProviders>,
+    );
+    await act(async () => {
+      fireEvent.click(await screen.findByRole('button', { name: /picked it up/i }));
+    });
+    await waitFor(() => expect(loyalty.stamps).toHaveLength(3));
+    expect(stores.orders.read()[0]?.status).toBe('collected');
+  });
+
+  it('still collects the order when nobody is signed in', async () => {
+    const loyalty = createFakeLoyaltyClient();
+    const stores = createTestStores();
+    stores.cart.add(signature);
+    const order = stores.orders.place(stores.cart.read(), 's');
+    stores.orders.setStatus(order.id, 'ready');
+    render(
+      <TestProviders stores={stores} loyalty={loyalty.client}>
+        <MemoryRouter initialEntries={['/order']}>
+          <OrderPanel />
+        </MemoryRouter>
+      </TestProviders>,
+    );
+    await act(async () => {
+      fireEvent.click(await screen.findByRole('button', { name: /picked it up/i }));
+    });
+    expect(stores.orders.read()[0]?.status).toBe('collected');
+    expect(loyalty.stamps).toHaveLength(0);
   });
 });
