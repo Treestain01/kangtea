@@ -13,15 +13,15 @@ Compose parts with `<use href="#kt-...">`; nothing here is a finished picture.
 | `kt-straw`           | 120 x 200 | Straw at 8 degrees, coloured `--straw`.                                                              |
 | `kt-tea-sheen`       | 120 x 200 | Gradient laid over the liquid so any tea colour reads as a drink.                                    |
 | `kt-steam`           | 120 x 200 | Two wisps above the lid, for the Warm ice level.                                                     |
-| `kt-ice-cube`        | 24 x 24   | One cube. Place two for Less ice, four for Normal ice.                                               |
+| `kt-ice-cube`        | 24 x 24   | One cube. Two for Less ice, four for Normal ice; floats fully under the surface.                     |
 | `kt-pearl`           | 24 x 24   | Boba. Sinks to the bottom rows.                                                                      |
 | `kt-pearl-mini`      | 24 x 24   | Mini pearl. Sinks.                                                                                   |
 | `kt-taro-ball`       | 24 x 24   | Mini taro ball. Sinks.                                                                               |
 | `kt-agar-ball`       | 24 x 24   | Agar ball. Sinks, translucent.                                                                       |
-| `kt-jelly-cube`      | 24 x 24   | Grass, coconut or tea jelly. Floats mid cup, tinted by `--jelly`.                                    |
-| `kt-popping-ball`    | 24 x 24   | Water chestnut or barley popping ball. Floats.                                                       |
+| `kt-jelly-cube`      | 24 x 24   | Grass, coconut or tea jelly. Sinks, tinted by `--jelly`.                                             |
+| `kt-popping-ball`    | 24 x 24   | Water chestnut or barley popping ball. Sinks.                                                        |
 | `kt-foam-cap`        | 120 x 40  | Milk foam, a flat topped band across the full cup width, surface line at y=30. Draw inside the clip. |
-| `kt-ice-cream-scoop` | 60 x 48   | One scoop, surface line at y=40. Centre it on the cup.                                               |
+| `kt-ice-cream-scoop` | 60 x 48   | Vanilla ice cream. One large sinking body per lot.                                                   |
 | `kt-brulee`          | 120 x 16  | Caramel crust, full cup width, surface line at y=6. Draw inside the clip.                            |
 | `kt-pudding`         | 24 x 24   | Pudding. One large block per lot, sinks with the pearls.                                             |
 | `kt-stamp-empty`     | 40 x 40   | Loyalty card: a cup still to earn, dashed.                                                           |
@@ -54,11 +54,11 @@ Colours that are product data (the tea, tapioca, foam, a topping's tint) are fix
 - **Toppings** are rigid bodies in a small 2D physics world (Matter.js), rendered as these symbols.
   Sinkers (boba, mini pearls, taro, agar) fall in from above the lid, bounce once and pile at the bottom, five bodies per lot.
   Gravity is tuned so a pearl reaches the bottom in well under a second (engine gravity scale 0.0011 in cup units, light air drag).
-  Floaters (jellies, popping balls) get buoyancy that settles them about 70 units under the surface with a little sway, three bodies per lot.
-  Caps (milk foam, ice cream, brulee) are not physical; they fade in on the surface over `--motion-slow`, lower the tea by their own thickness (brulee 6, ice cream 10, milk foam 16 cup units), and are drawn inside the cup clip so the slanted walls trim them to the inner width.
+  Jellies and popping balls sink too, four bodies per lot; the vanilla ice cream scoop is one large sinking body per lot.
+  Caps (milk foam and brulee) are not physical; they fade in on the surface over `--motion-slow`, lower the tea by their own thickness (brulee 6, milk foam 16 cup units), and are drawn inside the cup clip so the slanted walls trim them to the inner width.
   Pudding is one large block per lot, about twice a pearl, that sinks and piles with them.
   Each kind collides only with the cup and its own kind, so pearls sink straight through the ice.
-- **Ice** cubes are bodies too, held with their centre about 5 units under the surface so they bob.
+- **Ice** cubes are bodies too, held fully submerged with their top edge about 3 units under the surface, so they float without breaking it.
 - Under `prefers-reduced-motion` the world is stepped to rest instantly after each change and drawn once, so nothing moves.
 - **Quantity** of the drink does not change the cup; it is shown as a count beside it.
 
