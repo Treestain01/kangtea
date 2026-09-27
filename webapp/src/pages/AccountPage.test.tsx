@@ -64,7 +64,7 @@ async function createAccount(name = 'Tristan', email = 'tristan@example.com') {
   await act(async () => {
     fireEvent.submit(submitButton('Create your account'));
   });
-  await screen.findByText(/Signed in as/);
+  await screen.findByRole('heading', { name: /^Hi / });
 }
 
 describe('AccountPage', () => {
@@ -140,23 +140,89 @@ describe('AccountPage', () => {
   });
 
   describe('signed in', () => {
-    it('saves profile changes through the api and keeps them in the session', async () => {
+    it('asks new accounts to finish their details, then shows a Hi summary once the mobile is saved', async () => {
       const { stores } = renderAccount();
       await createAccount();
+      expect(
+        screen.getByRole('heading', { name: 'Hi Tristan, finish your details' }),
+      ).toBeInTheDocument();
+      expect(screen.getByText('tristan@example.com')).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Edit details' })).not.toBeInTheDocument();
+
       fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Tris' } });
-      fireEvent.change(screen.getByLabelText('Mobile (optional)'), {
-        target: { value: '0400 000 000' },
-      });
+      fireEvent.change(screen.getByLabelText('Mobile'), { target: { value: '0400 000 000' } });
       fireEvent.click(screen.getByLabelText('Tell me about new drinks and deals'));
       await act(async () => {
         fireEvent.submit(screen.getByRole('button', { name: 'Save' }));
       });
-      expect(await screen.findByText('Saved')).toBeInTheDocument();
+
+      expect(await screen.findByRole('heading', { name: 'Hi Tris' })).toBeInTheDocument();
+      const details = screen.getByRole('region', { name: 'Hi Tris' });
+      expect(within(details).getByText('tristan@example.com')).toBeInTheDocument();
+      expect(within(details).getByText('0400 000 000')).toBeInTheDocument();
+      expect(within(details).getByText('Yes please')).toBeInTheDocument();
+      expect(screen.queryByLabelText('Name')).not.toBeInTheDocument();
       expect(stores.session.read()?.account).toMatchObject({
         displayName: 'Tris',
         phone: '0400 000 000',
         marketingOptIn: true,
       });
+    });
+
+    it('opens the summary straight away for an account that already has a mobile', async () => {
+      const fake = createFakeAuthClient();
+      const stores = createTestStores();
+      const session = await fake.client.signUp({
+        email: 'tristan@example.com',
+        password: 'correct horse',
+        displayName: 'Tristan',
+      });
+      const account = await fake.client.updateAccount(session.token, {
+        displayName: 'Tristan',
+        phone: '0400 000 000',
+        marketingOptIn: false,
+      });
+      stores.session.save({ ...session, account });
+      renderAccount(stores, fake);
+      expect(screen.getByRole('heading', { name: 'Hi Tristan' })).toBeInTheDocument();
+      expect(screen.getByText('No thanks')).toBeInTheDocument();
+    });
+
+    it('edits from the summary with prefilled fields, and Cancel goes back without saving', async () => {
+      const fake = createFakeAuthClient();
+      const stores = createTestStores();
+      const session = await fake.client.signUp({
+        email: 'tristan@example.com',
+        password: 'correct horse',
+        displayName: 'Tristan',
+      });
+      const account = await fake.client.updateAccount(session.token, {
+        displayName: 'Tristan',
+        phone: '0400 000 000',
+        marketingOptIn: false,
+      });
+      stores.session.save({ ...session, account });
+      renderAccount(stores, fake);
+
+      fireEvent.click(screen.getByRole('button', { name: 'Edit details' }));
+      expect(screen.getByRole('heading', { name: 'Edit your details' })).toBeInTheDocument();
+      expect(screen.getByLabelText('Name')).toHaveValue('Tristan');
+      expect(screen.getByLabelText('Mobile')).toHaveValue('0400 000 000');
+      expect(screen.queryByLabelText('Email')).not.toBeInTheDocument();
+
+      fireEvent.change(screen.getByLabelText('Mobile'), { target: { value: '0411 111 111' } });
+      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+      expect(screen.getByRole('heading', { name: 'Hi Tristan' })).toBeInTheDocument();
+      expect(screen.getByText('0400 000 000')).toBeInTheDocument();
+      expect(stores.session.read()?.account.phone).toBe('0400 000 000');
+
+      fireEvent.click(screen.getByRole('button', { name: 'Edit details' }));
+      fireEvent.change(screen.getByLabelText('Mobile'), { target: { value: '0411 111 111' } });
+      await act(async () => {
+        fireEvent.submit(screen.getByRole('button', { name: 'Save' }));
+      });
+      expect(await screen.findByText('0411 111 111')).toBeInTheDocument();
+      expect(stores.session.read()?.account.phone).toBe('0411 111 111');
     });
 
     it('signs out and returns to the sign in card', async () => {

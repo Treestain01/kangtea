@@ -123,7 +123,8 @@
 .storecard,
 .danger,
 .appearance,
-.signin {
+.signin,
+.profile {
   display: grid;
   gap: var(--space-2);
   padding: var(--space-4);
@@ -139,6 +140,51 @@
   margin: 0;
   font-size: 1.125rem;
   font-weight: 600;
+}
+
+/* Signed in summary: a greeting and the saved details in two columns from 768px. */
+.profile {
+  gap: var(--space-4);
+}
+
+.profile__hi {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.profile__details {
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.profile__row {
+  display: grid;
+  gap: var(--space-1);
+}
+
+@media (min-width: 768px) {
+  .profile__row {
+    grid-template-columns: 12rem 1fr;
+    align-items: baseline;
+  }
+}
+
+.profile__row dt {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.profile__row dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.account__hint {
+  color: var(--color-text-muted);
+  font-weight: 400;
 }
 
 /* Sign in or create an account: one card, two modes chosen by chips. */

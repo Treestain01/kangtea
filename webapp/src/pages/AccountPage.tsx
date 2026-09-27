@@ -82,7 +82,7 @@ export function AccountPage() {
         Account
       </h2>
 
-      {auth.session ? <ProfileForm /> : <SignInCard />}
+      {auth.session ? <SignedInAccount /> : <SignInCard />}
 
       <fieldset className="appearance">
         <legend className="appearance__legend">Appearance</legend>
@@ -334,15 +334,85 @@ function SignInCard() {
 type ProfileField = 'displayName' | 'phone';
 const PROFILE_FIELDS: readonly ProfileField[] = ['displayName', 'phone'];
 
-/** The signed in person's profile, saved to the api. */
-function ProfileForm() {
+/**
+ * Signed in: a "Hi <name>" summary of the saved details with an Edit button, or the form.
+ * The form shows first until a mobile number has been saved, so new accounts finish their details.
+ */
+function SignedInAccount() {
+  const auth = useAuth();
+  const account = auth.session?.account;
+  const complete = Boolean(account?.phone);
+  const [editing, setEditing] = useState(!complete);
+
+  if (!account || (!editing && !complete)) {
+    return <ProfileForm onSaved={() => setEditing(false)} />;
+  }
+  if (editing) {
+    return (
+      <ProfileForm
+        onSaved={() => setEditing(false)}
+        onCancel={complete ? () => setEditing(false) : undefined}
+      />
+    );
+  }
+  return <ProfileSummary onEdit={() => setEditing(true)} />;
+}
+
+/** The saved details, read only. Email is shown here and nowhere editable. */
+function ProfileSummary({ onEdit }: { onEdit: () => void }) {
+  const auth = useAuth();
+  const account = auth.session?.account;
+  const email = auth.session?.user.email;
+  if (!account) return null;
+  return (
+    <section className="profile" aria-labelledby="profile-heading">
+      <h3 id="profile-heading" className="profile__hi">
+        Hi {account.displayName}
+      </h3>
+      <dl className="profile__details">
+        <div className="profile__row">
+          <dt>Name</dt>
+          <dd>{account.displayName}</dd>
+        </div>
+        <div className="profile__row">
+          <dt>Email</dt>
+          <dd>{email}</dd>
+        </div>
+        <div className="profile__row">
+          <dt>Mobile</dt>
+          <dd>{account.phone}</dd>
+        </div>
+        <div className="profile__row">
+          <dt>New drinks and deals</dt>
+          <dd>{account.marketingOptIn ? 'Yes please' : 'No thanks'}</dd>
+        </div>
+      </dl>
+      <div className="account__actions">
+        <button type="button" className="account__primary" onClick={onEdit}>
+          Edit details
+        </button>
+        <button type="button" className="account__secondary" onClick={() => void auth.signOut()}>
+          Sign out
+        </button>
+      </div>
+    </section>
+  );
+}
+
+type ProfileFormProps = {
+  onSaved: () => void;
+  /** Present when there is a summary to go back to. */
+  onCancel?: () => void;
+};
+
+/** Edits name, mobile and the marketing opt in. Email cannot change and is shown read only. */
+function ProfileForm({ onSaved, onCancel }: ProfileFormProps) {
   const auth = useAuth();
   const account = auth.session?.account;
   const [displayName, setDisplayName] = useState(account?.displayName ?? '');
   const [phone, setPhone] = useState(account?.phone ?? '');
   const [marketingOptIn, setMarketingOptIn] = useState(account?.marketingOptIn ?? false);
   const [errors, setErrors] = useState<Partial<Record<ProfileField, string>>>({});
-  const [message, setMessage] = useState('');
   const [failure, setFailure] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -355,7 +425,6 @@ function ProfileForm() {
     });
     if (!parsed.success) {
       setErrors(fieldErrors(parsed.error.issues, PROFILE_FIELDS));
-      setMessage('');
       return;
     }
     setErrors({});
@@ -363,9 +432,8 @@ function ProfileForm() {
     setBusy(true);
     try {
       await auth.updateAccount(parsed.data);
-      setMessage('Saved');
+      onSaved();
     } catch (error) {
-      setMessage('');
       setFailure(describeFailure(error));
     } finally {
       setBusy(false);
@@ -373,9 +441,18 @@ function ProfileForm() {
   };
 
   return (
-    <form className="account__form" onSubmit={(event) => void save(event)} noValidate>
+    <form
+      className="account__form"
+      aria-labelledby="profile-form-heading"
+      onSubmit={(event) => void save(event)}
+      noValidate
+    >
+      <h3 id="profile-form-heading" className="profile__hi">
+        {onCancel ? 'Edit your details' : `Hi ${account?.displayName ?? ''}, finish your details`}
+      </h3>
       <p className="account__signedin">
-        Signed in as <strong>{auth.session?.user.email}</strong>
+        Email <strong>{auth.session?.user.email}</strong>
+        <span className="account__hint"> (cannot be changed)</span>
       </p>
 
       <div className="field">
@@ -398,7 +475,7 @@ function ProfileForm() {
       </div>
 
       <div className="field">
-        <label htmlFor="phone">Mobile (optional)</label>
+        <label htmlFor="phone">Mobile</label>
         <input
           id="phone"
           name="phone"
@@ -432,13 +509,16 @@ function ProfileForm() {
         <button type="submit" className="account__primary" disabled={busy}>
           Save
         </button>
-        <button type="button" className="account__secondary" onClick={() => void auth.signOut()}>
-          Sign out
-        </button>
+        {onCancel ? (
+          <button type="button" className="account__secondary" onClick={onCancel}>
+            Cancel
+          </button>
+        ) : (
+          <button type="button" className="account__secondary" onClick={() => void auth.signOut()}>
+            Sign out
+          </button>
+        )}
       </div>
-      <p className="account__message" role="status">
-        {message}
-      </p>
       {failure && (
         <p className="account__error" role="alert">
           {failure}
