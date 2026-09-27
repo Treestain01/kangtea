@@ -57,5 +57,6 @@ Orders and accounts live in the browser and are not touched.
 ## Rules
 
 - Editing the menu means editing `seed.json`, running `pnpm --filter @bbt/api test`, committing, then running this skill per environment.
+- If the seed relies on a contract change (a new tag, a new field), push and wait for the api to redeploy before seeding, otherwise the live function fails to parse the new rows until the deploy lands.
 - Never edit rows by hand in the Neon console; the next seed would silently overwrite them.
 - If migrations fail, stop and fix them. Do not wipe production to get past a failing migration without being told to.
