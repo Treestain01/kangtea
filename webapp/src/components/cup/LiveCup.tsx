@@ -1,5 +1,5 @@
 import type { OptionLevel } from '@bbt/shared';
-import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
+import { useEffect, useId, useMemo, useRef, type CSSProperties } from 'react';
 import type { ToppingChoice } from '../../store/lines';
 import {
   CUP,
@@ -46,6 +46,8 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
   const specsRef = useRef<PieceSpec[]>([]);
   const previousCaps = useRef<string[]>([]);
   const reduced = useMemo(prefersReducedMotion, []);
+  // The cup owns its clip so the tea is trimmed to the walls even if the sprite is elsewhere.
+  const clipId = useId();
 
   const caps = capsFor(toppings);
   const liquidTop = liquidTopFor(caps);
@@ -159,7 +161,12 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
 
   return (
     <svg className="livecup" viewBox={CUP.viewBox} style={style} role="img" aria-label={label}>
-      <g clipPath="url(#kt-cup-inner)">
+      <defs>
+        <clipPath id={clipId}>
+          <path d={CUP.innerPath} />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${clipId})`}>
         <rect
           className="livecup__liquid"
           x="18"

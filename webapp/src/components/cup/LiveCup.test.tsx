@@ -27,6 +27,18 @@ describe('LiveCup', () => {
     expect(uses('kt-steam')).toHaveLength(0);
   });
 
+  it('clips the tea to its own copy of the cup interior', () => {
+    render(
+      <LiveCup colour="#E0912D" sugar={level('100%')} ice={level('Normal ice')} toppings={[]} />,
+    );
+    const clipped = document.querySelector('svg.livecup g[clip-path]');
+    const id = clipped?.getAttribute('clip-path')?.match(/url\(#(.+)\)/)?.[1];
+    expect(id).toBeTruthy();
+    const clip = id ? document.getElementById(id) : null;
+    expect(clip?.tagName).toBe('clipPath');
+    expect(clip?.closest('svg.livecup')).not.toBeNull();
+  });
+
   it('shows steam for a warm drink and no cubes', async () => {
     render(<LiveCup colour="#6B4A3A" sugar={level('50%')} ice={level('Warm')} toppings={[]} />);
     expect(uses('kt-steam')).toHaveLength(1);
@@ -92,5 +104,12 @@ describe('CupSprite', () => {
     for (const id of ['kt-cup-inner', 'kt-cup-body', 'kt-pearl', 'kt-foam-cap', 'kt-stamp-full']) {
       expect(document.getElementById(id)).not.toBeNull();
     }
+  });
+
+  it('is not display none, so clip paths and gradients inside it still resolve', () => {
+    render(<CupSprite />);
+    const wrapper = document.getElementById('kt-cup-body')?.closest('.cupsprite');
+    expect(wrapper).not.toBeNull();
+    expect(wrapper?.hasAttribute('hidden')).toBe(false);
   });
 });

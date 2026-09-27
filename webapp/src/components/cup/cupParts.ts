@@ -17,6 +17,8 @@ export const CUP = {
   liquidTop: 44,
   /** Leaves room above the lid for the straw and steam. */
   viewBox: '0 -14 120 214',
+  /** The inside of the cup, the same path as `#kt-cup-inner` in cup-parts.svg. The tea is clipped to it. */
+  innerPath: 'M22 36 H98 L88 187 Q86.5 194 79 194 H41 Q33.5 194 32 187 Z',
 } as const;
 
 /**
