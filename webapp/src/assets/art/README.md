@@ -51,7 +51,14 @@ Colours that are product data (the tea, a topping's tint) come in as data; every
 
 - **Sugar** sets the tea's depth: 0% is the drink colour mixed 45% towards white, 100% is the colour as given, the steps in between are linear. Sweeter reads darker and richer.
 - **Ice** sets what floats at the top: Warm shows steam and no cubes, No ice shows nothing, Less ice two cubes, Normal ice four cubes. Cubes sit just below the liquid line.
-- **Toppings** stack by kind: sinkers (boba, mini pearls, taro, agar) fill rows from the bottom, one lot is one row of five; floaters (jellies, popping balls) scatter in the middle band; caps (milk foam, ice cream, brulee) sit on the surface and lower the liquid a little; pudding sits just under the surface. Each added lot animates in from the top over `--motion-slow` with `--ease` and settles.
+- **Toppings** are rigid bodies in a small 2D physics world (Matter.js), rendered as these symbols.
+  Sinkers (boba, mini pearls, taro, agar) fall in from above the lid, bounce once and pile at the bottom, five bodies per lot.
+  Floaters (jellies, popping balls) get buoyancy that settles them about 70 units under the surface with a little sway, three bodies per lot.
+  Caps (milk foam, ice cream, brulee) are not physical; they sit on the surface and lower the tea a little.
+  Pudding is one buoyant body just under the surface.
+  Each kind collides only with the cup and its own kind, so pearls sink straight through the ice.
+- **Ice** cubes are bodies too, held with their centre about 5 units under the surface so they bob.
+- Under `prefers-reduced-motion` the world is stepped to rest instantly after each change and drawn once, so nothing moves.
 - **Quantity** of the drink does not change the cup; it is shown as a count beside it.
 
 ## Loyalty card
@@ -61,4 +68,5 @@ Earned stamps are `kt-stamp-full` in the colour of the drink that earned them, s
 The tenth is `kt-stamp-free`.
 A new stamp scales up from the centre over `--motion-slow` with `--ease` and the free cup wobbles once when it unlocks.
 
-The preview lab for both is in the Cup Lab artifact linked from `knowledge/home-screen.md`.
+The preview lab for both is the Cup Lab artifact: https://claude.ai/artifact/H9wmEpxuGnWqrBaUQ65jFb (private to Tristan's account).
+In the app the engine will load with the customise sheet only, through a dynamic import, so the rest of the site pays nothing for it.

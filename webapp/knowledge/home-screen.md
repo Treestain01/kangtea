@@ -57,7 +57,7 @@ The option lists come from `seed.json` at the repository root, transcribed from 
 
 `src/assets/art/cup-parts.svg` holds the SVG part library for two coming features: a cup in the customise sheet that builds itself as sugar, ice and toppings change, and the pearl loyalty card from the mockup.
 The README beside it lists every part, its tint variable and how each choice maps onto the cup.
-The interactive preview is the Cup Lab artifact (link in the ADR index once the features land).
+The interactive preview is the Cup Lab artifact linked from that README; toppings drop into the cup under a small physics simulation.
 
 ## Deliberately absent
 
