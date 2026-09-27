@@ -23,7 +23,7 @@ Compose parts with `<use href="#kt-...">`; nothing here is a finished picture.
 | `kt-foam-cap`        | 120 x 40  | Milk foam, full cup width, surface line at y=30. Draw inside the clip.    |
 | `kt-ice-cream-scoop` | 60 x 48   | One scoop, surface line at y=40. Centre it on the cup.                    |
 | `kt-brulee`          | 120 x 16  | Caramel crust, full cup width, surface line at y=6. Draw inside the clip. |
-| `kt-pudding`         | 24 x 24   | Pudding. Sits just under the surface.                                     |
+| `kt-pudding`         | 24 x 24   | Pudding. One large block per lot, sinks with the pearls.                  |
 | `kt-stamp-empty`     | 40 x 40   | Loyalty card: a cup still to earn, dashed.                                |
 | `kt-stamp-full`      | 40 x 40   | Loyalty card: an earned cup, tinted by `--tea`.                           |
 | `kt-stamp-free`      | 40 x 40   | Loyalty card: the tenth cup, accent filled with a star.                   |
@@ -33,19 +33,19 @@ Draw the liquid as a `<rect>` filled with `var(--tea)` inside it and move the re
 
 ## Variables
 
-| Variable        | Normally                                         |
-| --------------- | ------------------------------------------------ |
-| `--tea`         | `MenuItem.colour`                                |
-| `--cup-line`    | `var(--color-text)` on light, the accent in dark |
-| `--cup-surface` | `var(--color-surface)`                           |
-| `--straw`       | `var(--color-accent)`                            |
-| `--pearl`       | `var(--color-text)`                              |
-| `--pearl-mini`  | a lighter shade of the tea                       |
-| `--jelly`       | the topping's own colour                         |
-| `--foam`        | `var(--color-surface)`                           |
-| `--ice`         | white                                            |
+| Variable        | Normally                                                           |
+| --------------- | ------------------------------------------------------------------ |
+| `--tea`         | `MenuItem.colour`                                                  |
+| `--cup-line`    | `var(--color-text)` on light, the accent in dark                   |
+| `--cup-surface` | `var(--color-surface)`                                             |
+| `--straw`       | `var(--color-accent)`                                              |
+| `--pearl`       | dark brown `#33261F` in both themes, a product colour like the tea |
+| `--pearl-mini`  | a lighter shade of the tea                                         |
+| `--jelly`       | the topping's own colour                                           |
+| `--foam`        | cream `#F7F0E3` in both themes, a product colour like the tea      |
+| `--ice`         | white                                                              |
 
-Colours that are product data (the tea, a topping's tint) come in as data; everything else comes from tokens, so the theme guard stays satisfied.
+Colours that are product data (the tea, tapioca, foam, a topping's tint) are fixed in both themes and arrive as data; the cup outline, lid and straw come from tokens, so the theme guard stays satisfied.
 
 ## How choices map onto the cup
 
@@ -55,7 +55,7 @@ Colours that are product data (the tea, a topping's tint) come in as data; every
   Sinkers (boba, mini pearls, taro, agar) fall in from above the lid, bounce once and pile at the bottom, five bodies per lot.
   Floaters (jellies, popping balls) get buoyancy that settles them about 70 units under the surface with a little sway, three bodies per lot.
   Caps (milk foam, ice cream, brulee) are not physical; they fade in on the surface over `--motion-slow`, lower the tea by their own thickness (brulee 6, ice cream 10, milk foam 16 cup units), and are drawn inside the cup clip so the slanted walls trim them to the inner width.
-  Pudding is one buoyant body just under the surface.
+  Pudding is one large block per lot, about twice a pearl, that sinks and piles with them.
   Each kind collides only with the cup and its own kind, so pearls sink straight through the ice.
 - **Ice** cubes are bodies too, held with their centre about 5 units under the surface so they bob.
 - Under `prefers-reduced-motion` the world is stepped to rest instantly after each change and drawn once, so nothing moves.
