@@ -6,27 +6,27 @@ Compose parts with `<use href="#kt-...">`; nothing here is a finished picture.
 
 ## Parts
 
-| Symbol               | Space     | Use                                                               |
-| -------------------- | --------- | ----------------------------------------------------------------- |
-| `kt-cup-body`        | 120 x 200 | Translucent cup wall with one highlight stroke.                   |
-| `kt-cup-lid`         | 120 x 200 | Dome lid and rim.                                                 |
-| `kt-straw`           | 120 x 200 | Straw at 8 degrees, coloured `--straw`.                           |
-| `kt-tea-sheen`       | 120 x 200 | Gradient laid over the liquid so any tea colour reads as a drink. |
-| `kt-steam`           | 120 x 200 | Two wisps above the lid, for the Warm ice level.                  |
-| `kt-ice-cube`        | 24 x 24   | One cube. Place two for Less ice, four for Normal ice.            |
-| `kt-pearl`           | 24 x 24   | Boba. Sinks to the bottom rows.                                   |
-| `kt-pearl-mini`      | 24 x 24   | Mini pearl. Sinks.                                                |
-| `kt-taro-ball`       | 24 x 24   | Mini taro ball. Sinks.                                            |
-| `kt-agar-ball`       | 24 x 24   | Agar ball. Sinks, translucent.                                    |
-| `kt-jelly-cube`      | 24 x 24   | Grass, coconut or tea jelly. Floats mid cup, tinted by `--jelly`. |
-| `kt-popping-ball`    | 24 x 24   | Water chestnut or barley popping ball. Floats.                    |
-| `kt-foam-cap`        | 120 x 60  | Milk foam on the surface.                                         |
-| `kt-ice-cream-scoop` | 120 x 60  | Vanilla ice cream on the surface.                                 |
-| `kt-brulee`          | 120 x 60  | Brulee crust on the surface.                                      |
-| `kt-pudding`         | 24 x 24   | Pudding. Sits just under the surface.                             |
-| `kt-stamp-empty`     | 40 x 40   | Loyalty card: a cup still to earn, dashed.                        |
-| `kt-stamp-full`      | 40 x 40   | Loyalty card: an earned cup, tinted by `--tea`.                   |
-| `kt-stamp-free`      | 40 x 40   | Loyalty card: the tenth cup, accent filled with a star.           |
+| Symbol               | Space     | Use                                                                       |
+| -------------------- | --------- | ------------------------------------------------------------------------- |
+| `kt-cup-body`        | 120 x 200 | Translucent cup wall with one highlight stroke.                           |
+| `kt-cup-lid`         | 120 x 200 | Dome lid and rim.                                                         |
+| `kt-straw`           | 120 x 200 | Straw at 8 degrees, coloured `--straw`.                                   |
+| `kt-tea-sheen`       | 120 x 200 | Gradient laid over the liquid so any tea colour reads as a drink.         |
+| `kt-steam`           | 120 x 200 | Two wisps above the lid, for the Warm ice level.                          |
+| `kt-ice-cube`        | 24 x 24   | One cube. Place two for Less ice, four for Normal ice.                    |
+| `kt-pearl`           | 24 x 24   | Boba. Sinks to the bottom rows.                                           |
+| `kt-pearl-mini`      | 24 x 24   | Mini pearl. Sinks.                                                        |
+| `kt-taro-ball`       | 24 x 24   | Mini taro ball. Sinks.                                                    |
+| `kt-agar-ball`       | 24 x 24   | Agar ball. Sinks, translucent.                                            |
+| `kt-jelly-cube`      | 24 x 24   | Grass, coconut or tea jelly. Floats mid cup, tinted by `--jelly`.         |
+| `kt-popping-ball`    | 24 x 24   | Water chestnut or barley popping ball. Floats.                            |
+| `kt-foam-cap`        | 120 x 40  | Milk foam, full cup width, surface line at y=30. Draw inside the clip.    |
+| `kt-ice-cream-scoop` | 60 x 48   | One scoop, surface line at y=40. Centre it on the cup.                    |
+| `kt-brulee`          | 120 x 16  | Caramel crust, full cup width, surface line at y=6. Draw inside the clip. |
+| `kt-pudding`         | 24 x 24   | Pudding. Sits just under the surface.                                     |
+| `kt-stamp-empty`     | 40 x 40   | Loyalty card: a cup still to earn, dashed.                                |
+| `kt-stamp-full`      | 40 x 40   | Loyalty card: an earned cup, tinted by `--tea`.                           |
+| `kt-stamp-free`      | 40 x 40   | Loyalty card: the tenth cup, accent filled with a star.                   |
 
 `#kt-cup-inner` is a clip path in the cup space.
 Draw the liquid as a `<rect>` filled with `var(--tea)` inside it and move the rect's top edge to set the level.
@@ -54,7 +54,7 @@ Colours that are product data (the tea, a topping's tint) come in as data; every
 - **Toppings** are rigid bodies in a small 2D physics world (Matter.js), rendered as these symbols.
   Sinkers (boba, mini pearls, taro, agar) fall in from above the lid, bounce once and pile at the bottom, five bodies per lot.
   Floaters (jellies, popping balls) get buoyancy that settles them about 70 units under the surface with a little sway, three bodies per lot.
-  Caps (milk foam, ice cream, brulee) are not physical; they sit on the surface and lower the tea a little.
+  Caps (milk foam, ice cream, brulee) are not physical; they fade in on the surface over `--motion-slow`, lower the tea by their own thickness (brulee 6, ice cream 10, milk foam 16 cup units), and are drawn inside the cup clip so the slanted walls trim them to the inner width.
   Pudding is one buoyant body just under the surface.
   Each kind collides only with the cup and its own kind, so pearls sink straight through the ice.
 - **Ice** cubes are bodies too, held with their centre about 5 units under the surface so they bob.
