@@ -29,6 +29,7 @@ type CustomiseDrinkDialogProps = {
 
 const TAG_LABELS: Record<MenuItemTag, string> = {
   'best-seller': 'Best seller',
+  recommended: 'Recommended',
   new: 'New',
 };
 

@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { MenuCustomisationsSchema, MenuItemSchema, MenuSchema } from '../src/index.js';
+import {
+  MenuCustomisationsSchema,
+  MenuItemSchema,
+  MenuItemTagSchema,
+  MenuSchema,
+} from '../src/index.js';
 
 const milkTea = { id: 'milk-tea', name: 'Milk Tea', sortOrder: 0 };
 
@@ -25,6 +30,15 @@ const customisations = {
   ],
   toppings: [{ id: 'pearls', name: 'Pearls', priceCents: 80 }],
 };
+
+describe('MenuItemTagSchema', () => {
+  it('knows best-seller, recommended and new', () => {
+    for (const tag of ['best-seller', 'recommended', 'new']) {
+      expect(MenuItemTagSchema.safeParse(tag).success).toBe(true);
+    }
+    expect(MenuItemTagSchema.safeParse('featured').success).toBe(false);
+  });
+});
 
 describe('MenuItemSchema', () => {
   it('accepts a complete item', () => {

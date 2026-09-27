@@ -41,6 +41,327 @@
     }
   },
   "menu": {
+    "categories": [
+      {
+        "id": "fruit-tea",
+        "name": "Fruit Tea",
+        "sortOrder": 0
+      },
+      {
+        "id": "yakult",
+        "name": "Yakult",
+        "sortOrder": 1
+      },
+      {
+        "id": "milo",
+        "name": "Milo",
+        "sortOrder": 2
+      },
+      {
+        "id": "matcha",
+        "name": "Matcha",
+        "sortOrder": 3
+      }
+    ],
+    "items": [
+      {
+        "id": "signature-fruit-tea",
+        "categoryId": "fruit-tea",
+        "name": "Signature Fruit Tea",
+        "description": "滿杯水果茶",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#E0912D",
+        "pearls": false
+      },
+      {
+        "id": "orange-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Orange Green Tea",
+        "description": "春橙玉露",
+        "priceCents": 800,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#F0A640",
+        "pearls": false
+      },
+      {
+        "id": "lemon-black-tea",
+        "categoryId": "fruit-tea",
+        "name": "Lemon Black Tea",
+        "description": "熟成檸茶",
+        "priceCents": 750,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#C47A2C",
+        "pearls": false
+      },
+      {
+        "id": "lemon-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Lemon Green Tea",
+        "description": "玉露檸茶",
+        "priceCents": 750,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#C9D66B",
+        "pearls": false
+      },
+      {
+        "id": "lemon-peach-water-chestnuts-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Lemon Peach Water Chestnuts Green Tea",
+        "description": "爆檸粉桃",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": ["recommended"],
+        "colour": "#F2B5A0",
+        "pearls": false
+      },
+      {
+        "id": "passionfruit-boba-jelly-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Passionfruit Boba Jelly Green Tea",
+        "description": "百香QQ",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#E8B23A",
+        "pearls": true
+      },
+      {
+        "id": "pineapple-lemon-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Pineapple Lemon Green Tea",
+        "description": "鳳梨檸檬冰茶",
+        "priceCents": 800,
+        "currency": "AUD",
+        "tags": ["best-seller"],
+        "colour": "#D9CF3F",
+        "pearls": false
+      },
+      {
+        "id": "passionfruit-mango-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Passionfruit Mango Green Tea",
+        "description": "清爽百香芒",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#F0B540",
+        "pearls": false
+      },
+      {
+        "id": "plum-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Plum Green Tea",
+        "description": "梅子綠茶",
+        "priceCents": 750,
+        "currency": "AUD",
+        "tags": ["recommended"],
+        "colour": "#B56A7A",
+        "pearls": false
+      },
+      {
+        "id": "lemon-mango-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Lemon Mango Green Tea",
+        "description": "檸檬芒果綠茶",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#F2C24A",
+        "pearls": false
+      },
+      {
+        "id": "plum-lemon-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Plum Lemon Green Tea",
+        "description": "梅子檸檬綠",
+        "priceCents": 800,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#C08A8A",
+        "pearls": false
+      },
+      {
+        "id": "orange-grapefruit-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Orange Grapefruit Green Tea",
+        "description": "香橙鮮柚綠茶",
+        "priceCents": 800,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#F28C6A",
+        "pearls": false
+      },
+      {
+        "id": "lychee-agar-green-tea",
+        "categoryId": "fruit-tea",
+        "name": "Lychee Agar Green Tea",
+        "description": "荔枝QQ綠茶",
+        "priceCents": 800,
+        "currency": "AUD",
+        "tags": ["recommended"],
+        "colour": "#E8B7C0",
+        "pearls": false
+      },
+      {
+        "id": "orange-oolong-tea-with-tea-jelly",
+        "categoryId": "fruit-tea",
+        "name": "Orange Oolong Tea With Tea Jelly",
+        "description": "春橙烏龍",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": ["recommended"],
+        "colour": "#D89A4A",
+        "pearls": false
+      },
+      {
+        "id": "yakult-green-tea",
+        "categoryId": "yakult",
+        "name": "Yakult Green Tea",
+        "description": "多多綠茶",
+        "priceCents": 800,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#DDE3B0",
+        "pearls": false
+      },
+      {
+        "id": "lemon-yakult",
+        "categoryId": "yakult",
+        "name": "Lemon Yakult",
+        "description": "檸檬養樂多",
+        "priceCents": 950,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#EDE6A8",
+        "pearls": false
+      },
+      {
+        "id": "orange-grapefruit-yakult",
+        "categoryId": "yakult",
+        "name": "Orange Grapefruit Yakult",
+        "description": "香橙鮮柚多多",
+        "priceCents": 950,
+        "currency": "AUD",
+        "tags": ["best-seller"],
+        "colour": "#F4B08A",
+        "pearls": false
+      },
+      {
+        "id": "orange-yakult",
+        "categoryId": "yakult",
+        "name": "Orange Yakult",
+        "description": "香橙多多",
+        "priceCents": 950,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#F6C58A",
+        "pearls": false
+      },
+      {
+        "id": "pineapple-yakult",
+        "categoryId": "yakult",
+        "name": "Pineapple Yakult",
+        "description": "鳳梨多多",
+        "priceCents": 950,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#F2D06A",
+        "pearls": false
+      },
+      {
+        "id": "milo",
+        "categoryId": "milo",
+        "name": "Milo",
+        "description": "美祿",
+        "priceCents": 700,
+        "currency": "AUD",
+        "tags": ["best-seller"],
+        "colour": "#6B4A3A",
+        "pearls": false
+      },
+      {
+        "id": "ice-cream-milo",
+        "categoryId": "milo",
+        "name": "Ice Cream Milo",
+        "description": "冰淇淋美祿",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#8A6752",
+        "pearls": false
+      },
+      {
+        "id": "milk-foam-milo",
+        "categoryId": "milo",
+        "name": "Milk Foam Milo",
+        "description": "奶蓋美祿",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#7A5643",
+        "pearls": false
+      },
+      {
+        "id": "cold-brew-matcha",
+        "categoryId": "matcha",
+        "name": "Cold Brew Matcha",
+        "description": "抹茶",
+        "priceCents": 700,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#4F8A3A",
+        "pearls": false
+      },
+      {
+        "id": "matcha-latte",
+        "categoryId": "matcha",
+        "name": "Matcha Latte",
+        "description": "抹茶拿鐵",
+        "priceCents": 700,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#7FA35A",
+        "pearls": false
+      },
+      {
+        "id": "milk-foam-matcha-latte",
+        "categoryId": "matcha",
+        "name": "Milk Foam Matcha Latte",
+        "description": "抹茶拿鐵奶蓋",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": ["best-seller"],
+        "colour": "#9DBA78",
+        "pearls": false
+      },
+      {
+        "id": "matcha-latte-ice-cream",
+        "categoryId": "matcha",
+        "name": "Matcha Latte Ice Cream",
+        "description": "抹茶拿鐵冰淇淋",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#A9C48C",
+        "pearls": false
+      },
+      {
+        "id": "matcha-espresso-latte",
+        "categoryId": "matcha",
+        "name": "Matcha Espresso Latte",
+        "description": "綠野仙蹝",
+        "priceCents": 850,
+        "currency": "AUD",
+        "tags": [],
+        "colour": "#6E7F4A",
+        "pearls": false
+      }
+    ],
     "customisations": {
       "sugarLevels": [
         {
@@ -49,8 +370,8 @@
           "isDefault": false
         },
         {
-          "id": "sugar-25",
-          "name": "25%",
+          "id": "sugar-30",
+          "name": "30%",
           "isDefault": false
         },
         {
@@ -59,8 +380,8 @@
           "isDefault": false
         },
         {
-          "id": "sugar-75",
-          "name": "75%",
+          "id": "sugar-70",
+          "name": "70%",
           "isDefault": false
         },
         {
@@ -70,6 +391,11 @@
         }
       ],
       "iceLevels": [
+        {
+          "id": "ice-warm",
+          "name": "Warm",
+          "isDefault": false
+        },
         {
           "id": "ice-none",
           "name": "No ice",
@@ -81,230 +407,88 @@
           "isDefault": false
         },
         {
-          "id": "ice-regular",
-          "name": "Regular ice",
+          "id": "ice-normal",
+          "name": "Normal ice",
           "isDefault": true
         }
       ],
       "toppings": [
         {
-          "id": "pearls",
-          "name": "Pearls",
-          "priceCents": 80
+          "id": "boba",
+          "name": "Boba",
+          "priceCents": 100
+        },
+        {
+          "id": "mini-pearls",
+          "name": "Mini Pearls",
+          "priceCents": 100
+        },
+        {
+          "id": "mixed-pearls",
+          "name": "Mixed Pearls",
+          "priceCents": 100
         },
         {
           "id": "grass-jelly",
-          "name": "Grass jelly",
-          "priceCents": 80
+          "name": "Grass Jelly",
+          "priceCents": 100
         },
         {
           "id": "coconut-jelly",
-          "name": "Coconut jelly",
-          "priceCents": 80
-        },
-        {
-          "id": "pudding",
-          "name": "Pudding",
+          "name": "Coconut Jelly",
           "priceCents": 100
         },
         {
-          "id": "red-bean",
-          "name": "Red bean",
+          "id": "agar-ball",
+          "name": "Agar Ball",
           "priceCents": 100
         },
         {
-          "id": "cheese-foam",
-          "name": "Cheese foam",
+          "id": "tea-jelly",
+          "name": "Tea Jelly",
+          "priceCents": 150
+        },
+        {
+          "id": "milk-foam",
+          "name": "Milk Foam",
+          "priceCents": 150
+        },
+        {
+          "id": "brulee",
+          "name": "Brulee",
+          "priceCents": 150
+        },
+        {
+          "id": "vanilla-ice-cream",
+          "name": "Vanilla Ice Cream",
+          "priceCents": 150
+        },
+        {
+          "id": "water-chestnut-popping-ball",
+          "name": "Water Chestnut Popping Ball",
+          "priceCents": 150
+        },
+        {
+          "id": "highland-barley-popping-ball",
+          "name": "Highland Barley Popping Ball",
+          "priceCents": 150
+        },
+        {
+          "id": "mini-taro-ball",
+          "name": "Mini Taro Ball",
+          "priceCents": 150
+        },
+        {
+          "id": "boba-mini-pearls-coconut-jelly",
+          "name": "Boba, Mini Pearls & Coconut Jelly",
+          "priceCents": 150
+        },
+        {
+          "id": "boba-mini-pearls-grass-jelly",
+          "name": "Boba, Mini Pearls & Grass Jelly",
           "priceCents": 150
         }
       ]
-    },
-    "categories": [
-      {
-        "id": "milk-tea",
-        "name": "Milk Tea",
-        "sortOrder": 0
-      },
-      {
-        "id": "milk-foam",
-        "name": "Milk Foam",
-        "sortOrder": 1
-      },
-      {
-        "id": "fruit-tea",
-        "name": "Fruit Tea",
-        "sortOrder": 2
-      },
-      {
-        "id": "yakult",
-        "name": "Yakult",
-        "sortOrder": 3
-      },
-      {
-        "id": "milo",
-        "name": "Milo",
-        "sortOrder": 4
-      },
-      {
-        "id": "matcha",
-        "name": "Matcha",
-        "sortOrder": 5
-      }
-    ],
-    "items": [
-      {
-        "id": "signature-milk-tea",
-        "categoryId": "milk-tea",
-        "name": "Signature Milk Tea",
-        "priceCents": 750,
-        "currency": "AUD",
-        "tags": ["best-seller"],
-        "colour": "#B07A45",
-        "pearls": true,
-        "description": "House black tea with fresh milk and pearls"
-      },
-      {
-        "id": "ruby-milk-tea",
-        "categoryId": "milk-tea",
-        "name": "Ruby Milk Tea",
-        "priceCents": 790,
-        "currency": "AUD",
-        "tags": [],
-        "colour": "#A2553B",
-        "pearls": true
-      },
-      {
-        "id": "jasmine-green-milk-tea",
-        "categoryId": "milk-tea",
-        "name": "Jasmine Green Milk Tea",
-        "priceCents": 750,
-        "currency": "AUD",
-        "tags": [],
-        "colour": "#B8C48A",
-        "pearls": false
-      },
-      {
-        "id": "black-tea-boba",
-        "categoryId": "milk-tea",
-        "name": "Black Tea Boba",
-        "priceCents": 720,
-        "currency": "AUD",
-        "tags": [],
-        "colour": "#6E4A2F",
-        "pearls": true
-      },
-      {
-        "id": "winter-melon-milk-foam",
-        "categoryId": "milk-foam",
-        "name": "Winter Melon Tea with Milk Foam",
-        "priceCents": 790,
-        "currency": "AUD",
-        "tags": ["best-seller"],
-        "colour": "#C9A86A",
-        "pearls": false
-      },
-      {
-        "id": "oolong-milk-foam",
-        "categoryId": "milk-foam",
-        "name": "Oolong Tea with Milk Foam",
-        "priceCents": 790,
-        "currency": "AUD",
-        "tags": [],
-        "colour": "#A0743D",
-        "pearls": false
-      },
-      {
-        "id": "signature-fruit-tea",
-        "categoryId": "fruit-tea",
-        "name": "Signature Fruit Tea",
-        "priceCents": 890,
-        "currency": "AUD",
-        "tags": [],
-        "colour": "#E0912D",
-        "pearls": false,
-        "description": "Kiwi, pineapple, orange and passionfruit"
-      },
-      {
-        "id": "orange-green-tea",
-        "categoryId": "fruit-tea",
-        "name": "Orange Green Tea",
-        "priceCents": 790,
-        "currency": "AUD",
-        "tags": [],
-        "colour": "#F0A640",
-        "pearls": false
-      },
-      {
-        "id": "lychee-agar-green-tea",
-        "categoryId": "fruit-tea",
-        "name": "Lychee Agar Green Tea",
-        "priceCents": 850,
-        "currency": "AUD",
-        "tags": [],
-        "colour": "#E8B7C0",
-        "pearls": false
-      },
-      {
-        "id": "orange-grapefruit-yakult",
-        "categoryId": "yakult",
-        "name": "Orange Grapefruit Yakult",
-        "priceCents": 920,
-        "currency": "AUD",
-        "tags": ["new"],
-        "colour": "#F28C6A",
-        "pearls": false
-      },
-      {
-        "id": "pineapple-yakult",
-        "categoryId": "yakult",
-        "name": "Pineapple Yakult",
-        "priceCents": 950,
-        "currency": "AUD",
-        "tags": [],
-        "colour": "#F2D06A",
-        "pearls": false
-      },
-      {
-        "id": "iced-milo",
-        "categoryId": "milo",
-        "name": "Iced Milo",
-        "priceCents": 690,
-        "currency": "AUD",
-        "tags": [],
-        "colour": "#6B4A3A",
-        "pearls": false
-      },
-      {
-        "id": "milo-dinosaur",
-        "categoryId": "milo",
-        "name": "Milo Dinosaur",
-        "priceCents": 790,
-        "currency": "AUD",
-        "tags": [],
-        "colour": "#5A3D30",
-        "pearls": false,
-        "description": "Iced Milo topped with a mountain of Milo powder"
-      },
-      {
-        "id": "matcha-latte",
-        "categoryId": "matcha",
-        "name": "Matcha Latte",
-        "priceCents": 790,
-        "currency": "AUD",
-        "tags": [],
-        "colour": "#5F8F3E",
-        "pearls": false
-      },
-      {
-        "id": "strawberry-matcha-latte",
-        "categoryId": "matcha",
-        "name": "Strawberry Matcha Latte",
-        "priceCents": 850,
-        "currency": "AUD",
-        "tags": ["new"],
-        "colour": "#7FA35A",
-        "pearls": false
-      }
-    ]
+    }
   }
 }

@@ -1,8 +1,8 @@
 import type { Menu, MenuItem } from '@bbt/shared';
 
-const TAG_PRIORITY: Record<string, number> = { 'best-seller': 0, new: 1 };
+const TAG_PRIORITY: Record<string, number> = { 'best-seller': 0, recommended: 1, new: 2 };
 
-/** Drinks to feature on the home screen: tagged items first (best sellers before new), topped up in menu order. */
+/** Drinks to feature on the home screen: tagged items first (best sellers, then recommended, then new), topped up in menu order. */
 export function popularItems(menu: Menu, limit = 6): MenuItem[] {
   const tagged = menu.items
     .filter((item) => item.tags.length > 0)

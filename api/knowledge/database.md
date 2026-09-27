@@ -10,6 +10,7 @@ Cart and orders are still local to the browser (see `webapp/knowledge/orders.md`
 `seed.json` at the repository root is the base template for the database.
 Its shape is `{ store: Store, menu: Menu }` from `@bbt/shared`, checked by `SeedSchema` in `src/catalogue/seed.ts`.
 Change the menu by editing `seed.json`, then run the root `db-seed` skill against each environment.
+The current contents are transcribed from the in-store menu board photographed on 2026-09-27. Any series not on that board (for example a milk tea board) is not in the seed yet.
 `test/seed.test.ts` fails if the file stops matching the contract.
 
 ## The catalogue abstraction

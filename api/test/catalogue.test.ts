@@ -30,12 +30,12 @@ describe('GET /menu', () => {
     expect(parsed.success).toBe(true);
   });
 
-  it('lists the six Kang Tea categories in display order', async () => {
+  it('lists the four Kang Tea series in display order', async () => {
     const menu = MenuSchema.parse(await (await app.request('/menu')).json());
     const names = [...menu.categories]
       .sort((a, b) => a.sortOrder - b.sortOrder)
       .map((category) => category.name);
-    expect(names).toEqual(['Milk Tea', 'Milk Foam', 'Fruit Tea', 'Yakult', 'Milo', 'Matcha']);
+    expect(names).toEqual(['Fruit Tea', 'Yakult', 'Milo', 'Matcha']);
   });
 
   it('offers sugar and ice levels with one default each, and priced toppings', async () => {

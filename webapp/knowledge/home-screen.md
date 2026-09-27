@@ -45,7 +45,7 @@ Submitting the search navigates to `/menu?q=<text>`.
 
 The card opens `components/menu/CustomiseDrinkDialog.tsx`, a native `<dialog>` bottom sheet with the drink hero pinned at the top, sugar and ice tracks and topping tiles scrolling in the middle, and the itemised summary with the add button pinned at the bottom.
 Adding builds an `OrderLine` with `store/lines.ts#buildCartLine`, calls `cart.add`, closes the sheet, and announces the addition.
-The option lists are placeholders in `seed.json` at the repository root until Kang Tea confirms them.
+The option lists come from `seed.json` at the repository root, transcribed from the in-store board: sugar 0, 30, 50, 70 and 100%; warm, no ice, less ice and normal ice.
 
 ## Layout rules in play
 

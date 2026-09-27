@@ -8,7 +8,8 @@ export const MenuCategorySchema = z.object({
 });
 export type MenuCategory = z.infer<typeof MenuCategorySchema>;
 
-export const MenuItemTagSchema = z.enum(['best-seller', 'new']);
+/** `recommended` is the cactus mark on the in-store board; `best-seller` leads Popular now. */
+export const MenuItemTagSchema = z.enum(['best-seller', 'recommended', 'new']);
 export type MenuItemTag = z.infer<typeof MenuItemTagSchema>;
 
 export const MenuItemSchema = z.object({

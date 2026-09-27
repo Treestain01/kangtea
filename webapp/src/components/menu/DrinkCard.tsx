@@ -6,6 +6,7 @@ import './menu.css';
 
 const TAG_LABELS: Record<MenuItemTag, string> = {
   'best-seller': 'Best seller',
+  recommended: 'Recommended',
   new: 'New',
 };
 

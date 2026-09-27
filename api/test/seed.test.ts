@@ -6,12 +6,10 @@ describe('seed.json', () => {
     expect(() => loadSeed()).not.toThrow();
   });
 
-  it('holds the Calamvale Central store and the six categories', () => {
+  it('holds the Calamvale Central store and the four series from the board', () => {
     const seed = loadSeed();
     expect(seed.store.id).toBe('calamvale-central');
     expect(seed.menu.categories.map((category) => category.name)).toEqual([
-      'Milk Tea',
-      'Milk Foam',
       'Fruit Tea',
       'Yakult',
       'Milo',

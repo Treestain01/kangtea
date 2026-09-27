@@ -25,7 +25,7 @@ Routers that need data are factories taking what they read from (`storeRoutes(ca
 `createDeps(env)` in `src/deps.ts` builds those dependencies over one database connection.
 The catalogue comes from Postgres or from `seed.json`; see `database.md`.
 Routes still parse the result through the schema on the way out, so a bad row fails the route rather than reaching a client.
-The menu prices in `seed.json` are placeholders; replace them when the shop confirms the real menu.
+The menu in `seed.json` is transcribed from the in-store board photographed on 2026-09-27 (fruit tea, Yakult, Milo and matcha series, toppings, sugar and ice levels).
 
 ## Validation
 
