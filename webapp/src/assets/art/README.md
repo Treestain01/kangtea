@@ -21,7 +21,7 @@ Compose parts with `<use href="#kt-...">`; nothing here is a finished picture.
 | `kt-jelly-cube`      | 24 x 24   | Grass, coconut or tea jelly. Sinks, tinted by `--jelly`.                                             |
 | `kt-popping-ball`    | 24 x 24   | Water chestnut or barley popping ball. Sinks.                                                        |
 | `kt-foam-cap`        | 120 x 40  | Milk foam, a flat topped band across the full cup width, surface line at y=30. Draw inside the clip. |
-| `kt-ice-cream-scoop` | 60 x 48   | Vanilla ice cream. One large sinking body per lot.                                                   |
+| `kt-ice-cream-scoop` | 24 x 24   | Vanilla ice cream, one big round scoop. One sinking body per lot, about three pearls wide.           |
 | `kt-brulee`          | 120 x 16  | Caramel crust, full cup width, surface line at y=6. Draw inside the clip.                            |
 | `kt-pudding`         | 24 x 24   | Pudding. One large block per lot, sinks with the pearls.                                             |
 | `kt-stamp-empty`     | 40 x 40   | Loyalty card: a cup still to earn, dashed.                                                           |
