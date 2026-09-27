@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { CatalogueProvider } from '../../api/CatalogueProvider';
 import { RouterProvider, createMemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 import { NotFoundPage } from '../../pages/NotFoundPage';
@@ -8,6 +9,7 @@ import { AppShell } from './AppShell';
 
 vi.mock('../../api/client', () => ({
   fetchStore: vi.fn().mockReturnValue(new Promise(() => {})),
+  fetchMenu: vi.fn().mockReturnValue(new Promise(() => {})),
 }));
 
 function renderShell(path: string) {
@@ -25,7 +27,9 @@ function renderShell(path: string) {
   );
   return render(
     <StoresProvider stores={createTestStores()}>
-      <RouterProvider router={router} />
+      <CatalogueProvider storage={null}>
+        <RouterProvider router={router} />
+      </CatalogueProvider>
     </StoresProvider>,
   );
 }

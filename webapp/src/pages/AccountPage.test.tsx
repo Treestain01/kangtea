@@ -1,19 +1,33 @@
 import type { Store } from '@bbt/shared';
+import { CatalogueProvider } from '../api/CatalogueProvider';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fetchStore } from '../api/client';
+import { fetchMenu, fetchStore } from '../api/client';
 import { AuthProvider } from '../auth/AuthProvider';
 import { createFakeAuthClient } from '../auth/testing';
 import { StoresProvider } from '../store/StoresProvider';
-import { cartLineFixture, createTestStores } from '../store/testing';
+import {
+  cartLineFixture,
+  createTestStores,
+  customisationsFixture,
+  menuItemFixture,
+} from '../store/testing';
 import type { Stores } from '../store/types';
 import { AccountPage } from './AccountPage';
 
 vi.mock('../api/client', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../api/client')>()),
   fetchStore: vi.fn(),
+  fetchMenu: vi.fn(),
 }));
 const mockedFetchStore = vi.mocked(fetchStore);
+const mockedFetchMenu = vi.mocked(fetchMenu);
+
+const menuFixture = {
+  categories: [{ id: 'milk-tea', name: 'Milk Tea', sortOrder: 0 }],
+  items: [menuItemFixture()],
+  customisations: customisationsFixture,
+};
 
 const hours = { open: '00:00', close: '23:59' };
 const store: Store = {
@@ -35,9 +49,11 @@ function renderAccount(
 ): { stores: Stores; fake: ReturnType<typeof createFakeAuthClient> } {
   render(
     <StoresProvider stores={stores}>
-      <AuthProvider client={fake.client}>
-        <AccountPage />
-      </AuthProvider>
+      <CatalogueProvider storage={null}>
+        <AuthProvider client={fake.client}>
+          <AccountPage />
+        </AuthProvider>
+      </CatalogueProvider>
     </StoresProvider>,
   );
   return { stores, fake };
@@ -71,6 +87,8 @@ describe('AccountPage', () => {
   beforeEach(() => {
     mockedFetchStore.mockReset();
     mockedFetchStore.mockResolvedValue(store);
+    mockedFetchMenu.mockReset();
+    mockedFetchMenu.mockResolvedValue(menuFixture);
   });
 
   describe('signed out', () => {

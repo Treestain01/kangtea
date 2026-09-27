@@ -1,7 +1,7 @@
 # Home Screen and Menu
 
 The `/` route is a landing screen; the `/menu` route is the full catalogue.
-Both read the store and menu through `src/api/useCatalogue.ts`, which loads the two endpoints together and exposes `loading`, `error` (with `retry`) and `ready`.
+Both read the store and menu through `useCatalogue()`, backed by `src/api/CatalogueProvider.tsx`, which loads the two endpoints once for the whole app, caches them for the tab, and exposes `loading`, `error` (with `retry`) and `ready` (see `api-client.md`).
 
 ## Home (`pages/HomePage.tsx`)
 

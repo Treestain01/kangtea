@@ -19,7 +19,7 @@ It runs in any browser and inside the `iosapp` WKWebView, and must behave identi
 - Every UI change serves phones and desktops. Use the `responsive-ui` skill whenever you touch a `.tsx` or `.css` file; a hook reminds you.
 - Colours only via `var(--color-*)` from `src/theme/tokens.css`. Breakpoints only 768px and 1024px. `src/theme/tokens.test.ts` enforces both.
 - Query the DOM by role and text in tests, never by class name.
-- Only `src/config.ts` reads `import.meta.env`. Only `src/api/client.ts` calls `fetch` against the API. Only `src/store/local.ts` reads `localStorage`; pages use `useStores()` and the hooks.
+- Only `src/config.ts` reads `import.meta.env`. Only `src/api/client.ts` calls `fetch` against the API. Only `src/store/local.ts` reads `localStorage`, and only `src/api/catalogueCache.ts` reads `sessionStorage`; pages use `useStores()` and the hooks.
 - Sign in and the account go through `useAuth()` from `src/auth/AuthProvider.tsx`. Never call `/auth` routes or an auth SDK from a page.
 - Pages live in `src/pages/` and are registered in `src/router.tsx`. See `knowledge/navigation.md` before adding one.
 - Parse every API response with the schema from `@bbt/shared`. Never hand write a response type.

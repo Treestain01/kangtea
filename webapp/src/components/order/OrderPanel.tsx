@@ -1,7 +1,6 @@
-import type { Order, Store } from '@bbt/shared';
-import { useEffect, useState } from 'react';
+import type { Order } from '@bbt/shared';
 import { Link } from 'react-router';
-import { fetchStore } from '../../api/client';
+import { useStoreInfo } from '../../api/useStoreInfo';
 import { formatPrice } from '../../lib/money';
 import { useStores } from '../../store/StoresProvider';
 import { useCart, useOrders } from '../../store/hooks';
@@ -34,21 +33,7 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
   const cart = useCart();
   const orders = useOrders();
   const active = activeOrder(orders);
-  const [store, setStore] = useState<Store | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchStore()
-      .then((loaded) => {
-        if (!cancelled) setStore(loaded);
-      })
-      .catch(() => {
-        if (!cancelled) setStore(null);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const store = useStoreInfo();
 
   const className = `order${compact ? ' order--compact' : ''}`;
 

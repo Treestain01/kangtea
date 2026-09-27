@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router';
+import { CatalogueProvider } from './api/CatalogueProvider';
 import { AuthProvider } from './auth/AuthProvider';
 import { apiAuthClient } from './auth/apiAuthClient';
 import { createAppRouter } from './router';
@@ -25,9 +26,11 @@ startOrderProgress(stores.orders);
 createRoot(rootElement).render(
   <StrictMode>
     <StoresProvider stores={stores}>
-      <AuthProvider client={apiAuthClient}>
-        <RouterProvider router={createAppRouter()} />
-      </AuthProvider>
+      <CatalogueProvider>
+        <AuthProvider client={apiAuthClient}>
+          <RouterProvider router={createAppRouter()} />
+        </AuthProvider>
+      </CatalogueProvider>
     </StoresProvider>
   </StrictMode>,
 );

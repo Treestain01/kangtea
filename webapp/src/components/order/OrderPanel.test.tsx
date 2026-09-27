@@ -1,15 +1,22 @@
 import type { Store } from '@bbt/shared';
+import { CatalogueProvider } from '../../api/CatalogueProvider';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fetchStore } from '../../api/client';
+import { fetchMenu, fetchStore } from '../../api/client';
 import { StoresProvider } from '../../store/StoresProvider';
-import { cartLineFixture, createTestStores } from '../../store/testing';
+import {
+  cartLineFixture,
+  createTestStores,
+  customisationsFixture,
+  menuItemFixture,
+} from '../../store/testing';
 import type { Stores } from '../../store/types';
 import { OrderPanel } from './OrderPanel';
 
-vi.mock('../../api/client', () => ({ fetchStore: vi.fn() }));
+vi.mock('../../api/client', () => ({ fetchStore: vi.fn(), fetchMenu: vi.fn() }));
 const mockedFetchStore = vi.mocked(fetchStore);
+const mockedFetchMenu = vi.mocked(fetchMenu);
 
 const hours = { open: '00:00', close: '23:59' };
 const store: Store = {
@@ -24,6 +31,12 @@ const store: Store = {
   hours: { mon: hours, tue: hours, wed: hours, thu: hours, fri: hours, sat: hours, sun: hours },
 };
 
+const menuFixture = {
+  categories: [{ id: 'milk-tea', name: 'Milk Tea', sortOrder: 0 }],
+  items: [menuItemFixture()],
+  customisations: customisationsFixture,
+};
+
 const signature = cartLineFixture();
 const matcha = cartLineFixture({
   itemId: 'matcha-latte',
@@ -34,9 +47,11 @@ const matcha = cartLineFixture({
 function renderPanel(stores: Stores = createTestStores(), compact = false) {
   render(
     <StoresProvider stores={stores}>
-      <MemoryRouter initialEntries={['/order']}>
-        <OrderPanel compact={compact} />
-      </MemoryRouter>
+      <CatalogueProvider storage={null}>
+        <MemoryRouter initialEntries={['/order']}>
+          <OrderPanel compact={compact} />
+        </MemoryRouter>
+      </CatalogueProvider>
     </StoresProvider>,
   );
   return stores;
@@ -46,6 +61,8 @@ describe('OrderPanel cart', () => {
   beforeEach(() => {
     mockedFetchStore.mockReset();
     mockedFetchStore.mockResolvedValue(store);
+    mockedFetchMenu.mockReset();
+    mockedFetchMenu.mockResolvedValue(menuFixture);
   });
 
   it('shows the empty state with a link to the menu', () => {
@@ -120,6 +137,8 @@ describe('OrderPanel active order', () => {
   beforeEach(() => {
     mockedFetchStore.mockReset();
     mockedFetchStore.mockResolvedValue(store);
+    mockedFetchMenu.mockReset();
+    mockedFetchMenu.mockResolvedValue(menuFixture);
   });
 
   function withOrder(status: 'received' | 'making' | 'ready') {

@@ -30,6 +30,16 @@ Pages never call the auth functions directly; `src/auth/apiAuthClient.ts` wraps 
 The `fetchImpl` parameter exists for tests.
 Production callers omit it.
 
+## Loading once, caching for the tab
+
+`src/api/CatalogueProvider.tsx` wraps the app in `main.tsx` and loads the store and the menu once.
+`useCatalogue()` returns `{ catalogue, retry }` where `catalogue` is `loading`, `error` or `ready`; `useStoreInfo()` returns just the store or null.
+Home, Menu, the app shell's pickup card, the order panel and the Account page all read from it, so switching tabs sends no requests.
+The loaded pair is written to `sessionStorage` under `kangtea.catalogue`, validated with the shared schemas on read, so a reload in the same tab paints from the cache with no request and a new tab fetches fresh.
+`retry` always fetches and rewrites the cache.
+Tests render inside `<CatalogueProvider storage={null}>` so every test starts from its mocked fetches.
+This is the one place outside `store/local.ts` that touches browser storage, and it only ever holds public menu data.
+
 ## Adding a call
 
 1. Schema and type in `packages/shared/src/`, exported from `index.ts`.

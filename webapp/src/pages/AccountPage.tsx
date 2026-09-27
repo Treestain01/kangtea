@@ -1,11 +1,7 @@
-import {
-  AccountUpdateSchema,
-  SignInRequestSchema,
-  SignUpRequestSchema,
-  type Store,
-} from '@bbt/shared';
-import { useEffect, useState, type FormEvent } from 'react';
-import { ApiError, fetchStore } from '../api/client';
+import { AccountUpdateSchema, SignInRequestSchema, SignUpRequestSchema } from '@bbt/shared';
+import { useState, type FormEvent } from 'react';
+import { ApiError } from '../api/client';
+import { useStoreInfo } from '../api/useStoreInfo';
 import { useAuth } from '../auth/AuthProvider';
 import { describeOpeningStatus, openingStatus } from '../lib/openingHours';
 import { useStores } from '../store/StoresProvider';
@@ -46,23 +42,9 @@ export function AccountPage() {
   const stores = useStores();
   const auth = useAuth();
   const preferences = usePreferences();
-  const [store, setStore] = useState<Store | null>(null);
+  const store = useStoreInfo();
   const [confirmingClear, setConfirmingClear] = useState(false);
   const [clearedMessage, setClearedMessage] = useState('');
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchStore()
-      .then((loaded) => {
-        if (!cancelled) setStore(loaded);
-      })
-      .catch(() => {
-        if (!cancelled) setStore(null);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const chooseTheme = (theme: ThemePreference) => {
     stores.preferences.save({ ...preferences, theme });

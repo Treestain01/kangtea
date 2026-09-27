@@ -1,4 +1,5 @@
 import type { Menu, Store } from '@bbt/shared';
+import { CatalogueProvider } from '../api/CatalogueProvider';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -46,9 +47,11 @@ const menu: Menu = {
 function renderMenu(path = '/menu', stores: Stores = createTestStores()) {
   render(
     <StoresProvider stores={stores}>
-      <MemoryRouter initialEntries={[path]}>
-        <MenuPage />
-      </MemoryRouter>
+      <CatalogueProvider storage={null}>
+        <MemoryRouter initialEntries={[path]}>
+          <MenuPage />
+        </MemoryRouter>
+      </CatalogueProvider>
     </StoresProvider>,
   );
   return stores;
