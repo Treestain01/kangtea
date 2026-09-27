@@ -1,4 +1,4 @@
-import type { Account, Order, OrderLine, OrderStatus } from '@bbt/shared';
+import type { AuthSession, Order, OrderLine, OrderStatus } from '@bbt/shared';
 import type { Preferences } from './preferences';
 
 /** A line in the cart has the same shape as a line in a placed order. */
@@ -26,9 +26,13 @@ export interface OrdersStore {
   subscribe(listener: () => void): () => void;
 }
 
-export interface AccountStore {
-  read(): Account | null;
-  save(account: Account): void;
+/**
+ * The signed in session: bearer token, user and account as the api last sent them.
+ * The api owns accounts; this is the device's copy. Null means signed out.
+ */
+export interface SessionStore {
+  read(): AuthSession | null;
+  save(session: AuthSession): void;
   clear(): void;
   subscribe(listener: () => void): () => void;
 }
@@ -43,6 +47,6 @@ export interface PreferencesStore {
 export interface Stores {
   cart: CartStore;
   orders: OrdersStore;
-  account: AccountStore;
+  session: SessionStore;
   preferences: PreferencesStore;
 }

@@ -35,13 +35,15 @@ afterAll(async () => {
 });
 
 describe('migrations', () => {
-  it('create the catalogue tables', async () => {
+  it('create the catalogue and account tables', async () => {
     expect(await tableNames()).toEqual([
       'menu_categories',
       'menu_items',
       'option_levels',
+      'sessions',
       'stores',
       'toppings',
+      'users',
     ]);
   });
 });

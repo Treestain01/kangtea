@@ -4,3 +4,4 @@
 - [Routing and validation](routing-and-validation.md) - how the app is assembled, how routes validate, and error shapes.
 - [Deployment](deployment.md) - Vercel project settings, environment variables and how the entrypoint works.
 - [Database](database.md) - Postgres on Vercel via Neon, the Drizzle schema and migrations, `seed.json`, and the seed and wipe scripts.
+- [Accounts](accounts.md) - the `AccountsProvider` seam, the Postgres implementation with scrypt and bearer sessions, and the `/auth` routes.

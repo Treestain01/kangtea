@@ -1,7 +1,9 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import type { Catalogue } from './catalogue/index.js';
+import type { AccountsProvider } from './accounts/types.js';
+import type { Catalogue } from './catalogue/types.js';
 import { parseAllowedOrigins, type Env } from './env.js';
+import { authRoutes } from './routes/auth.js';
 import { healthRoutes } from './routes/health.js';
 import { menuRoutes } from './routes/menu.js';
 import { storeRoutes } from './routes/store.js';
@@ -9,6 +11,7 @@ import { storeRoutes } from './routes/store.js';
 /** Everything the routes read from. Entrypoints build it from env; tests pass fakes. */
 export interface AppDeps {
   catalogue: Catalogue;
+  accounts: AccountsProvider;
 }
 
 /** Builds the Hono application. Pure with respect to env and storage so tests can construct it. */
@@ -20,6 +23,7 @@ export function createApp(env: Env, deps: AppDeps): Hono {
   app.route('/health', healthRoutes);
   app.route('/store', storeRoutes(deps.catalogue));
   app.route('/menu', menuRoutes(deps.catalogue));
+  app.route('/auth', authRoutes(deps.accounts));
 
   app.notFound((c) => c.json({ error: 'Not found' }, 404));
   app.onError((error, c) => {

@@ -1,16 +1,16 @@
 import { act, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { StoresProvider } from './StoresProvider';
-import { useAccount, useCart, useOrders } from './hooks';
+import { useCart, useOrders, useSession } from './hooks';
 import { cartLineFixture, createTestStores } from './testing';
 
 function Probe() {
   const cart = useCart();
   const orders = useOrders();
-  const account = useAccount();
+  const session = useSession();
   return (
     <p>
-      cart:{cart.length} orders:{orders.length} name:{account?.displayName ?? 'none'}
+      cart:{cart.length} orders:{orders.length} name:{session?.account.displayName ?? 'none'}
     </p>
   );
 }
@@ -30,10 +30,15 @@ describe('store hooks', () => {
 
     act(() => {
       stores.orders.place(stores.cart.read(), 's');
-      stores.account.save({
-        displayName: 'Tristan',
-        marketingOptIn: false,
-        createdAt: '2026-09-24T02:00:00.000Z',
+      stores.session.save({
+        token: 't',
+        expiresAt: '2026-10-27T00:00:00.000Z',
+        user: { id: 'u1', email: 't@example.com', createdAt: '2026-09-24T02:00:00.000Z' },
+        account: {
+          displayName: 'Tristan',
+          marketingOptIn: false,
+          createdAt: '2026-09-24T02:00:00.000Z',
+        },
       });
     });
     expect(screen.getByText('cart:1 orders:1 name:Tristan')).toBeInTheDocument();

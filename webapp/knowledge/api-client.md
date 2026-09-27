@@ -7,22 +7,26 @@
 
 ## Pattern
 
-One private helper does the work for every endpoint:
+Two private helpers do the work for every endpoint:
 
 ```ts
-async function getJson<T extends z.ZodType>(path, schema: T, fetchImpl): Promise<z.output<T>>;
+async function request(path, { method, body, token, fetchImpl }): Promise<Response>;
+async function requestJson<T extends z.ZodType>(path, schema: T, options): Promise<z.output<T>>;
 ```
 
-It builds the URL from `API_URL`, throws on a non 2xx status with the status code in the message, and parses the JSON body with the schema from `@bbt/shared`.
-Each public function is one line naming the path and schema:
+`request` builds the URL from `API_URL`, sends JSON when there is a body and `Authorization: Bearer <token>` when there is a token, and throws `ApiError` on a non 2xx status.
+`ApiError` carries `status`, the api's `error` message when it sent one (otherwise `<METHOD> <path> failed with status <n>`), and any Zod `issues`.
+`requestJson` parses the body with the schema from `@bbt/shared`.
+Each public function is a few lines naming the path, schema and method:
 
 ```ts
 export function fetchMenu(fetchImpl: typeof fetch = fetch): Promise<Menu> {
-  return getJson('/menu', MenuSchema, fetchImpl);
+  return requestJson('/menu', MenuSchema, { fetchImpl });
 }
 ```
 
-Current functions: `fetchHealth`, `fetchStore`, `fetchMenu`.
+Current functions: `fetchHealth`, `fetchStore`, `fetchMenu`, `signUp`, `signIn`, `signOut`, `fetchMe`, `updateAccount`.
+Pages never call the auth functions directly; `src/auth/apiAuthClient.ts` wraps them (see `accounts.md`).
 The `fetchImpl` parameter exists for tests.
 Production callers omit it.
 
@@ -30,7 +34,7 @@ Production callers omit it.
 
 1. Schema and type in `packages/shared/src/`, exported from `index.ts`.
 2. Route in `api` (see `api/.claude/skills/add-endpoint`).
-3. One line function here calling `getJson`, with a test in `client.test.ts` covering success (and the URL called) and a body that fails the schema.
+3. A function here calling `requestJson`, with a test in `client.test.ts` covering success (URL, method and headers) and a body that fails the schema.
 
 ## CORS
 

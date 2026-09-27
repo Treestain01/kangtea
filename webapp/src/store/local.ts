@@ -1,9 +1,9 @@
 import {
-  AccountSchema,
+  AuthSessionSchema,
   OrderLineSchema,
   OrderSchema,
   orderLinesTotalCents,
-  type Account,
+  type AuthSession,
   type Order,
   type OrderStatus,
 } from '@bbt/shared';
@@ -11,18 +11,18 @@ import { z } from 'zod';
 import { lineKey } from './lines';
 import { DEFAULT_PREFERENCES, PreferencesSchema, type Preferences } from './preferences';
 import type {
-  AccountStore,
   CartLine,
   CartStore,
   OrdersStore,
   PreferencesStore,
+  SessionStore,
   Stores,
 } from './types';
 
 export const STORAGE_KEYS = {
   cart: 'kangtea.cart',
   orders: 'kangtea.orders',
-  account: 'kangtea.account',
+  session: 'kangtea.session',
   preferences: 'kangtea.preferences',
 } as const;
 
@@ -167,18 +167,18 @@ function createOrdersStore(storage: Storage): OrdersStore {
   };
 }
 
-function createAccountStore(storage: Storage): AccountStore {
-  const store = createKeyStore<Account | null>(
+function createSessionStore(storage: Storage): SessionStore {
+  const store = createKeyStore<AuthSession | null>(
     storage,
-    STORAGE_KEYS.account,
-    AccountSchema.nullable(),
+    STORAGE_KEYS.session,
+    AuthSessionSchema.nullable(),
     null,
   );
   return {
     read: store.read,
     subscribe: store.subscribe,
-    save(account) {
-      store.write(AccountSchema.parse(account));
+    save(session) {
+      store.write(AuthSessionSchema.parse(session));
     },
     clear: store.remove,
   };
@@ -205,7 +205,7 @@ export function createLocalStores(storage: Storage): Stores {
   return {
     cart: createCartStore(storage),
     orders: createOrdersStore(storage),
-    account: createAccountStore(storage),
+    session: createSessionStore(storage),
     preferences: createPreferencesStore(storage),
   };
 }

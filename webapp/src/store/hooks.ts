@@ -1,4 +1,4 @@
-import type { Account, Order } from '@bbt/shared';
+import type { AuthSession, Order } from '@bbt/shared';
 import { useSyncExternalStore } from 'react';
 import { useStores } from './StoresProvider';
 import type { Preferences } from './preferences';
@@ -16,10 +16,10 @@ export function useOrders(): Order[] {
   return useSyncExternalStore(orders.subscribe, orders.read, orders.read);
 }
 
-/** The local profile, or null. */
-export function useAccount(): Account | null {
-  const { account } = useStores();
-  return useSyncExternalStore(account.subscribe, account.read, account.read);
+/** The signed in session, or null. Pages usually want `useAuth()` from `auth/AuthProvider` instead. */
+export function useSession(): AuthSession | null {
+  const { session } = useStores();
+  return useSyncExternalStore(session.subscribe, session.read, session.read);
 }
 
 /** Device preferences, starting from the defaults. */

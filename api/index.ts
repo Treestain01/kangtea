@@ -1,6 +1,6 @@
 import type { Hono } from 'hono';
-import { createCatalogue } from './src/catalogue/index.js';
 import { createApp } from './src/create-app.js';
+import { createDeps } from './src/deps.js';
 import { loadEnv } from './src/env.js';
 
 /**
@@ -10,6 +10,6 @@ import { loadEnv } from './src/env.js';
  * may import `hono` directly. Local development uses `src/server.ts` instead.
  */
 const env = loadEnv();
-const app: Hono = createApp(env, { catalogue: createCatalogue(env) });
+const app: Hono = createApp(env, createDeps(env));
 
 export default app;

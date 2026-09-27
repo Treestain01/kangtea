@@ -23,5 +23,6 @@ Read the document, not this index, for the facts.
   - [0014 Explicit ESM specifiers in api and shared](decisions/0014-explicit-esm-specifiers-in-api-and-shared.md)
   - [0015 Bundle the api function with esbuild](decisions/0015-bundle-the-api-function-with-esbuild.md)
   - [0016 Theme choice as a device preference](decisions/0016-theme-choice-as-a-device-preference.md)
+  - [0017 Accounts behind a provider interface](decisions/0017-accounts-behind-a-provider-interface.md)
 
 Project knowledge bases: `webapp/knowledge/INDEX.md`, `api/knowledge/INDEX.md`, `iosapp/knowledge/INDEX.md`.

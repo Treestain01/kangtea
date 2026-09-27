@@ -17,11 +17,12 @@ Nothing else constructs the app.
 One file per resource in `src/routes/`, exporting `<resource>Routes = new Hono()` with its handlers chained.
 Paths inside the router are relative; the prefix is given at mount time in `create-app.ts`.
 
-Current routes: `GET /health`, `GET /store`, `GET /menu`.
+Current routes: `GET /health`, `GET /store`, `GET /menu`, and under `/auth`: `POST /sign-up`, `POST /sign-in`, `POST /sign-out`, `GET /me`, `PATCH /me` (see `accounts.md`).
 
 ## Data access
 
-Routers that need data are factories taking the `Catalogue` (`storeRoutes(catalogue)`, `menuRoutes(catalogue)`), so they never import a database module.
+Routers that need data are factories taking what they read from (`storeRoutes(catalogue)`, `menuRoutes(catalogue)`, `authRoutes(accounts)`), so they never import a database module.
+`createDeps(env)` in `src/deps.ts` builds those dependencies over one database connection.
 The catalogue comes from Postgres or from `seed.json`; see `database.md`.
 Routes still parse the result through the schema on the way out, so a bad row fails the route rather than reaching a client.
 The menu prices in `seed.json` are placeholders; replace them when the shop confirms the real menu.
@@ -33,6 +34,12 @@ The menu prices in `seed.json` are placeholders; replace them when the shop conf
 - Output: build the body as the inferred type, then `c.json(ResponseSchema.parse(body))`.
   A contract violation throws and becomes a 500 in tests rather than a silent mismatch in production.
 - Schemas live in `packages/shared`, never inline in a route.
+
+## Authentication
+
+Protected routes read `Authorization: Bearer <token>` and call `accounts.resolve(token)`; a missing or unknown token answers `401 { error: 'Sign in first' }`.
+`AccountsError` from the provider maps to 409 (`email-taken`), 401 (`invalid-credentials`) or 503 (`unavailable`) in `src/routes/auth.ts`.
+There is no global auth middleware yet; add one when a second protected router appears.
 
 ## Error shape
 

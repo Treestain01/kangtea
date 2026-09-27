@@ -2,20 +2,20 @@
 
 ## Where the data lives
 
-Cart, orders, the profile and device preferences live in the browser's `localStorage` behind four stores in `src/store/`.
+Cart, orders, the signed in session and device preferences live in the browser's `localStorage` behind four stores in `src/store/`.
 Nothing about orders touches the API yet.
-The shapes are the shared contract's `OrderLine`, `Order` and `Account`, so moving storage to the API later changes `src/store/local.ts` and `src/store/orderProgress.ts` and nothing else.
+The shapes are the shared contract's `OrderLine`, `Order` and `AuthSession`, so moving cart and orders to the API later changes `src/store/local.ts` and `src/store/orderProgress.ts` and nothing else.
 
 | Piece           | File                                         | Role                                                                                                                            |
 | --------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Interfaces      | `store/types.ts`                             | `CartStore`, `OrdersStore`, `AccountStore`, `PreferencesStore`, `Stores`. Pages depend on these, never on storage.              |
+| Interfaces      | `store/types.ts`                             | `CartStore`, `OrdersStore`, `SessionStore`, `PreferencesStore`, `Stores`. Pages depend on these, never on storage.              |
 | Preferences     | `store/preferences.ts`                       | `PreferencesSchema` (`theme`: system, light or dark) and the defaults. Device level, not part of the shared contract.           |
 | Implementation  | `store/local.ts`                             | `createLocalStores(storage)`. One key per store, schema validated on every read, corrupt data resets.                           |
 | Derived helpers | `store/orders.ts`                            | `activeOrder`, `pastOrders`, `cartTotalCents`, `summariseLines`, `countDrinks`.                                                 |
-| React access    | `store/StoresProvider.tsx`, `store/hooks.ts` | `useStores()` for actions, `useCart()`, `useOrders()`, `useAccount()`, `usePreferences()` for reads via `useSyncExternalStore`. |
+| React access    | `store/StoresProvider.tsx`, `store/hooks.ts` | `useStores()` for actions, `useCart()`, `useOrders()`, `useSession()`, `usePreferences()` for reads via `useSyncExternalStore`. |
 | Test helpers    | `store/testing.ts`                           | `createMemoryStorage`, `createTestStores`, `menuItemFixture`.                                                                   |
 
-Storage keys are `kangtea.cart`, `kangtea.orders`, `kangtea.account`, `kangtea.preferences`.
+Storage keys are `kangtea.cart`, `kangtea.orders`, `kangtea.session`, `kangtea.preferences`.
 
 ## Lines and customisations
 
@@ -55,7 +55,7 @@ When the API owns orders, replace this file with polling (or a push) and delete 
 - `components/order/OrderPanel.tsx`: the cart while no order is active, the status view while one is. Placing needs the store id from `/store`, so the button stays disabled until that loads. `compact` stacks every line as a plain hairline-separated row for the narrow desktop panel and swaps the "Browse the menu" link for a hint.
 - `/order` (`pages/OrderPage.tsx`): renders `OrderPanel` on phones. On desktop the same panel is always on the right of every page, so the route redirects to `/`.
 - `/history` (`pages/HistoryPage.tsx`): `pastOrders` with date, status pill, `summariseLines`, total, and "Order again" which calls `cart.replace(order.lines)` and navigates to `/order`.
-- `/account` (`pages/AccountPage.tsx`): the profile form validated with `AccountSchema`, the Appearance radio group (System, Light, Dark; saved to `preferences` on change and applied by `theme/theme.ts`, see `theme.md`), the store card from `/store`, and "Clear my data" behind a confirmation. Clearing empties cart, orders and account; the theme choice stays.
+- `/account` (`pages/AccountPage.tsx`): see `accounts.md`. Clearing empties cart and orders and signs out; the theme choice stays.
 
 ## Rules
 

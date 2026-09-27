@@ -1,5 +1,5 @@
 import type { Store } from '@bbt/shared';
-import { boolean, integer, jsonb, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
+import { boolean, integer, jsonb, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 /**
  * Catalogue tables. Column shapes mirror the shared contract so the Postgres catalogue can
@@ -57,4 +57,31 @@ export const toppings = pgTable('toppings', {
   name: text('name').notNull(),
   priceCents: integer('price_cents').notNull(),
   sortOrder: integer('sort_order').notNull(),
+});
+
+/**
+ * Accounts. Owned by the Postgres accounts provider (src/accounts/postgres.ts); nothing else
+ * reads or writes these tables, so a different provider can leave them behind.
+ * The seed never touches them; only a wipe does.
+ */
+export const users = pgTable('users', {
+  id: text('id').primaryKey(),
+  /** Lower cased and trimmed before it gets here. */
+  email: text('email').notNull().unique(),
+  passwordHash: text('password_hash').notNull(),
+  displayName: text('display_name').notNull(),
+  phone: text('phone'),
+  marketingOptIn: boolean('marketing_opt_in').notNull().default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull(),
+});
+
+export const sessions = pgTable('sessions', {
+  /** SHA-256 of the bearer token. The token itself is never stored. */
+  tokenHash: text('token_hash').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull(),
+  expiresAt: timestamp('expires_at', { withTimezone: true }).notNull(),
 });

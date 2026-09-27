@@ -38,12 +38,12 @@ describe('preferences store', () => {
     expect(storage.getItem(STORAGE_KEYS.preferences)).toBeNull();
   });
 
-  it('survives clearing the account, cart and orders', () => {
+  it('survives clearing the session, cart and orders', () => {
     const stores = createTestStores();
     stores.preferences.save({ theme: 'light' });
     stores.cart.clear();
     stores.orders.clear();
-    stores.account.clear();
+    stores.session.clear();
     expect(stores.preferences.read()).toEqual({ theme: 'light' });
   });
 });

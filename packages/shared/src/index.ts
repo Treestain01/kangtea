@@ -35,3 +35,22 @@ export type { Customisation, Order, OrderLine, OrderStatus } from './order.js';
 
 export { AccountSchema } from './account.js';
 export type { Account } from './account.js';
+
+export {
+  AccountUpdateSchema,
+  AuthSessionSchema,
+  EmailSchema,
+  MeResponseSchema,
+  PasswordSchema,
+  SignInRequestSchema,
+  SignUpRequestSchema,
+  UserSchema,
+} from './auth.js';
+export type {
+  AccountUpdate,
+  AuthSession,
+  MeResponse,
+  SignInRequest,
+  SignUpRequest,
+  User,
+} from './auth.js';

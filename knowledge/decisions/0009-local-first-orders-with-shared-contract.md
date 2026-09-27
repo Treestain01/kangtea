@@ -1,7 +1,7 @@
 # 0009 Local first orders with the shared contract
 
 Date: 2026-09-24
-Status: Accepted
+Status: Accepted (the account part is superseded by 0017; cart and orders still apply)
 
 ## Context
 

@@ -122,7 +122,8 @@
 
 .storecard,
 .danger,
-.appearance {
+.appearance,
+.signin {
   display: grid;
   gap: var(--space-2);
   padding: var(--space-4);
@@ -133,9 +134,71 @@
 
 .storecard__heading,
 .danger__heading,
-.appearance__legend {
+.appearance__legend,
+.signin__heading {
   margin: 0;
   font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* Sign in or create an account: one card, two modes chosen by chips. */
+.signin__modes {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.signin__mode {
+  flex: 1 1 auto;
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background var(--motion-fast) var(--ease),
+    color var(--motion-fast) var(--ease),
+    border-color var(--motion-fast) var(--ease);
+}
+
+.signin__mode:hover {
+  border-color: var(--color-accent);
+}
+
+.signin__mode[aria-pressed='true'] {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.signin__form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.signin__copy,
+.account__signedin {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.account__signedin strong {
+  color: var(--color-text);
+}
+
+.account__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.account__error {
+  margin: 0;
+  color: var(--color-danger);
   font-weight: 600;
 }
 
@@ -260,7 +323,8 @@
   .account__primary,
   .account__secondary,
   .danger__yes,
-  .appearance__option {
+  .appearance__option,
+  .signin__mode {
     transition: none;
   }
 }

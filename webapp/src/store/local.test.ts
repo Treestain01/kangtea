@@ -146,25 +146,37 @@ describe('orders store', () => {
   });
 });
 
-describe('account store', () => {
-  const account = {
-    displayName: 'Tristan',
-    marketingOptIn: false,
-    createdAt: '2026-09-24T02:00:00.000Z',
+describe('session store', () => {
+  const session = {
+    token: 'opaque-token',
+    expiresAt: '2026-10-27T00:00:00.000Z',
+    user: { id: 'u1', email: 'tristan@example.com', createdAt: '2026-09-27T00:00:00.000Z' },
+    account: {
+      displayName: 'Tristan',
+      email: 'tristan@example.com',
+      marketingOptIn: false,
+      createdAt: '2026-09-27T00:00:00.000Z',
+    },
   };
 
   it('is null until saved, then reads back', () => {
     const storage = createMemoryStorage();
-    const { account: store } = createLocalStores(storage);
+    const { session: store } = createLocalStores(storage);
     expect(store.read()).toBeNull();
-    store.save(account);
-    expect(createLocalStores(storage).account.read()).toEqual(account);
+    store.save(session);
+    expect(createLocalStores(storage).session.read()).toEqual(session);
   });
 
-  it('clears', () => {
-    const { account: store } = createLocalStores(createMemoryStorage());
-    store.save(account);
+  it('clears on sign out', () => {
+    const { session: store } = createLocalStores(createMemoryStorage());
+    store.save(session);
     store.clear();
     expect(store.read()).toBeNull();
+  });
+
+  it('drops a stored session that no longer matches the contract', () => {
+    const storage = createMemoryStorage();
+    storage.setItem('kangtea.session', JSON.stringify({ token: 'x' }));
+    expect(createLocalStores(storage).session.read()).toBeNull();
   });
 });

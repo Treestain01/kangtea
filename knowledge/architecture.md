@@ -23,6 +23,7 @@
 - `api` is one Vercel serverless function. Every route is mounted on a single Hono app.
 - `api` reads the catalogue from Postgres when `DATABASE_URL` is set and from `seed.json` at the repository root otherwise. See `api/knowledge/database.md`.
 - `seed.json` is the base template for every database environment. The root skills `db-seed` and `db-wipe` load and empty a database.
+- Accounts live in the same database behind `api/src/accounts/types.ts#AccountsProvider`; the webapp signs in through `webapp/src/auth/AuthClient.ts` and sends an opaque bearer token. Both are swap points for a hosted auth provider (ADR 0017).
 - `packages/shared` is TypeScript source consumed directly by both. There is no build step.
 - `iosapp` loads `webapp` from `WEBAPP_URL`. It never calls `api` directly and never bundles web assets.
 

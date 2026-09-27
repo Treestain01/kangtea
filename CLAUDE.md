@@ -60,6 +60,7 @@ Say so in your report when doing iOS work rather than silently improvising.
 - API shape changes start in `packages/shared`, then `api`, then `webapp`.
 - Record non-obvious decisions as ADRs with the `record-decision` skill.
 - Menu and store changes are edits to `seed.json`, followed by the `db-seed` skill per environment. Never edit database rows by hand.
+- Anything about who a user is goes through `AccountsProvider` (api) and `AuthClient` (webapp). Never call an auth vendor SDK from a route or a page.
 - Never commit `*.xcodeproj`, `.vercel/`, `.env` files, `node_modules` or `dist`.
 - Report verification faithfully: if a check failed or could not be run (iOS on Windows), say so.
 - Follow Tristan's global instructions: no em dashes, one sentence per line in long Markdown, no agent co-author lines in commits.
