@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -29,23 +30,6 @@ export interface CatalogueContextValue {
 
 const CatalogueContext = createContext<CatalogueContextValue | null>(null);
 
-/**
- * One fetch at a time for the whole module. StrictMode mounts twice in development and two
- * providers would otherwise each fire a pair of requests; both now await the same promise.
- */
-let inFlight: Promise<LoadedCatalogue> | null = null;
-
-function loadCatalogue(): Promise<LoadedCatalogue> {
-  if (!inFlight) {
-    inFlight = Promise.all([fetchStore(), fetchMenu()])
-      .then(([store, menu]) => ({ store, menu }))
-      .finally(() => {
-        inFlight = null;
-      });
-  }
-  return inFlight;
-}
-
 type CatalogueProviderProps = {
   /**
    * Where to cache for the tab's lifetime. Defaults to sessionStorage; pass null for no cache.
@@ -67,13 +51,24 @@ export function CatalogueProvider({ storage, children }: CatalogueProviderProps)
     return cached ? { kind: 'ready', ...cached } : { kind: 'loading' };
   });
   const [attempt, setAttempt] = useState(0);
+  // The request in progress, if any. StrictMode runs the effect twice on mount in development;
+  // the second run awaits the same promise instead of firing a second pair of requests.
+  const inFlight = useRef<{ attempt: number; promise: Promise<LoadedCatalogue> } | null>(null);
 
   useEffect(() => {
     // The first attempt is satisfied by the cache when there is one; retries always fetch.
     if (attempt === 0 && readCachedCatalogue(cache)) return;
     let cancelled = false;
     setCatalogue({ kind: 'loading' });
-    loadCatalogue()
+    if (inFlight.current?.attempt !== attempt) {
+      const promise = Promise.all([fetchStore(), fetchMenu()])
+        .then(([store, menu]): LoadedCatalogue => ({ store, menu }))
+        .finally(() => {
+          if (inFlight.current?.promise === promise) inFlight.current = null;
+        });
+      inFlight.current = { attempt, promise };
+    }
+    inFlight.current.promise
       .then((loaded) => {
         if (cancelled) return;
         writeCachedCatalogue(cache, loaded);
