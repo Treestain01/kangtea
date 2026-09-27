@@ -39,11 +39,14 @@ Submitting the search navigates to `/menu?q=<text>`.
 | `CategoryChips`   | `components/menu/CategoryChips.tsx`   | "All" plus categories sorted by `sortOrder`, as `aria-pressed` buttons.                                                                                                                  |
 | `DrinkGrid`       | `components/menu/DrinkGrid.tsx`       | 2 columns on phones; from 768px as many 300px cards as fit.                                                                                                                              |
 | `DrinkCard`       | `components/menu/DrinkCard.tsx`       | Name, optional description, price, first tag, `CupIllustration`. `variant="compact"` for the home row: square art, no description. The whole card is a button when `onOpen` is provided. |
-| `CupIllustration` | `components/menu/CupIllustration.tsx` | Decorative CSS cup tinted with the item's `colour`.                                                                                                                                      |
+| `CupIllustration` | `components/menu/CupIllustration.tsx` | Decorative CSS cup tinted with the item's `colour`, for cards.                                                                                                                           |
+| `LiveCup`         | `components/cup/LiveCup.tsx`          | The cup in the customise sheet that builds itself from the current choices, with physics for toppings and ice.                                                                           |
 
 ## Customising and adding to the cart
 
 The card opens `components/menu/CustomiseDrinkDialog.tsx`, a native `<dialog>` bottom sheet with the drink hero pinned at the top, sugar and ice tracks and topping tiles scrolling in the middle, and the itemised summary with the add button pinned at the bottom.
+The hero holds the live cup, `components/cup/LiveCup.tsx`: the tea deepens with sugar, ice floats under the surface, foam and brulee fade in on top, and every other topping drops in under a small physics world and piles at the bottom.
+`components/cup/cupParts.ts` maps menu names to art and `components/cup/cupPhysics.ts` wraps Matter.js, which loads only when the sheet opens; the rules are in `src/assets/art/README.md` and ADR 0018.
 Adding builds an `OrderLine` with `store/lines.ts#buildCartLine`, calls `cart.add`, closes the sheet, and announces the addition.
 The option lists come from `seed.json` at the repository root, transcribed from the in-store board: sugar 0, 30, 50, 70 and 100%; warm, no ice, less ice and normal ice.
 
@@ -53,11 +56,11 @@ The option lists come from `seed.json` at the repository root, transcribed from 
 - Every colour is a token; drink tints arrive as data through the `--tea` custom property.
 - Display type (`--font-display`, Fraunces) is used for the greeting, drink names, prices and headings; body type is Nunito Sans.
 
-## Planned: the live cup and the pearl loyalty card
+## The cup art
 
-`src/assets/art/cup-parts.svg` holds the SVG part library for two coming features: a cup in the customise sheet that builds itself as sugar, ice and toppings change, and the pearl loyalty card from the mockup.
-The README beside it lists every part, its tint variable and how each choice maps onto the cup.
-The interactive preview is the Cup Lab artifact linked from that README; toppings drop into the cup under a small physics simulation.
+`src/assets/art/cup-parts.svg` holds the SVG part library for the live cup (shipped in the customise sheet) and for the pearl loyalty card (planned).
+The README beside it lists every part, its tint variable and how each choice maps onto the cup; the Cup Lab artifact linked there is the interactive reference.
+`components/cup/CupSprite.tsx` puts the library into the document; render it once wherever a `LiveCup` appears.
 
 ## Deliberately absent
 

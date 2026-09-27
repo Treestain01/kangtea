@@ -1,15 +1,16 @@
 # Stack
 
-| Piece                            | Role                              | Configured in                                         |
-| -------------------------------- | --------------------------------- | ----------------------------------------------------- |
-| Vite                             | dev server and production bundler | `vite.config.ts`                                      |
-| React 19                         | UI                                | `src/main.tsx` mounts `App` under `StrictMode`        |
-| TypeScript (strict)              | types                             | `tsconfig.json` extends `../tsconfig.base.json`       |
-| ESLint                           | lint, with `react-hooks` rules    | root `eslint.config.mjs`, block scoped to `webapp/**` |
-| Prettier                         | formatting                        | root `.prettierrc`                                    |
-| Vitest + jsdom                   | test runner and DOM               | `test` block in `vite.config.ts`                      |
-| React Testing Library + jest-dom | rendering and matchers            | `src/test/setup.ts`                                   |
-| `@bbt/shared`                    | response schemas                  | workspace dependency                                  |
+| Piece                            | Role                                        | Configured in                                                 |
+| -------------------------------- | ------------------------------------------- | ------------------------------------------------------------- |
+| Vite                             | dev server and production bundler           | `vite.config.ts`                                              |
+| React 19                         | UI                                          | `src/main.tsx` mounts `App` under `StrictMode`                |
+| TypeScript (strict)              | types                                       | `tsconfig.json` extends `../tsconfig.base.json`               |
+| ESLint                           | lint, with `react-hooks` rules              | root `eslint.config.mjs`, block scoped to `webapp/**`         |
+| Prettier                         | formatting                                  | root `.prettierrc`                                            |
+| Matter.js                        | 2D physics for the toppings in the live cup | `components/cup/cupPhysics.ts`, loaded on demand by `LiveCup` |
+| Vitest + jsdom                   | test runner and DOM                         | `test` block in `vite.config.ts`                              |
+| React Testing Library + jest-dom | rendering and matchers                      | `src/test/setup.ts`                                           |
+| `@bbt/shared`                    | response schemas                            | workspace dependency                                          |
 
 ## Notes
 

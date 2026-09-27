@@ -14,7 +14,8 @@ import {
   unitPriceCents,
   type ToppingChoice,
 } from '../../store/lines';
-import { CupIllustration } from './CupIllustration';
+import { CupSprite } from '../cup/CupSprite';
+import { LiveCup } from '../cup/LiveCup';
 import './CustomiseDrinkDialog.css';
 
 type CustomiseDrinkDialogProps = {
@@ -119,13 +120,20 @@ export function CustomiseDrinkDialog({
       }}
     >
       <div className="customise__body">
+        <CupSprite />
         <button type="button" className="customise__close" aria-label="Close" onClick={onClose}>
           ×
         </button>
 
         <header className="hero" style={heroStyle}>
           <div className="hero__art">
-            <CupIllustration colour={item.colour} pearls={item.pearls} size={96} />
+            <LiveCup
+              colour={item.colour}
+              sugar={sugar}
+              ice={ice}
+              toppings={toppings}
+              label={`${item.name} as you have built it`}
+            />
           </div>
           <div className="hero__text">
             {tag && <span className="hero__tag">{TAG_LABELS[tag]}</span>}

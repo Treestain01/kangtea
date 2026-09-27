@@ -69,5 +69,6 @@ Earned stamps are `kt-stamp-full` in the colour of the drink that earned them, s
 The tenth is `kt-stamp-free`.
 A new stamp scales up from the centre over `--motion-slow` with `--ease` and the free cup wobbles once when it unlocks.
 
+In the app: `src/components/cup/LiveCup.tsx` composes these parts, `cupParts.ts` maps menu names to them (change it with this file), and `cupPhysics.ts` runs the world. `CupSprite.tsx` injects this file into the document.
 The preview lab for both is the Cup Lab artifact: https://claude.ai/artifact/H9wmEpxuGnWqrBaUQ65jFb (private to Tristan's account).
 In the app the engine will load with the customise sheet only, through a dynamic import, so the rest of the site pays nothing for it.
