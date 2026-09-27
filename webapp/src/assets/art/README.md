@@ -8,7 +8,7 @@ Compose parts with `<use href="#kt-...">`; nothing here is a finished picture.
 
 | Symbol               | Space     | Use                                                                                                  |
 | -------------------- | --------- | ---------------------------------------------------------------------------------------------------- |
-| `kt-cup-body`        | 120 x 200 | Translucent cup wall with one highlight stroke.                                                      |
+| `kt-cup-body`        | 120 x 200 | Translucent cup wall.                                                                                |
 | `kt-cup-lid`         | 120 x 200 | Dome lid and rim.                                                                                    |
 | `kt-straw`           | 120 x 200 | Straw at 8 degrees, coloured `--straw`.                                                              |
 | `kt-tea-sheen`       | 120 x 200 | Gradient laid over the liquid so any tea colour reads as a drink.                                    |

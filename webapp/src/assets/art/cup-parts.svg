@@ -33,7 +33,6 @@
     <path d="M18 30 H102 L91 188 Q89.5 197 80 197 H40 Q30.5 197 29 188 Z"
       fill="var(--cup-surface, #ffffff)" fill-opacity="0.25"
       stroke="var(--cup-line, currentColor)" stroke-width="3" stroke-linejoin="round" />
-    <path d="M30 42 L26 170" stroke="#ffffff" stroke-opacity="0.55" stroke-width="4" stroke-linecap="round" />
   </symbol>
 
   <symbol id="kt-cup-lid" viewBox="0 0 120 200">
