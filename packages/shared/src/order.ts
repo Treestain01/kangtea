@@ -1,9 +1,13 @@
 import { z } from 'zod';
 
-/** A chosen option on a line, for example size Large. Empty until ordering supports options. */
+/**
+ * A chosen option on a line, for example Sugar 50% or Topping Pearls.
+ * `quantity` is for options that can be added more than once (two lots of pearls); absent means one.
+ */
 export const CustomisationSchema = z.object({
   name: z.string().min(1),
   value: z.string().min(1),
+  quantity: z.number().int().min(1).optional(),
 });
 export type Customisation = z.infer<typeof CustomisationSchema>;
 

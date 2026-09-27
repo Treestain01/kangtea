@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { OrderLineSchema, OrderSchema, orderLinesTotalCents } from '../src/index.js';
+import {
+  CustomisationSchema,
+  OrderLineSchema,
+  OrderSchema,
+  orderLinesTotalCents,
+} from '../src/index.js';
 
 const signature = {
   itemId: 'signature-milk-tea',
@@ -44,6 +49,18 @@ describe('OrderLineSchema', () => {
 
   it('rejects a zero quantity', () => {
     expect(OrderLineSchema.safeParse({ ...signature, quantity: 0 }).success).toBe(false);
+  });
+
+  it('accepts a customisation with a quantity of two or more and rejects zero', () => {
+    expect(
+      CustomisationSchema.safeParse({ name: 'Topping', value: 'Pearls', quantity: 2 }).success,
+    ).toBe(true);
+    expect(
+      CustomisationSchema.safeParse({ name: 'Topping', value: 'Pearls', quantity: 0 }).success,
+    ).toBe(false);
+    expect(
+      CustomisationSchema.safeParse({ name: 'Topping', value: 'Pearls', quantity: 1.5 }).success,
+    ).toBe(false);
   });
 
   it('accepts a customisation', () => {

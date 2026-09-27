@@ -21,9 +21,10 @@ Storage keys are `kangtea.cart`, `kangtea.orders`, `kangtea.session`, `kangtea.p
 
 `store/lines.ts` owns how a customised drink becomes a line:
 
-- `buildCartLine(item, selection)` sets `unitPriceCents` to the drink price plus its toppings and records the choices as `customisations`: `{ name: 'Sugar', value: '50%' }`, `{ name: 'Ice', value: 'Less ice' }`, one `{ name: 'Topping', value }` per topping.
-- `lineKey(line)` identifies a line by drink plus exactly its customisations. Two lines merge in the cart only when their keys match; `setQuantity` and remove address lines by key. A line with no customisations has its `itemId` as its key.
-- `summariseCustomisations(line)` renders "50% · Less ice · Pearls, Pudding" for cart rows, the order recap and History.
+- `buildCartLine(item, selection)` sets `unitPriceCents` to the drink price plus every lot of every topping and records the choices as `customisations`: `{ name: 'Sugar', value: '50%' }`, `{ name: 'Ice', value: 'Less ice' }`, one `{ name: 'Topping', value }` per topping, with `quantity` set when there is more than one lot (`{ name: 'Topping', value: 'Pearls', quantity: 2 }`).
+- A topping can be added up to `MAX_TOPPING_QUANTITY` (3) times. The cap is a placeholder until Kang Tea confirms it; the customise sheet enforces it, the contract only requires a positive integer.
+- `lineKey(line)` identifies a line by drink plus exactly its customisations and their quantities, so one lot of pearls and two lots are different lines. Two lines merge in the cart only when their keys match; `setQuantity` and remove address lines by key. A line with no customisations has its `itemId` as its key.
+- `describeCustomisation(choice)` renders "Pearls" or "Pearls ×2"; `summariseCustomisations(line)` joins them as "50% · Less ice · Pearls ×2, Pudding" for cart rows, the order recap and History.
 
 Because names and prices are snapshots, a topping price change later does not alter a placed order.
 

@@ -8,7 +8,12 @@ import type {
 } from '@bbt/shared';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { formatPrice } from '../../lib/money';
-import { buildCartLine, unitPriceCents } from '../../store/lines';
+import {
+  buildCartLine,
+  MAX_TOPPING_QUANTITY,
+  unitPriceCents,
+  type ToppingChoice,
+} from '../../store/lines';
 import { CupIllustration } from './CupIllustration';
 import './CustomiseDrinkDialog.css';
 
@@ -30,6 +35,9 @@ const TAG_LABELS: Record<MenuItemTag, string> = {
 const defaultOf = (levels: OptionLevel[]): OptionLevel =>
   levels.find((level) => level.isDefault) ?? (levels[0] as OptionLevel);
 
+/** Topping id to how many lots of it. Absent means none. */
+type ToppingCounts = Record<string, number>;
+
 /**
  * Sugar, ice, toppings and quantity for one drink, as a tall bottom sheet.
  * Built on the native dialog element so Escape, the backdrop and focus are the browser's.
@@ -44,7 +52,7 @@ export function CustomiseDrinkDialog({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [sugarId, setSugarId] = useState(defaultOf(customisations.sugarLevels).id);
   const [iceId, setIceId] = useState(defaultOf(customisations.iceLevels).id);
-  const [toppingIds, setToppingIds] = useState<string[]>([]);
+  const [toppingCounts, setToppingCounts] = useState<ToppingCounts>({});
   const [quantity, setQuantity] = useState(1);
 
   // Reset the choices and open or close the dialog whenever the drink changes.
@@ -54,7 +62,7 @@ export function CustomiseDrinkDialog({
     if (item) {
       setSugarId(defaultOf(customisations.sugarLevels).id);
       setIceId(defaultOf(customisations.iceLevels).id);
-      setToppingIds([]);
+      setToppingCounts({});
       setQuantity(1);
       if (!dialog.open) {
         if (typeof dialog.showModal === 'function') dialog.showModal();
@@ -76,16 +84,23 @@ export function CustomiseDrinkDialog({
   const ice =
     customisations.iceLevels.find((level) => level.id === iceId) ??
     defaultOf(customisations.iceLevels);
-  const toppings = customisations.toppings.filter((topping) => toppingIds.includes(topping.id));
+  // Menu order, so the summary and the line list toppings the way the menu does.
+  const toppings: ToppingChoice[] = customisations.toppings
+    .filter((topping) => (toppingCounts[topping.id] ?? 0) > 0)
+    .map((topping) => ({ topping, quantity: toppingCounts[topping.id] ?? 0 }));
   const unit = unitPriceCents(item, toppings);
   const total = unit * quantity;
   const tag = item.tags[0];
   const heroStyle = { '--tea': item.colour } as CSSProperties;
 
-  const toggleTopping = (id: string) =>
-    setToppingIds((current) =>
-      current.includes(id) ? current.filter((existing) => existing !== id) : [...current, id],
-    );
+  const changeTopping = (id: string, delta: number) =>
+    setToppingCounts((current) => {
+      const next = Math.min(MAX_TOPPING_QUANTITY, Math.max(0, (current[id] ?? 0) + delta));
+      const updated = { ...current };
+      if (next === 0) delete updated[id];
+      else updated[id] = next;
+      return updated;
+    });
 
   const add = () => {
     onAdd(buildCartLine(item, { sugar, ice, toppings, quantity }));
@@ -142,34 +157,20 @@ export function CustomiseDrinkDialog({
           {customisations.toppings.length > 0 && (
             <fieldset className="group">
               <legend className="group__legend">Add toppings</legend>
-              <div className="tiles">
-                {customisations.toppings.map((topping) => {
-                  const selected = toppingIds.includes(topping.id);
-                  return (
-                    <label key={topping.id} className="tile">
-                      <input
-                        type="checkbox"
-                        name="toppings"
-                        value={topping.id}
-                        checked={selected}
-                        onChange={() => toggleTopping(topping.id)}
-                      />
-                      <span className="tile__face">
-                        <span className="tile__art">
-                          <ToppingIcon topping={topping} />
-                        </span>
-                        {selected && (
-                          <span className="tile__badge" aria-hidden="true">
-                            1
-                          </span>
-                        )}
-                        <span className="tile__name">{topping.name}</span>
-                        <span className="tile__price">+{formatPrice(topping.priceCents)}</span>
-                      </span>
-                    </label>
-                  );
-                })}
-              </div>
+              <p className="group__hint">
+                Tap a topping again for another lot, up to {MAX_TOPPING_QUANTITY}.
+              </p>
+              <ul className="tiles">
+                {customisations.toppings.map((topping) => (
+                  <ToppingTile
+                    key={topping.id}
+                    topping={topping}
+                    count={toppingCounts[topping.id] ?? 0}
+                    onAdd={() => changeTopping(topping.id, 1)}
+                    onRemove={() => changeTopping(topping.id, -1)}
+                  />
+                ))}
+              </ul>
             </fieldset>
           )}
         </div>
@@ -185,10 +186,13 @@ export function CustomiseDrinkDialog({
             <p className="summary__choices">
               {sugar.name} sugar · {ice.name}
             </p>
-            {toppings.map((topping) => (
-              <div key={topping.id} className="summary__row summary__row--topping">
-                <span>{topping.name}</span>
-                <span>{formatPrice(topping.priceCents * quantity)}</span>
+            {toppings.map((choice) => (
+              <div key={choice.topping.id} className="summary__row summary__row--topping">
+                <span>
+                  {choice.topping.name}
+                  {choice.quantity > 1 ? ` ×${choice.quantity}` : ''}
+                </span>
+                <span>{formatPrice(choice.topping.priceCents * choice.quantity * quantity)}</span>
               </div>
             ))}
             <div className="summary__row summary__row--total">
@@ -227,6 +231,58 @@ export function CustomiseDrinkDialog({
         </div>
       </div>
     </dialog>
+  );
+}
+
+type ToppingTileProps = {
+  topping: Topping;
+  count: number;
+  onAdd: () => void;
+  onRemove: () => void;
+};
+
+/**
+ * One topping. The face is a button that adds a lot each tap; a small "−" appears once there is
+ * something to take away, and a badge shows how many lots are on the drink.
+ */
+function ToppingTile({ topping, count, onAdd, onRemove }: ToppingTileProps) {
+  const atMax = count >= MAX_TOPPING_QUANTITY;
+  return (
+    <li className={`tile${count > 0 ? ' tile--chosen' : ''}`}>
+      <button
+        type="button"
+        className="tile__face"
+        aria-pressed={count > 0}
+        aria-disabled={atMax || undefined}
+        aria-label={`Add ${topping.name}, ${formatPrice(topping.priceCents)} each${
+          count > 0 ? `, ${count} added` : ''
+        }`}
+        onClick={() => {
+          if (!atMax) onAdd();
+        }}
+      >
+        <span className="tile__art">
+          <ToppingIcon topping={topping} />
+        </span>
+        {count > 0 && (
+          <span className="tile__badge" aria-hidden="true">
+            ×{count}
+          </span>
+        )}
+        <span className="tile__name">{topping.name}</span>
+        <span className="tile__price">+{formatPrice(topping.priceCents)}</span>
+      </button>
+      {count > 0 && (
+        <button
+          type="button"
+          className="tile__remove"
+          aria-label={`Remove one ${topping.name}`}
+          onClick={onRemove}
+        >
+          −
+        </button>
+      )}
+    </li>
   );
 }
 

@@ -170,7 +170,7 @@ describe('HomePage', () => {
     const stores = renderHome();
     await screen.findByText('Calamvale Central');
     fireEvent.click(screen.getByRole('button', { name: 'Customise Signature Milk Tea' }));
-    fireEvent.click(screen.getByRole('checkbox', { name: /Pearls/ }));
+    fireEvent.click(screen.getByRole('button', { name: /^Add Pearls/ }));
     fireEvent.click(screen.getByRole('button', { name: /Add to order/ }));
     expect(stores.cart.read()).toEqual([
       expect.objectContaining({ itemId: 'signature-milk-tea', unitPriceCents: 830 }),

@@ -17,18 +17,22 @@ function renderDialog(onAdd = vi.fn(), onClose = vi.fn()) {
   return { onAdd, onClose };
 }
 
+const addTopping = (name: string) =>
+  fireEvent.click(screen.getByRole('button', { name: new RegExp(`^Add ${name}`) }));
+const addButton = () => screen.getByRole('button', { name: /Add to order/ });
+
 describe('CustomiseDrinkDialog', () => {
   it('opens with the drink, the defaults selected and the base price on the button', () => {
     renderDialog();
     expect(screen.getByRole('heading', { name: 'Signature Milk Tea' })).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: '100%' })).toBeChecked();
     expect(screen.getByRole('radio', { name: 'Regular ice' })).toBeChecked();
-    expect(screen.getByRole('button', { name: /Add to order/ })).toHaveTextContent('$7.50');
+    expect(addButton()).toHaveTextContent('$7.50');
   });
 
   it('itemises the drink, choices and toppings in the summary', () => {
     renderDialog();
-    fireEvent.click(screen.getByRole('checkbox', { name: /Pearls/ }));
+    addTopping('Pearls');
     fireEvent.click(screen.getByRole('button', { name: 'One more' }));
     const summary = screen.getByRole('region', { name: 'Order summary' });
     expect(summary).toHaveTextContent('2 × Signature Milk Tea');
@@ -55,12 +59,68 @@ describe('CustomiseDrinkDialog', () => {
 
   it('updates the total as toppings and quantity change', () => {
     renderDialog();
-    fireEvent.click(screen.getByRole('checkbox', { name: /Pearls/ }));
-    expect(screen.getByRole('button', { name: /Add to order/ })).toHaveTextContent('$8.30');
-    fireEvent.click(screen.getByRole('checkbox', { name: /Pudding/ }));
-    expect(screen.getByRole('button', { name: /Add to order/ })).toHaveTextContent('$9.30');
+    addTopping('Pearls');
+    expect(addButton()).toHaveTextContent('$8.30');
+    addTopping('Pudding');
+    expect(addButton()).toHaveTextContent('$9.30');
     fireEvent.click(screen.getByRole('button', { name: 'One more' }));
-    expect(screen.getByRole('button', { name: /Add to order/ })).toHaveTextContent('$18.60');
+    expect(addButton()).toHaveTextContent('$18.60');
+  });
+
+  describe('more than one of a topping', () => {
+    it('adds another lot on each tap, prices every lot, and shows the count', () => {
+      renderDialog();
+      addTopping('Pearls');
+      addTopping('Pearls');
+      expect(
+        screen.getByRole('button', { name: 'Add Pearls, $0.80 each, 2 added' }),
+      ).toHaveAttribute('aria-pressed', 'true');
+      expect(addButton()).toHaveTextContent('$9.10');
+      const summary = screen.getByRole('region', { name: 'Order summary' });
+      expect(summary).toHaveTextContent('Pearls ×2');
+      expect(summary).toHaveTextContent('$1.60');
+    });
+
+    it('takes one lot away with the minus, and hides it at zero', () => {
+      renderDialog();
+      expect(screen.queryByRole('button', { name: 'Remove one Pearls' })).not.toBeInTheDocument();
+      addTopping('Pearls');
+      addTopping('Pearls');
+      fireEvent.click(screen.getByRole('button', { name: 'Remove one Pearls' }));
+      expect(addButton()).toHaveTextContent('$8.30');
+      fireEvent.click(screen.getByRole('button', { name: 'Remove one Pearls' }));
+      expect(addButton()).toHaveTextContent('$7.50');
+      expect(screen.queryByRole('button', { name: 'Remove one Pearls' })).not.toBeInTheDocument();
+    });
+
+    it('stops at three lots of one topping', () => {
+      renderDialog();
+      for (let i = 0; i < 5; i += 1) addTopping('Pearls');
+      expect(addButton()).toHaveTextContent('$9.90');
+      expect(screen.getByRole('button', { name: /^Add Pearls/ })).toHaveAttribute(
+        'aria-disabled',
+        'true',
+      );
+    });
+
+    it('adds a line carrying the topping quantity', () => {
+      const { onAdd } = renderDialog();
+      addTopping('Pearls');
+      addTopping('Pearls');
+      addTopping('Pudding');
+      fireEvent.click(addButton());
+      expect(onAdd).toHaveBeenCalledWith(
+        expect.objectContaining({
+          unitPriceCents: 750 + 160 + 100,
+          customisations: [
+            { name: 'Sugar', value: '100%' },
+            { name: 'Ice', value: 'Regular ice' },
+            { name: 'Topping', value: 'Pearls', quantity: 2 },
+            { name: 'Topping', value: 'Pudding' },
+          ],
+        }),
+      );
+    });
   });
 
   it('will not go below one drink', () => {
@@ -72,9 +132,9 @@ describe('CustomiseDrinkDialog', () => {
     const { onAdd, onClose } = renderDialog();
     fireEvent.click(screen.getByRole('radio', { name: '50%' }));
     fireEvent.click(screen.getByRole('radio', { name: 'Less ice' }));
-    fireEvent.click(screen.getByRole('checkbox', { name: /Pearls/ }));
+    addTopping('Pearls');
     fireEvent.click(screen.getByRole('button', { name: 'One more' }));
-    fireEvent.click(screen.getByRole('button', { name: /Add to order/ }));
+    fireEvent.click(addButton());
     expect(onAdd).toHaveBeenCalledWith({
       itemId: 'signature-milk-tea',
       name: 'Signature Milk Tea',
