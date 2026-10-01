@@ -36,6 +36,7 @@ Because names and prices are snapshots, a topping price change later does not al
 - While an order is active the panel shows a kitchen cup of the first line: empty while received, poured with its pieces dropping in while being made, lidded when ready.
   A ring around it fills toward ready on the kitchen schedule from `config.ts`, with "Ready in m:ss" beneath (`formatCountdown`), refreshed four times a second until ready.
 - Totals in the panel are `components/ui/RollingPrice.tsx`: the real digits stay in the DOM and a CSS strip behind each digit rolls to it when the total changes.
+- History draws each past order's drinks as cups, three at most and then a count, from the catalogue's colours; Order again pours them (`usePour`) and flies them into the order before the cart is replaced.
 - An empty order shows an empty cup outline (`StaticCup` at level 0) above the copy, as does an empty History. Loading states use `components/cup/Loading.tsx`, a cup pouring itself on a loop. The not found page is a tipped cup with a puddle.
 - Collecting fires a haptic tap where available, posts the stamps, drops a pearl from the kitchen cup onto the pearl strip and then marks the order collected.
   Without motion, or with nothing to land on, collecting is immediate.

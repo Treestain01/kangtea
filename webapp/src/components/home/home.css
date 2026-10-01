@@ -160,6 +160,105 @@
   background: var(--color-surface-muted);
 }
 
+/* Cup of the day: the drink on a tinted well, pouring itself, with its name and two actions. */
+.cotd {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.cotd__art {
+  display: grid;
+  place-items: center;
+  height: 132px;
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--tea) 22%, var(--color-surface-muted));
+}
+
+.cotd__cup {
+  display: block;
+  width: 64px;
+}
+
+.cotd__text {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.cotd__eyebrow {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.cotd__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.cotd__description {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.cotd__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.cotd__btn {
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font: inherit;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--motion-fast) var(--ease),
+    border-color var(--motion-fast) var(--ease);
+}
+
+.cotd__btn:hover {
+  background: var(--color-accent-hover);
+}
+
+.cotd__btn--quiet {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-accent);
+}
+
+.cotd__btn--quiet:hover {
+  background: var(--color-surface);
+  border-color: var(--color-accent);
+}
+
+.cotd__btn:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
 /* Popular now: a two column grid on phones, four across from 768px. */
 .popular {
   display: grid;
@@ -183,7 +282,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .usual__btn {
+  .usual__btn,
+  .cotd__btn {
     transition: none;
   }
 }

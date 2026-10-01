@@ -72,12 +72,12 @@ function arc(
 
 /**
  * Clones the cup drawn in `source` (the element or the first svg inside it) and flies it into the
- * fly target. Resolves when it lands.
+ * fly target. Resolves when it lands; null when nothing will move, so callers can stay synchronous.
  */
-export function flyCup(source: Element, width = 56): Promise<void> {
+export function flyCup(source: Element, width = 56): Promise<void> | null {
   const svg = source instanceof SVGSVGElement ? source : source.querySelector('svg');
   const target = findFlyTarget();
-  if (!svg || !target || !motionAllowed()) return Promise.resolve();
+  if (!svg || !target || !motionAllowed()) return null;
   const wrapper = layer();
   wrapper.style.width = `${width}px`;
   const clone = svg.cloneNode(true) as SVGSVGElement;

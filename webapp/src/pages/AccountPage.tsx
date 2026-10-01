@@ -4,6 +4,7 @@ import { ApiError } from '../api/client';
 import { useStoreInfo } from '../api/useStoreInfo';
 import { TastePortrait } from '../components/account/TastePortrait';
 import { LoyaltyCard } from '../components/loyalty/LoyaltyCard';
+import { PearlJar } from '../components/loyalty/PearlJar';
 import { useAuth } from '../auth/AuthProvider';
 import { describeOpeningStatus, openingStatus } from '../lib/openingHours';
 import { useStores } from '../store/StoresProvider';
@@ -76,6 +77,8 @@ export function AccountPage() {
       {auth.session ? <SignedInAccount /> : <SignInCard />}
 
       <LoyaltyCard />
+
+      <PearlJar />
 
       <TastePortrait orders={orders} />
 

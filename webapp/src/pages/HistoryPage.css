@@ -59,6 +59,11 @@
   background: var(--color-accent-hover);
 }
 
+.pastorder__again:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
 .history__list {
   list-style: none;
   margin: 0;
@@ -103,6 +108,24 @@
 }
 
 .pastorder__status--cancelled {
+  color: var(--color-text-muted);
+}
+
+/* The order's drinks as cups, up to three, then a count. */
+.pastorder__cups {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-1);
+}
+
+.pastorder__cup {
+  display: block;
+  width: 40px;
+}
+
+.pastorder__more {
+  font-size: 0.8125rem;
   color: var(--color-text-muted);
 }
 

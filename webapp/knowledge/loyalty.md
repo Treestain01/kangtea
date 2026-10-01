@@ -32,6 +32,12 @@ It reads the session token from `useAuth()`; with no session the state is `signe
 - `compact`: one row of ten small stamps with the count and no copy, rendered under the order panel for signed in people; it is the landing spot for the pearl that drops on collect (see `orders.md`). It renders nothing while signed out, loading or in error.
 - Card full: "Use my free drink" opens an in page confirmation ("Only do this at the counter"), then `redeem()`. The card resets to the next one and a visually hidden status announces it.
 
+## PearlJar
+
+`components/loyalty/PearlJar.tsx`, on the Account page under the card: every stamp ever earned (`card.earned`) as pearls in a jar, up to 104 drawn, with the count beside it and the weekly streak from `lib/streak.ts#weeklyStreak` when it is two weeks or more.
+A streak is consecutive weeks with a collected order on this device, ending this week or last, so it survives until Sunday.
+Pearls earned since the last render drop in. Nothing renders while signed out.
+
 ## Testing
 
 `components/loyalty/LoyaltyCard.test.tsx`, `loyalty/LoyaltyProvider.test.tsx`, the loyalty block in `api/client.test.ts`, and the collect tests in `components/order/OrderPanel.test.tsx`.

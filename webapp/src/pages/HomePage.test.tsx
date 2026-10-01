@@ -116,6 +116,18 @@ describe('HomePage', () => {
     );
   });
 
+  it('features a cup of the day from the recommended drinks and opens the sheet on it', async () => {
+    renderHome();
+    await screen.findByText('Calamvale Central');
+    // No recommended drinks in this menu, so the best seller is the cup of the day.
+    const featured = screen.getByRole('region', { name: 'Cup of the day' });
+    expect(featured).toHaveTextContent('Signature Milk Tea');
+    fireEvent.click(screen.getByRole('button', { name: /Build it/ }));
+    expect(
+      screen.getByRole('heading', { name: 'Signature Milk Tea', level: 2 }),
+    ).toBeInTheDocument();
+  });
+
   it('offers category chips that open the menu filtered by that category', async () => {
     renderHome();
     await screen.findByText('Calamvale Central');

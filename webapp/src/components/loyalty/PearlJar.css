@@ -1,0 +1,94 @@
+/* The pearl jar: glass on the left, the count and streak on the right, on a plain card. */
+.jar {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.jar__glass {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.jar__body {
+  fill: color-mix(in srgb, var(--color-surface-muted) 60%, transparent);
+  stroke: var(--color-text);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.jar__lid {
+  fill: var(--color-surface);
+  stroke: var(--color-text);
+  stroke-width: 3;
+}
+
+.jar__pearl {
+  fill: var(--pearl);
+}
+
+@keyframes jar-drop {
+  from {
+    transform: translateY(-130px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.jar__pearl--new {
+  animation: jar-drop calc(var(--motion-slow) * 2) var(--ease) both;
+  animation-delay: var(--delay);
+}
+
+.jar__text {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+  min-width: 0;
+}
+
+.jar__heading {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.jar__count {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.jar__copy {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.jar__streak {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 var(--space-3);
+  border-radius: 999px;
+  background: var(--color-surface-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jar__pearl--new {
+    animation: none;
+  }
+}

@@ -43,6 +43,12 @@ Submitting the search navigates to `/menu?q=<text>`.
 | `LiveCup`       | `components/cup/LiveCup.tsx`        | The cup in the customise sheet that builds itself from the current choices, with physics for toppings and ice.                                                                                 |
 | `ToppingArt`    | `components/cup/ToppingArt.tsx`     | A topping drawn with its cup symbol, for the tokens in the customise sheet's tray.                                                                                                             |
 
+## Cup of the day
+
+`components/home/CupOfTheDay.tsx` sits under the category chips: one drink from the board that pours itself about half a second after Home appears, with "Build it" opening the customise sheet on it and "Pour again" replaying the pour.
+`lib/popular.ts#drinkOfTheDay` picks it: the recommended drinks in turn, one per local day, falling back to best sellers and then the whole menu.
+The pour itself is `components/cup/usePour.ts`, shared with Your usual and History: empty, filling with the pieces dropping, lidded, then the handover; immediate where nothing can animate.
+
 ## Your usual
 
 `components/home/UsualCard.tsx` shows the most recent collected order with a `StaticCup` of its first drink drawn from the saved choices.

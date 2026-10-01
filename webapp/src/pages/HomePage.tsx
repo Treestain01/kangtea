@@ -2,6 +2,7 @@ import type { MenuItem, Order, OrderLine } from '@bbt/shared';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useCatalogue } from '../api/useCatalogue';
+import { CupOfTheDay } from '../components/home/CupOfTheDay';
 import { PopularRow } from '../components/home/PopularRow';
 import { SearchBar } from '../components/home/SearchBar';
 import { UsualCard } from '../components/home/UsualCard';
@@ -10,7 +11,7 @@ import { AppHeader } from '../components/layout/AppHeader';
 import { LoyaltyCard } from '../components/loyalty/LoyaltyCard';
 import { CategoryChips } from '../components/menu/CategoryChips';
 import { CustomiseDrinkDialog } from '../components/menu/CustomiseDrinkDialog';
-import { popularItems } from '../lib/popular';
+import { drinkOfTheDay, popularItems } from '../lib/popular';
 import { useStores } from '../store/StoresProvider';
 import { useOrders } from '../store/hooks';
 import { pastOrders } from '../store/orders';
@@ -80,6 +81,7 @@ export function HomePage() {
   }
 
   const { store, menu } = catalogue;
+  const featured = drinkOfTheDay(menu);
   const usualItem = usual
     ? menu.items.find((item) => item.id === usual.lines[0]?.itemId)
     : undefined;
@@ -88,6 +90,7 @@ export function HomePage() {
     <div className="home">
       <AppHeader store={store} actions={<SearchBar onSubmit={search} />} />
       <CategoryChips categories={menu.categories} selected={null} onSelect={browseCategory} />
+      {featured && <CupOfTheDay item={featured} onOpen={setCustomising} />}
       {usual && (
         <UsualCard
           order={usual}
