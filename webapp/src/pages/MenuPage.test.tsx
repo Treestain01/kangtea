@@ -124,6 +124,18 @@ describe('MenuPage', () => {
     vi.restoreAllMocks();
   });
 
+  it('opens a shared build pre-built and clears it from the address', async () => {
+    renderMenu('/menu?build=matcha-latte~sugar-50~ice-less~pearls.2');
+    expect(
+      await screen.findByRole('heading', { name: 'Matcha Latte', level: 2 }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: '50%' })).toBeChecked();
+    expect(screen.getByRole('radio', { name: 'Less ice' })).toBeChecked();
+    expect(
+      screen.getByRole('button', { name: 'Add Pearls, $0.80 each, 2 added' }),
+    ).toBeInTheDocument();
+  });
+
   it('adds a customised drink to the cart', async () => {
     const stores = renderMenu();
     await screen.findByRole('heading', { name: 'Menu' });

@@ -8,14 +8,18 @@ import { CategoryChips } from '../components/menu/CategoryChips';
 import { CustomiseDrinkDialog } from '../components/menu/CustomiseDrinkDialog';
 import { DrinkGrid } from '../components/menu/DrinkGrid';
 import { SurpriseCard, type SurprisePick } from '../components/menu/SurpriseCard';
+import { BUILD_PARAM, decodeBuild } from '../lib/build';
 import { matchesQuery } from '../lib/popular';
 import { useStores } from '../store/StoresProvider';
 import './MenuPage.css';
 
 const ANNOUNCEMENT_MS = 2000;
 
-/** What the customise sheet opens on: the drink, and levels to start from when Surprise me chose them. */
-type Customising = { item: MenuItem; initial?: { sugarId: string; iceId: string } };
+/** What the customise sheet opens on: the drink, and where to start when Surprise me or a shared link chose. */
+type Customising = {
+  item: MenuItem;
+  initial?: { sugarId: string; iceId: string; toppings?: Record<string, number> };
+};
 
 /** The full menu: search, category filter, every drink drawn as its cup, Surprise me, and the customise sheet. */
 export function MenuPage() {
@@ -49,6 +53,28 @@ export function MenuPage() {
   );
 
   const openItem = useCallback((item: MenuItem) => setCustomising({ item }), []);
+
+  // A shared build in the address opens the sheet once the menu is known, then leaves the address.
+  const build = searchParams.get(BUILD_PARAM);
+  useEffect(() => {
+    if (!build || catalogue.kind !== 'ready') return;
+    const decoded = decodeBuild(build, catalogue.menu);
+    if (decoded) {
+      setCustomising({
+        item: decoded.item,
+        initial: {
+          sugarId: decoded.sugar.id,
+          iceId: decoded.ice.id,
+          toppings: decoded.toppings,
+        },
+      });
+    }
+    const next = new URLSearchParams(searchParams);
+    next.delete(BUILD_PARAM);
+    setSearchParams(next, { replace: true });
+    // searchParams changes as a result; the build string is what matters.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [build, catalogue]);
   const openPick = useCallback(
     (pick: SurprisePick) =>
       setCustomising({ item: pick.item, initial: { sugarId: pick.sugar.id, iceId: pick.ice.id } }),

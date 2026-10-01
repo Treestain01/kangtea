@@ -65,10 +65,10 @@
   padding: 0 0 env(safe-area-inset-bottom);
 }
 
-/* Head: name and Chinese name on the left, price and close on the right. */
+/* Head: name and Chinese name on the left, price, share and close on the right. */
 .head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto var(--tap-target);
+  grid-template-columns: minmax(0, 1fr) auto var(--tap-target) var(--tap-target);
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-4) var(--space-4) var(--space-2);
@@ -134,6 +134,26 @@
 .customise__close:hover {
   border-color: var(--color-accent);
   color: var(--color-accent);
+}
+
+.customise__close svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.customise__close:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.readout__status {
+  color: var(--color-success);
+  font-weight: 700;
 }
 
 /* Builder: the stage takes the spare height, the tray sits under it. Only on a very short screen

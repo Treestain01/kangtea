@@ -61,6 +61,14 @@ Search, category chips and the drink grid, every drink drawn as its cup.
 Choosing a category washes the top of the page with that family's colour, taken from the first drink in it, through the registered `--wash` property in `MenuPage.css` so the change fades.
 `SurpriseCard` sits under the grid; its pick opens `CustomiseDrinkDialog` with `initial` levels so the person confirms rather than getting a surprise in the cart.
 
+### Sharing a drink
+
+The customise sheet's share button turns the current build into a link on this origin, `/menu?build=<item>~<sugar>~<ice>~<topping>.<lots>,...` (`lib/build.ts`), and offers it through the device share sheet with a PNG card of the cup when the sheet accepts files (`lib/share.ts`, `lib/cupImage.ts`).
+Without a share sheet the link is copied; the outcome is read out in the sheet's readout line and to assistive technology.
+Opening a build link on the Menu page decodes it against the menu, opens the sheet pre-built with those levels and toppings, and removes the parameter from the address.
+Unknown drinks are ignored, unknown levels fall back to the defaults, unknown toppings are dropped and lots are capped at three.
+The PNG is drawn on a canvas from a standalone copy of the cup's svg with the sprite symbols and the cup's CSS variables inlined, on the page's accent colour; where that cannot be drawn the share goes ahead without a picture.
+
 ## Customising and adding to the cart
 
 The card opens `components/menu/CustomiseDrinkDialog.tsx`, a native `<dialog>` bottom sheet built around the live cup (ADR 0020).

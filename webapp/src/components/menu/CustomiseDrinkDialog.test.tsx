@@ -150,6 +150,35 @@ describe('CustomiseDrinkDialog', () => {
     expect(screen.getByRole('radio', { name: 'Less ice' })).toBeChecked();
   });
 
+  it("opens with a shared build's toppings already in the cup", () => {
+    render(
+      <CustomiseDrinkDialog
+        item={item}
+        customisations={customisationsFixture}
+        initial={{ sugarId: 'sugar-50', iceId: 'ice-less', toppings: { pearls: 2 } }}
+        onAdd={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+    expect(
+      screen.getByRole('button', { name: 'Add Pearls, $0.80 each, 2 added' }),
+    ).toBeInTheDocument();
+    expect(addButton()).toHaveTextContent('$9.10');
+  });
+
+  it('shares the drink as a link, copying it where there is no share sheet', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    renderDialog();
+    fireEvent.click(screen.getByRole('radio', { name: '50%' }));
+    addTopping('Pearls');
+    fireEvent.click(screen.getByRole('button', { name: 'Share this drink' }));
+    expect(await screen.findAllByText(/Link copied/)).not.toHaveLength(0);
+    expect(writeText).toHaveBeenCalledWith(
+      expect.stringContaining('/menu?build=signature-milk-tea%7Esugar-50%7Eice-regular%7Epearls'),
+    );
+  });
+
   it('will not go below one drink', () => {
     renderDialog();
     expect(screen.getByRole('button', { name: 'One fewer' })).toBeDisabled();

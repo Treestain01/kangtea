@@ -17,6 +17,9 @@ import {
 import { LiveCup } from '../cup/LiveCup';
 import { flyCup } from '../cup/fly';
 import { cue } from '../../lib/sounds';
+import { buildUrl } from '../../lib/build';
+import { renderCupImage } from '../../lib/cupImage';
+import { describeShareOutcome, shareDrink } from '../../lib/share';
 import { ToppingArt } from '../cup/ToppingArt';
 import './CustomiseDrinkDialog.css';
 
@@ -26,8 +29,8 @@ type CustomiseDrinkDialogProps = {
   /** Category name shown beside the drink name. */
   categoryName?: string;
   customisations: MenuCustomisations;
-  /** Levels to start on instead of the defaults, for example from Surprise me. Keep the object stable. */
-  initial?: { sugarId?: string; iceId?: string };
+  /** Where to start instead of the defaults: Surprise me's levels, or a shared build. Keep the object stable. */
+  initial?: { sugarId?: string; iceId?: string; toppings?: Record<string, number> };
   onAdd: (line: OrderLine) => void;
   onClose: () => void;
 };
@@ -64,6 +67,8 @@ export function CustomiseDrinkDialog({
   const [iceId, setIceId] = useState(defaultOf(customisations.iceLevels).id);
   const [toppingCounts, setToppingCounts] = useState<ToppingCounts>({});
   const [quantity, setQuantity] = useState(1);
+  const [shareStatus, setShareStatus] = useState('');
+  const [sharing, setSharing] = useState(false);
 
   // Reset the choices and open or close the dialog whenever the drink changes.
   useEffect(() => {
@@ -72,8 +77,9 @@ export function CustomiseDrinkDialog({
     if (item) {
       setSugarId(initial?.sugarId ?? defaultOf(customisations.sugarLevels).id);
       setIceId(initial?.iceId ?? defaultOf(customisations.iceLevels).id);
-      setToppingCounts({});
+      setToppingCounts(initial?.toppings ?? {});
       setQuantity(1);
+      setShareStatus('');
       if (!dialog.open) {
         if (typeof dialog.showModal === 'function') dialog.showModal();
         else dialog.setAttribute('open', '');
@@ -122,6 +128,24 @@ export function CustomiseDrinkDialog({
     });
   };
 
+  const share = async () => {
+    setSharing(true);
+    setShareStatus('');
+    const url = buildUrl({ item, sugar, ice, toppings }, window.location.origin);
+    const svg = stageCupRef.current?.querySelector('svg');
+    const image = svg
+      ? await renderCupImage(svg, { brand: 'KANG TEA', name: item.name, details: choices })
+      : null;
+    const outcome = await shareDrink({
+      title: `${item.name} at Kang Tea`,
+      text: `${item.name}, ${choices}. Tap the link to build it.`,
+      url,
+      image,
+    });
+    setShareStatus(describeShareOutcome(outcome));
+    setSharing(false);
+  };
+
   const add = () => {
     // The built cup arcs into the Order tab while the sheet closes. Decorative; never awaited.
     if (stageCupRef.current) void flyCup(stageCupRef.current);
@@ -154,6 +178,18 @@ export function CustomiseDrinkDialog({
             )}
           </div>
           <p className="head__price">{formatPrice(item.priceCents)}</p>
+          <button
+            type="button"
+            className="customise__close"
+            aria-label="Share this drink"
+            disabled={sharing}
+            onClick={() => void share()}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3v12M7.5 7.5 12 3l4.5 4.5" />
+              <path d="M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7" />
+            </svg>
+          </button>
           <button type="button" className="customise__close" aria-label="Close" onClick={onClose}>
             ×
           </button>
@@ -215,12 +251,16 @@ export function CustomiseDrinkDialog({
         </div>
 
         <div className="customise__fixed">
+          <p className="visually-hidden" role="status">
+            {shareStatus}
+          </p>
           <section className="readout" aria-label="Order summary">
             <p className="readout__line">
               <strong className="readout__item">
                 {quantity} × {item.name}
               </strong>
               <span className="readout__choices"> · {choices}</span>
+              {shareStatus && <span className="readout__status"> · {shareStatus}</span>}
             </p>
           </section>
 
