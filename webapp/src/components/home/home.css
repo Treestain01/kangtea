@@ -185,6 +185,26 @@
   width: 64px;
 }
 
+@container home (min-width: 34rem) {
+  .cotd {
+    grid-template-columns: 168px minmax(0, 1fr);
+    gap: var(--space-5);
+    padding: var(--space-5);
+  }
+
+  .cotd__art {
+    height: 192px;
+  }
+
+  .cotd__cup {
+    width: 92px;
+  }
+
+  .cotd__name {
+    font-size: 1.375rem;
+  }
+}
+
 .cotd__text {
   display: grid;
   gap: var(--space-1);
@@ -274,9 +294,12 @@
   gap: var(--space-3);
 }
 
-@media (min-width: 768px) {
+/* Three across, two rows of the six most popular, once the page is wide enough for it. The home page
+   is a container (see .home) so this follows the column the page actually has, not the viewport:
+   at 1024px the column between the sidebar and the order panel is still narrow. */
+@container home (min-width: 34rem) {
   .popular__list {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--space-4);
   }
 }

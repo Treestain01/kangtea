@@ -1,5 +1,7 @@
 import { useSyncExternalStore } from 'react';
 
+/** Matches the `md` breakpoint in src/theme/breakpoints.ts. */
+export const TABLET_QUERY = '(min-width: 768px)';
 /** Matches the `lg` breakpoint in src/theme/breakpoints.ts. */
 export const DESKTOP_QUERY = '(min-width: 1024px)';
 

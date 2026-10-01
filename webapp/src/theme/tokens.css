@@ -68,7 +68,7 @@
   /* Layout: the tab bar height on phones; the two side columns from 1024px.
      The sidebar is locked to the order panel so the page stays centred between them. */
   --tab-bar-height: 64px;
-  --cart-panel-width: 340px;
+  --cart-panel-width: 300px;
   --sidebar-width: var(--cart-panel-width);
 }
 

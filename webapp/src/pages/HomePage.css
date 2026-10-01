@@ -2,6 +2,8 @@
   display: grid;
   gap: var(--space-5);
   padding-bottom: var(--space-6);
+  /* Sections size themselves to the column the page has (home.css), not to the viewport. */
+  container: home / inline-size;
 }
 
 @media (min-width: 768px) {

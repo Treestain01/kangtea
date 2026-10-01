@@ -27,7 +27,7 @@ Vercel's SPA rewrite in `vercel.json` serves `index.html` for every path, so dee
 ## AppShell
 
 `components/layout/AppShell.tsx` renders the hidden document `h1`, `<main class="app">` with the `Outlet`, the iOS shell note, the desktop order panel, and `TabBar`.
-`.app` in `styles.css` owns the gutters and leaves room for the fixed pieces: bottom padding of `--tab-bar-height` plus the safe area on phones; from 1024px a left margin of `--sidebar-width`, a right margin of `--cart-panel-width`, and no max width, so the page fills the middle column.
+`.app` in `styles.css` owns the gutters and leaves room for the fixed pieces: bottom padding of `--tab-bar-height` plus the safe area on phones; from 1024px a left margin of `--sidebar-width`, a right margin of `--cart-panel-width`, and the page in one centred column of at most 60rem, so a wide screen widens the gutters rather than stretching the cards.
 The three layout tokens live in `tokens.css`.
 
 ## Desktop layout (1024px and up)

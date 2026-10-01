@@ -31,15 +31,24 @@
   gap: var(--space-3);
 }
 
+/* From 768px the search sits beside the greeting when there is room and drops under it when not,
+   so the greeting never breaks across two lines. */
 @media (min-width: 768px) {
   .header__row {
-    grid-template-columns: 1fr auto;
-    align-items: end;
-    gap: var(--space-5);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-3) var(--space-5);
+  }
+
+  .header__text {
+    flex: 1 1 20rem;
   }
 
   .header__actions {
-    width: 320px;
+    flex: 0 1 320px;
+    min-width: 260px;
   }
 }
 

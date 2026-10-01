@@ -4,6 +4,7 @@
 
 `src/theme/tokens.css` defines every colour, spacing step, radius and the focus ring as CSS custom properties.
 `src/theme/breakpoints.ts` defines the two viewport breakpoints.
+The home page is also a size container (`container: home / inline-size` in `HomePage.css`), so Popular now and the cup of the day lay out by the column they have, which from 1024px is the space between the sidebar and the order panel rather than the viewport.
 `src/theme/tokens.test.ts` fails the build if any other non-test file under `src/` writes a colour literally, references an undefined `--color-*` token, or uses a media query width that is not a documented breakpoint.
 Test files are exempt because their fixtures carry drink colours as data; components must still receive those at runtime rather than write them.
 
@@ -71,7 +72,7 @@ Headings carry `letter-spacing: -0.01em` and `text-wrap: balance`.
 - `--radius-sm`, `--radius-md`, `--radius-lg`: 4, 8, 20px. Soft shapes need the larger radius.
 - `--tap-target`: 44px minimum height for tappable elements on phones.
 - `--ease` (`ease-in-out`), `--motion-fast` (160ms), `--motion-slow` (320ms): the only timing values used by transitions and animations.
-- `--tab-bar-height` (64px), `--cart-panel-width` (340px), `--sidebar-width` (locked to `--cart-panel-width`): the fixed layout pieces `.app` leaves room for. Change the panel width and the sidebar follows. See `navigation.md`.
+- `--tab-bar-height` (64px), `--cart-panel-width` (300px), `--sidebar-width` (locked to `--cart-panel-width`): the fixed layout pieces `.app` leaves room for. Change the panel width and the sidebar follows. See `navigation.md`.
 
 ## Breakpoints
 

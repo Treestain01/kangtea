@@ -8,7 +8,7 @@ type PopularRowProps = {
   onOpen: (item: MenuItem) => void;
 };
 
-/** "Popular now": a grid of compact cards, two across on phones and four from 768px. */
+/** "Popular now": a grid of compact cards, four drinks two across on phones and six drinks three across from 768px. */
 export function PopularRow({ items, onOpen }: PopularRowProps) {
   return (
     <section className="popular" aria-labelledby="popular-heading">

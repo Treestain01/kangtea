@@ -12,6 +12,7 @@ import { LoyaltyCard } from '../components/loyalty/LoyaltyCard';
 import { CategoryChips } from '../components/menu/CategoryChips';
 import { CustomiseDrinkDialog } from '../components/menu/CustomiseDrinkDialog';
 import { drinkOfTheDay, popularItems } from '../lib/popular';
+import { TABLET_QUERY, useMediaQuery } from '../lib/useMediaQuery';
 import { useStores } from '../store/StoresProvider';
 import { useOrders } from '../store/hooks';
 import { pastOrders } from '../store/orders';
@@ -25,6 +26,8 @@ export function HomePage() {
   const orders = useOrders();
   const navigate = useNavigate();
   const { catalogue, retry } = useCatalogue();
+  // Phones show four popular drinks two across; wider screens show six, three across.
+  const wide = useMediaQuery(TABLET_QUERY);
   const [announcement, setAnnouncement] = useState('');
   const [customising, setCustomising] = useState<MenuItem | null>(null);
 
@@ -99,7 +102,7 @@ export function HomePage() {
         />
       )}
       <LoyaltyCard />
-      <PopularRow items={popularItems(menu, 4)} onOpen={setCustomising} />
+      <PopularRow items={popularItems(menu, wide ? 6 : 4)} onOpen={setCustomising} />
       <CustomiseDrinkDialog
         item={customising}
         categoryName={

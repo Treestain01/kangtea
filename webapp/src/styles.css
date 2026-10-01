@@ -113,6 +113,11 @@ a {
     max-width: none;
     margin: 0 var(--cart-panel-width) 0 var(--sidebar-width);
     padding: var(--space-5) var(--space-6) var(--space-6);
+    /* The page sits in one centred column, so a wide screen widens the gutters, not the cards. */
+    display: grid;
+    grid-template-columns: minmax(0, 60rem);
+    justify-content: center;
+    align-content: start;
   }
 }
 
