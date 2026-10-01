@@ -26,6 +26,7 @@
 - Accounts live in the same database behind `api/src/accounts/types.ts#AccountsProvider`; the webapp signs in through `webapp/src/auth/AuthClient.ts` and sends an opaque bearer token. Both are swap points for a hosted auth provider (ADR 0017).
 - `packages/shared` is TypeScript source consumed directly by both. There is no build step.
 - `iosapp` loads `webapp` from `WEBAPP_URL`. It never calls `api` directly and never bundles web assets.
+- `webapp` posts one way messages to the shell through `window.webkit.messageHandlers.bbt` for haptics and the order's Live Activity (`packages/shared/src/shell.ts`, ADR 0021). A browser has no handler and nothing happens.
 
 ## URL configuration flow
 

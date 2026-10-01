@@ -23,9 +23,8 @@ struct WebView: UIViewRepresentable {
             .filter { !$0.isEmpty }
             .joined(separator: " ")
 
-        // Extension point for a JavaScript to Swift bridge:
-        // configuration.userContentController.add(handler, name: "bbt")
-        // and expose window.webkit.messageHandlers.bbt to the webapp.
+        // The one way bridge from the webapp (ADR 0021): haptics and the order's Live Activity.
+        configuration.userContentController.add(context.coordinator.bridge, name: ShellBridge.handlerName)
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
@@ -37,6 +36,10 @@ struct WebView: UIViewRepresentable {
         return webView
     }
 
+    static func dismantleUIView(_ webView: WKWebView, coordinator: Coordinator) {
+        webView.configuration.userContentController.removeScriptMessageHandler(forName: ShellBridge.handlerName)
+    }
+
     func updateUIView(_ webView: WKWebView, context: Context) {
         guard context.coordinator.lastReloadToken != reloadToken else { return }
         context.coordinator.lastReloadToken = reloadToken
@@ -46,6 +49,7 @@ struct WebView: UIViewRepresentable {
     @MainActor
     final class Coordinator: NSObject, WKNavigationDelegate {
         let model: WebViewModel
+        let bridge = ShellBridge()
         var lastReloadToken = 0
 
         init(model: WebViewModel) {

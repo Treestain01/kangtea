@@ -15,10 +15,9 @@ import {
   type ToppingChoice,
 } from '../../store/lines';
 import { LiveCup } from '../cup/LiveCup';
-import { flyCup } from '../cup/fly';
+import { flyCup, tap } from '../cup/fly';
 import { cue } from '../../lib/sounds';
 import { buildUrl } from '../../lib/build';
-import { renderCupImage } from '../../lib/cupImage';
 import { describeShareOutcome, shareDrink } from '../../lib/share';
 import { ToppingArt } from '../cup/ToppingArt';
 import './CustomiseDrinkDialog.css';
@@ -118,7 +117,10 @@ export function CustomiseDrinkDialog({
   ].join(' · ');
 
   const changeTopping = (id: string, delta: number) => {
-    if (delta > 0 && (toppingCounts[id] ?? 0) < MAX_TOPPING_QUANTITY) cue('drop');
+    if (delta > 0 && (toppingCounts[id] ?? 0) < MAX_TOPPING_QUANTITY) {
+      cue('drop');
+      tap('light');
+    }
     setToppingCounts((current) => {
       const next = Math.min(MAX_TOPPING_QUANTITY, Math.max(0, (current[id] ?? 0) + delta));
       const updated = { ...current };
@@ -134,7 +136,9 @@ export function CustomiseDrinkDialog({
     const url = buildUrl({ item, sugar, ice, toppings }, window.location.origin);
     const svg = stageCupRef.current?.querySelector('svg');
     const image = svg
-      ? await renderCupImage(svg, { brand: 'KANG TEA', name: item.name, details: choices })
+      ? await import('../../lib/cupImage').then(({ renderCupImage }) =>
+          renderCupImage(svg, { brand: 'KANG TEA', name: item.name, details: choices }),
+        )
       : null;
     const outcome = await shareDrink({
       title: `${item.name} at Kang Tea`,

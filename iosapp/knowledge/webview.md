@@ -29,13 +29,19 @@
 The retry button increments it; `updateUIView` notices the change and calls `load` again.
 This avoids holding a reference to the `WKWebView` in SwiftUI state.
 
-## Adding a JavaScript bridge
+## The JavaScript bridge (ADR 0021)
 
-1. Define the message schema in `packages/shared` first, so the webapp and shell agree.
-2. In `WebView.makeUIView`, at the marked extension point, add a `WKScriptMessageHandler` to `configuration.userContentController` under a name such as `bbt`.
-3. In the webapp, post with `window.webkit?.messageHandlers?.bbt?.postMessage(payload)` behind an `isInIosShell()` check.
-4. For Swift to JavaScript, call `webView.evaluateJavaScript` from the coordinator.
-5. Record the decision with the root `record-decision` skill and update `knowledge/architecture.md`.
+One way, webapp to shell. The schema is `packages/shared/src/shell.ts`; `ShellBridge.swift` is its Swift twin and the two change together.
+
+- `WebView.makeUIView` registers `Coordinator.bridge` on `configuration.userContentController` under `ShellBridge.handlerName` (`bbt`); `dismantleUIView` removes it.
+- The webapp posts with `postToShell` in `webapp/src/platform.ts`, which does nothing when the handler is absent.
+- `ShellBridge.handle` plays haptics (`UIImpactFeedbackGenerator` for light and medium, `UINotificationFeedbackGenerator` for success) and hands `orderStatus` and `orderEnded` to `OrderActivityController`.
+- `OrderActivityController` keeps the one `Activity<OrderActivityAttributes>`: started on the first status, updated on the rest, ended a minute after collection.
+- `OrderActivity.swift` holds the attributes and content state and is compiled into both the app and the `BBTWidgets` extension, which draws the lock screen card and the Dynamic Island in `OrderLiveActivity.swift`.
+- `Info.plist` sets `NSSupportsLiveActivities`.
+
+To add a message: extend the Zod union, extend `ShellMessage` and its parser, add a case to `handle`, and a test to `BBTTests/ShellBridgeTests.swift`.
+For Swift to JavaScript, call `webView.evaluateJavaScript` from the coordinator; nothing uses it yet.
 
 ## Not handled yet
 

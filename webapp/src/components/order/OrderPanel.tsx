@@ -78,7 +78,10 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
   useEffect(() => {
     if (previousStatus.current !== status) {
       if (status === 'making') cue('pour');
-      if (status === 'ready') cue('lid');
+      if (status === 'ready') {
+        cue('lid');
+        tap('success');
+      }
     }
     previousStatus.current = status;
   }, [status]);

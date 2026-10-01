@@ -62,3 +62,6 @@ export {
   StampSchema,
 } from './loyalty.js';
 export type { EarnStampsRequest, LoyaltyCard, Stamp } from './loyalty.js';
+
+export { HapticStyleSchema, SHELL_MESSAGE_HANDLER, ShellMessageSchema } from './shell.js';
+export type { HapticStyle, ShellMessage } from './shell.js';

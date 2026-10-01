@@ -1,9 +1,13 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Outlet } from 'react-router';
 import { useStoreInfo } from '../../api/useStoreInfo';
 import { openingStatus } from '../../lib/openingHours';
+import { shellOrderMessage } from '../../lib/shellOrder';
 import { setSoundsEnabled } from '../../lib/sounds';
-import { usePreferences } from '../../store/hooks';
+import { postToShell } from '../../platform';
+import { KITCHEN_SCHEDULE } from '../../config';
+import { activeOrder } from '../../store/orders';
+import { useOrders, usePreferences } from '../../store/hooks';
 import { applyTheme } from '../../theme/theme';
 import { isInIosShell } from '../../platform';
 import { CupSprite } from '../cup/CupSprite';
@@ -32,6 +36,23 @@ export function AppShell() {
   useEffect(() => {
     setSoundsEnabled(preferences.sounds);
   }, [preferences.sounds]);
+
+  // The iOS shell's Live Activity follows the active order (ADR 0021). A browser ignores these posts.
+  const orders = useOrders();
+  const active = activeOrder(orders);
+  const activeKey = active ? `${active.id}:${active.status}` : null;
+  const hadActive = useRef(false);
+  useEffect(() => {
+    if (active) {
+      postToShell(shellOrderMessage(active, store, KITCHEN_SCHEDULE));
+      hadActive.current = true;
+    } else if (hadActive.current) {
+      postToShell({ type: 'orderEnded' });
+      hadActive.current = false;
+    }
+    // activeKey captures the id and status; active itself changes identity on every store write.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeKey, store]);
 
   return (
     <>

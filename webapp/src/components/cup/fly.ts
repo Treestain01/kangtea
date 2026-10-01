@@ -7,6 +7,8 @@
  * no animations, or when no target is on screen, so callers never wait on decoration.
  */
 
+import { postToShell } from '../../platform';
+
 export const FLY_TARGET_ATTRIBUTE = 'data-fly-target';
 
 const FLIGHT_MS = 650;
@@ -110,10 +112,11 @@ export function flyPearl(source: Element, target: Element, colour: string): Prom
   );
 }
 
-/** A short haptic tap where the platform offers one. Silent everywhere else. */
-export function tap(): void {
+/** A short haptic tap where the platform offers one: the iOS shell's bridge, or the Vibration API. */
+export function tap(style: 'light' | 'medium' | 'success' = 'medium'): void {
+  if (postToShell({ type: 'haptic', style })) return;
   try {
-    navigator.vibrate?.(20);
+    navigator.vibrate?.(style === 'light' ? 10 : 20);
   } catch {
     // No haptics here.
   }

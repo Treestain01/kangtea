@@ -11,9 +11,15 @@
 ## What the shell does not do
 
 - It does not bundle or cache the site. If the network is down the shell shows its offline screen, not the site.
-- It does not expose any JavaScript bridge yet. `window.webkit.messageHandlers` is empty.
 - It does not intercept links. Every navigation stays inside the webview.
 - It does not call the API. All API traffic originates from the webapp's origin.
+
+## The bridge
+
+The shell registers one message handler, `bbt` (ADR 0021).
+`src/platform.ts#postToShell` posts a `ShellMessage` from `@bbt/shared` to it and returns false without doing anything in a browser.
+The app posts haptics (`components/cup/fly.ts#tap`, falling back to `navigator.vibrate`) and the active order's status for the shell's Live Activity (`AppShell` with `lib/shellOrder.ts`, ready time from the kitchen schedule).
+Nothing comes back; never wait on the shell.
 
 ## Your responsibilities
 
