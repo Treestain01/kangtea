@@ -24,7 +24,7 @@ struct WebView: UIViewRepresentable {
             .joined(separator: " ")
 
         // The one way bridge from the webapp (ADR 0021): haptics and the order's Live Activity.
-        configuration.userContentController.add(context.coordinator.bridge, name: ShellBridge.handlerName)
+        configuration.userContentController.add(context.coordinator.messages, name: ShellBridge.handlerName)
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = context.coordinator
@@ -49,7 +49,7 @@ struct WebView: UIViewRepresentable {
     @MainActor
     final class Coordinator: NSObject, WKNavigationDelegate {
         let model: WebViewModel
-        let bridge = ShellBridge()
+        let messages = BridgeMessageHandler()
         var lastReloadToken = 0
 
         init(model: WebViewModel) {
@@ -75,5 +75,20 @@ struct WebView: UIViewRepresentable {
         ) {
             model.didFail(error)
         }
+    }
+}
+
+/// Hands each `window.webkit.messageHandlers.bbt.postMessage(...)` body to the bridge.
+/// Lives here so WebView.swift stays the only file that imports WebKit.
+@MainActor
+final class BridgeMessageHandler: NSObject, WKScriptMessageHandler {
+    let bridge = ShellBridge()
+
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
+        guard message.name == ShellBridge.handlerName else { return }
+        bridge.receive(message.body)
     }
 }

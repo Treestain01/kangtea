@@ -33,7 +33,7 @@ This avoids holding a reference to the `WKWebView` in SwiftUI state.
 
 One way, webapp to shell. The schema is `packages/shared/src/shell.ts`; `ShellBridge.swift` is its Swift twin and the two change together.
 
-- `WebView.makeUIView` registers `Coordinator.bridge` on `configuration.userContentController` under `ShellBridge.handlerName` (`bbt`); `dismantleUIView` removes it.
+- `WebView.makeUIView` registers `Coordinator.messages`, a `BridgeMessageHandler`, on `configuration.userContentController` under `ShellBridge.handlerName` (`bbt`); `dismantleUIView` removes it. The handler forwards each message body to `ShellBridge.receive`, so `WebView.swift` stays the only file importing WebKit.
 - The webapp posts with `postToShell` in `webapp/src/platform.ts`, which does nothing when the handler is absent.
 - `ShellBridge.handle` plays haptics (`UIImpactFeedbackGenerator` for light and medium, `UINotificationFeedbackGenerator` for success) and hands `orderStatus` and `orderEnded` to `OrderActivityController`.
 - `OrderActivityController` keeps the one `Activity<OrderActivityAttributes>`: started on the first status, updated on the rest, ended a minute after collection.

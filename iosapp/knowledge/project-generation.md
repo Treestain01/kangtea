@@ -10,6 +10,7 @@ XcodeGen reads it and writes the project; the project is never edited by hand an
 - `configFiles`: maps each config to `Config/<Config>.xcconfig`. This is where `WEBAPP_URL` comes from.
 - `settings.base`: Swift 5.10, version numbers, automatic signing, strict concurrency.
 - `targets.BBT`: the app. Sources are everything under `BBT/`. Uses the hand written `BBT/Info.plist` (`GENERATE_INFOPLIST_FILE: NO`).
+- `targets.BBTWidgets`: the widget extension holding the order Live Activity. Sources under `BBTWidgets/` plus `BBT/OrderActivity.swift`, which both targets compile. `BBT` depends on it so Xcode embeds it.
 - `targets.BBTTests`: XCTest bundle depending on `BBT`. Sources under `BBTTests/`. Uses `@testable import BBT`.
 - `schemes.BBT`: builds both, runs Debug, tests Debug, archives Release.
 

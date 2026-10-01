@@ -1,6 +1,5 @@
 import Foundation
 import UIKit
-import WebKit
 
 /// A message from the webapp. The schema lives in `packages/shared/src/shell.ts`; this is its Swift twin.
 enum ShellMessage: Equatable {
@@ -51,11 +50,11 @@ enum ShellMessage: Equatable {
     }
 }
 
-/// Receives `window.webkit.messageHandlers.bbt.postMessage(...)` from the webapp and acts on it:
-/// haptics through UIKit, the order's Live Activity through `OrderActivityController`.
-/// The bridge is one way; the webapp never waits for a reply.
+/// Acts on what the webapp posts to `window.webkit.messageHandlers.bbt`: haptics through UIKit,
+/// the order's Live Activity through `OrderActivityController`. `WebView.swift` owns the WebKit side
+/// and hands over each message body. The bridge is one way; the webapp never waits for a reply.
 @MainActor
-final class ShellBridge: NSObject, WKScriptMessageHandler {
+final class ShellBridge {
     static let handlerName = "bbt"
 
     private let activities: OrderActivityController
@@ -66,11 +65,9 @@ final class ShellBridge: NSObject, WKScriptMessageHandler {
         self.activities = activities
     }
 
-    func userContentController(
-        _ userContentController: WKUserContentController,
-        didReceive message: WKScriptMessage
-    ) {
-        guard message.name == Self.handlerName, let parsed = ShellMessage(body: message.body) else { return }
+    /// The raw `postMessage` body from WebKit. Anything that does not parse is ignored.
+    func receive(_ body: Any) {
+        guard let parsed = ShellMessage(body: body) else { return }
         handle(parsed)
     }
 

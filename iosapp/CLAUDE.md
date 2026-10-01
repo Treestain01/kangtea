@@ -5,7 +5,7 @@
 The native iOS shell for Kang Tea, shown on the home screen as "Kang Tea" (`CFBundleDisplayName` in `BBT/Info.plist`).
 The Xcode target, scheme and folder keep the codename `BBT`.
 SwiftUI app whose single screen is a WKWebView loading the deployed `webapp`.
-No product UI lives here; the shell owns configuration, loading state, the offline screen, and the user agent token.
+The shell owns configuration, loading state, the offline screen, the user agent token, and the one way bridge from the webapp (haptics and the order's Live Activity, drawn by the `BBTWidgets` extension). Everything else the customer sees is the webapp.
 
 ## Commands (Mac only)
 
@@ -29,6 +29,6 @@ No product UI lives here; the shell owns configuration, loading state, the offli
 
 - `knowledge/INDEX.md` - start here.
 - `knowledge/configuration.md` - the xcconfig to Info.plist to runtime flow and its gotchas.
-- `knowledge/webview.md` - how the webview is wired and where a JS bridge would go.
+- `knowledge/webview.md` - how the webview is wired and how the JS bridge and Live Activity work.
 - Skills: `.claude/skills/regenerate-project`, `.claude/skills/point-at-webapp`.
 - Agency agents: `front-end-engineer` for UI, `architect` for the shell to web contract. The agency has no iOS specialist; say so in reports.
