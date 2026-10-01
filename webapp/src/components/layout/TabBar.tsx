@@ -46,6 +46,7 @@ type TabBarProps = {
 /**
  * Primary navigation. A fixed bottom bar on phones, a left sidebar from 1024px.
  * The Order tab carries the cart count, or a dot while an order is in progress.
+ * Every tab navigates inside a view transition (see styles.css); browsers without them simply cut.
  */
 export function TabBar({ store = null }: TabBarProps) {
   const cart = useCart();
@@ -60,15 +61,15 @@ export function TabBar({ store = null }: TabBarProps) {
       <div className="tabbar__brand" aria-hidden="true">
         <KangTeaLogo size={64} />
       </div>
-      <NavLink to="/" end className={tabClass}>
+      <NavLink to="/" end viewTransition className={tabClass}>
         {icons.home}
         <span className="tab__label">Home</span>
       </NavLink>
-      <NavLink to="/menu" className={tabClass}>
+      <NavLink to="/menu" viewTransition className={tabClass}>
         {icons.menu}
         <span className="tab__label">Menu</span>
       </NavLink>
-      <NavLink to="/order" className={(state) => `${tabClass(state)} tab--order`}>
+      <NavLink to="/order" viewTransition className={(state) => `${tabClass(state)} tab--order`}>
         <span className="tab__icon" {...{ [FLY_TARGET_ATTRIBUTE]: '' }}>
           {icons.order}
           {inProgress && <span className="tab__dot" data-testid="order-dot" />}
@@ -85,11 +86,11 @@ export function TabBar({ store = null }: TabBarProps) {
         )}
         {inProgress && <span className="visually-hidden">, order in progress</span>}
       </NavLink>
-      <NavLink to="/history" className={tabClass}>
+      <NavLink to="/history" viewTransition className={tabClass}>
         {icons.history}
         <span className="tab__label">History</span>
       </NavLink>
-      <NavLink to="/account" className={tabClass}>
+      <NavLink to="/account" viewTransition className={tabClass}>
         {icons.account}
         <span className="tab__label">Account</span>
       </NavLink>

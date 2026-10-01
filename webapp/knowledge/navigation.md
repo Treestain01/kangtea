@@ -1,5 +1,12 @@
 # Navigation
 
+## Moving between tabs
+
+The tab links carry React Router's `viewTransition`, so each tab change runs inside `document.startViewTransition`.
+`src/styles.css` animates the page: the old page slides out to the left while the new one slides in from the right, over `--motion-slow`.
+The tab bar and the desktop order panel have their own `view-transition-name`, so they hold still while the page moves.
+Browsers without view transitions cut as before, and reduced motion turns the animation off.
+
 ## Routes
 
 `src/router.tsx` exports `routes` (for tests) and `createAppRouter()` (for `main.tsx`).
