@@ -55,7 +55,8 @@
   }
 }
 
-/* Three bands: pinned hero, scrolling options, pinned summary and action. */
+/* Three bands: the compact head, the builder (cup stage and topping tray), the readout and action.
+   The builder takes every spare pixel so the cup is as large as the sheet allows. */
 .customise__body {
   position: relative;
   display: grid;
@@ -64,67 +65,61 @@
   padding: 0 0 env(safe-area-inset-bottom);
 }
 
-.customise__scroll {
+/* Head: name and Chinese name on the left, price and close on the right. */
+.head {
   display: grid;
-  gap: var(--space-6);
-  align-content: start;
-  padding: var(--space-6) var(--space-5) var(--space-6);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
-  /* A thin, quiet scrollbar that only shows its thumb; hidden entirely until hovered on desktop. */
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-  scrollbar-gutter: stable;
+  grid-template-columns: minmax(0, 1fr) auto var(--tap-target);
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4) var(--space-2);
 }
 
-.customise__scroll:hover,
-.customise__scroll:focus-within {
-  scrollbar-color: color-mix(in srgb, var(--color-text-muted) 35%, transparent) transparent;
+.head__text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
 }
 
-.customise__scroll::-webkit-scrollbar {
-  width: 6px;
+.head__name {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.15;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 
-.customise__scroll::-webkit-scrollbar-track {
-  background: transparent;
+.head__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
 }
 
-.customise__scroll::-webkit-scrollbar-thumb {
+.head__tag {
+  padding: 2px var(--space-2);
   border-radius: 999px;
-  background: transparent;
+  background: var(--color-surface-muted);
+  color: var(--color-success);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
-.customise__scroll:hover::-webkit-scrollbar-thumb,
-.customise__scroll:focus-within::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--color-text-muted) 35%, transparent);
-}
-
-.customise__fixed {
-  display: grid;
-  gap: var(--space-4);
-  padding: var(--space-4) var(--space-5) var(--space-5);
-  background: var(--color-surface);
-}
-
-@media (min-width: 768px) {
-  .customise__scroll {
-    padding: var(--space-6);
-    gap: var(--space-6);
-  }
-
-  .customise__fixed {
-    padding: var(--space-5) var(--space-6) var(--space-6);
-  }
+.head__price {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
 }
 
 .customise__close {
-  position: absolute;
-  top: var(--space-4);
-  right: var(--space-4);
-  z-index: 1;
   width: var(--tap-target);
   height: var(--tap-target);
   border: 1px solid var(--color-border);
@@ -141,154 +136,118 @@
   color: var(--color-accent);
 }
 
-/* Hero: pinned at the top. The drink on a soft tinted disc beside its category, name and price. */
-.hero {
+/* Builder: the stage takes the spare height, the tray sits under it. Only on a very short screen
+   does the builder scroll, so the cup never shrinks below a useful size. */
+.builder {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Stage: sugar dial, cup, ice dial. The cup fills its cell in both directions and keeps its aspect. */
+.stage {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr) 84px;
   align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-5) calc(var(--space-5) + var(--tap-target) + var(--space-2)) var(--space-4)
-    var(--space-5);
+  gap: var(--space-2);
+  min-height: 0;
+  padding: 0 var(--space-3);
 }
 
-@media (min-width: 768px) {
-  .hero {
-    gap: var(--space-5);
-    padding: var(--space-6) calc(var(--space-6) + var(--tap-target) + var(--space-2)) var(--space-5)
-      var(--space-6);
-  }
+.stage__cup {
+  position: relative;
+  align-self: stretch;
+  min-height: 240px;
 }
 
-.hero__art {
-  display: grid;
-  place-items: center;
-  width: 108px;
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--tea) 22%, transparent);
+.stage__cup .livecup {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-@media (min-width: 768px) {
-  .hero__art {
-    width: 128px;
-  }
-}
-
-.hero__text {
-  display: grid;
-  gap: var(--space-1);
-  justify-items: start;
-  min-width: 0;
-}
-
-.hero__tag {
-  padding: 4px var(--space-3);
-  border-radius: 999px;
-  background: var(--color-surface-muted);
-  color: var(--color-success);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.hero__eyebrow {
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.hero__name {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
-  line-height: 1.15;
-  text-wrap: balance;
-  overflow-wrap: anywhere;
-}
-
-.hero__description {
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: 0.9375rem;
-}
-
-.hero__price {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 1.375rem;
-  font-weight: 700;
-  color: var(--color-accent);
-  font-variant-numeric: tabular-nums;
-}
-
-/* Option groups. A fieldset's legend sits outside its grid, so the gap comes from the legend's margin. */
-.group {
+/* Dial: a vertical track of radio stops. The dot column is on the cup's side, labels on the outside,
+   so the line reads as a gauge against the cup wall. */
+.dial {
+  --dot: 16px;
+  --label: 40px;
   margin: 0;
   padding: 0;
   border: 0;
   min-width: 0;
   display: grid;
-  gap: var(--space-4);
+  justify-items: center;
+  gap: var(--space-1);
 }
 
-.group__legend {
+.dial__legend {
+  width: 100%;
   padding: 0;
-  margin-bottom: var(--space-4);
-  font-size: 0.8125rem;
+  margin-bottom: var(--space-1);
+  font-size: 0.6875rem;
   font-weight: 700;
   color: var(--color-text-muted);
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-align: center;
 }
 
-.group__legend + .tiles {
-  margin-top: var(--space-2);
-}
-
-/* Stepped track: equal columns, one radio per stop, the dots centred in their columns.
-   The line runs from the first dot centre to the last, so it always meets the dots. */
-.track {
-  --dot: 22px;
+.dial__stops {
   --stops: 5;
-  --half-column: calc(100% / var(--stops) / 2);
   position: relative;
   display: grid;
-  grid-template-columns: repeat(var(--stops), minmax(0, 1fr));
-  padding: var(--space-3) 0 var(--space-2);
+  grid-auto-rows: var(--tap-target);
 }
 
-.track__line,
-.track__fill {
+.dial__line,
+.dial__fill {
   position: absolute;
-  top: calc(var(--space-3) + var(--dot) / 2 - 1px);
-  left: var(--half-column);
-  right: var(--half-column);
-  height: 2px;
+  top: calc(var(--tap-target) / 2);
+  bottom: calc(var(--tap-target) / 2);
+  width: 2px;
   border-radius: 999px;
   background: var(--color-border);
 }
 
-.track__fill {
-  right: auto;
-  width: calc((100% - 2 * var(--half-column)) * var(--fill) / 100%);
+.dial--left .dial__line,
+.dial--left .dial__fill {
+  right: calc(var(--tap-target) / 2 - 1px);
+}
+
+.dial--right .dial__line,
+.dial--right .dial__fill {
+  left: calc(var(--tap-target) / 2 - 1px);
+}
+
+/* The fill rises from the bottom stop to the chosen one. */
+.dial__fill {
+  top: auto;
+  height: calc((100% - var(--tap-target)) * var(--fill) / 100%);
   background: var(--color-accent);
 }
 
-.track__stop {
+.dial__stop {
   position: relative;
   display: grid;
-  justify-items: center;
-  gap: var(--space-3);
-  min-width: 0;
-  min-height: 56px;
+  grid-template-columns: var(--label) var(--tap-target);
+  align-items: center;
+  height: var(--tap-target);
   cursor: pointer;
 }
 
-.track__stop input {
+.dial--right .dial__stop {
+  grid-template-columns: var(--tap-target) var(--label);
+}
+
+/* DOM order is dot then label; the left dial shows the label first. */
+.dial--left .dial__dot {
+  order: 1;
+}
+
+.dial__stop input {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -298,7 +257,8 @@
   cursor: pointer;
 }
 
-.track__dot {
+.dial__dot {
+  justify-self: center;
   width: var(--dot);
   height: var(--dot);
   border-radius: 50%;
@@ -310,145 +270,175 @@
     transform var(--motion-fast) var(--ease);
 }
 
-/* Stops before the chosen one light up too, so the track reads as a level. */
-.track__stop--passed .track__dot {
+.dial__stop--passed .dial__dot {
   background: var(--color-accent);
   border-color: var(--color-accent);
 }
 
-.track__stop input:checked ~ .track__dot {
+.dial__stop input:checked ~ .dial__dot {
   background: var(--color-accent);
   border-color: var(--color-accent);
   outline: 5px solid color-mix(in srgb, var(--color-accent) 20%, transparent);
   transform: scale(1.1);
 }
 
-.track__stop input:focus-visible ~ .track__dot {
+.dial__stop input:focus-visible ~ .dial__dot {
   outline: var(--focus-outline);
   outline-offset: 3px;
 }
 
-.track__label {
-  font-size: 0.9375rem;
+.dial__label {
+  font-size: 0.75rem;
   font-weight: 600;
+  line-height: 1.15;
   color: var(--color-text-muted);
-  text-align: center;
-  line-height: 1.2;
+  text-align: right;
 }
 
-.track__stop input:checked ~ .track__label {
+.dial--right .dial__label {
+  text-align: left;
+}
+
+.dial__stop input:checked ~ .dial__label {
   color: var(--color-accent);
   font-weight: 700;
 }
 
-/* Topping tiles. Each tile is a button that adds a lot; a "−" appears once there is one to remove. */
-.tiles {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.dial__value {
+  margin: var(--space-1) 0 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* Tray: one swipeable row of round topping tokens under the cup, with its label and hint on one line. */
+.tray {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-3);
+  min-width: 0;
+  padding-top: var(--space-2);
 }
 
-@media (min-width: 768px) {
-  .tiles {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--space-4);
-  }
+.tray__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  padding: 0 var(--space-4);
 }
 
-.group__hint {
-  margin: 0 0 var(--space-3);
-  font-size: 0.875rem;
+.tray__legend {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tray__hint {
+  margin: 0;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
 }
 
-.tile {
-  position: relative;
-  min-width: 0;
+.tray__list {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-2) var(--space-4) var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--space-4);
+  overscroll-behavior-x: contain;
+  /* A thin, quiet scrollbar that only shows its thumb on hover, as the old scroll band did. */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
 }
 
-.tile__face {
+.tray__list:hover,
+.tray__list:focus-within {
+  scrollbar-color: color-mix(in srgb, var(--color-text-muted) 35%, transparent) transparent;
+}
+
+.tray__list::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tray__list::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: transparent;
+}
+
+.tray__list:hover::-webkit-scrollbar-thumb,
+.tray__list:focus-within::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-text-muted) 35%, transparent);
+}
+
+.token {
+  position: relative;
+  flex: 0 0 76px;
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+.token__face {
   position: relative;
   width: 100%;
   display: grid;
   justify-items: center;
-  gap: var(--space-2);
-  padding: var(--space-4) var(--space-2) var(--space-4);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  gap: 2px;
+  padding: var(--space-1) 0 0;
+  border: 0;
+  background: transparent;
   color: var(--color-text);
   font: inherit;
   cursor: pointer;
+}
+
+.token__face[aria-disabled='true'] {
+  cursor: default;
+}
+
+.token__face:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+
+.token__art {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  padding: 12px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: var(--color-surface-muted);
+  border: 2px solid transparent;
   transition:
     border-color var(--motion-fast) var(--ease),
     background var(--motion-fast) var(--ease);
 }
 
-.tile__face:hover {
+.token__face:hover .token__art {
   border-color: var(--color-accent);
 }
 
-.tile__face[aria-pressed='true'] {
+.token__face[aria-pressed='true'] .token__art {
   border-color: var(--color-accent);
-  background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
-  outline: 1px solid var(--color-accent);
-  outline-offset: -2px;
-}
-
-.tile__face[aria-disabled='true'] {
-  cursor: default;
-}
-
-.tile__face:focus-visible {
-  outline: var(--focus-outline);
-  outline-offset: 2px;
-}
-
-/* Take one lot away. Sits in the top right corner of the face, inside the tile bounds. */
-.tile__remove {
-  position: absolute;
-  top: var(--space-1);
-  right: var(--space-1);
-  width: var(--tap-target);
-  height: var(--tap-target);
-  border: 1px solid var(--color-border);
-  border-radius: 50%;
-  background: var(--color-surface);
-  color: var(--color-accent);
-  font: inherit;
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1;
-  cursor: pointer;
-  transition: border-color var(--motion-fast) var(--ease);
-}
-
-.tile__remove:hover {
-  border-color: var(--color-accent);
-}
-
-.tile__art {
-  display: grid;
-  place-items: center;
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
   background: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface));
-  color: var(--color-accent);
 }
 
-.tile__art svg {
-  width: 40px;
-  height: 40px;
-}
-
-.tile__badge {
+.token__badge {
   position: absolute;
-  top: var(--space-2);
-  left: var(--space-2);
+  top: 0;
+  right: 2px;
   pointer-events: none;
   min-width: 22px;
   height: 22px;
@@ -462,71 +452,82 @@
   text-align: center;
 }
 
-.tile__name {
+.token__name {
   margin-top: var(--space-1);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 600;
+  line-height: 1.15;
   text-align: center;
   overflow-wrap: anywhere;
 }
 
-.tile__price {
-  font-size: 0.8125rem;
+.token__price {
+  font-size: 0.6875rem;
   color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
-/* Itemised summary: the dark block from the mockup, on the accent. */
-.summary {
+/* Take one lot away: a full size tap target in the token's top left corner drawn as a small ring. */
+.token__remove {
+  position: absolute;
+  top: calc(var(--space-1) - 10px);
+  left: -8px;
   display: grid;
-  gap: var(--space-2);
-  padding: var(--space-4) var(--space-5);
-  border-radius: var(--radius-lg);
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-  font-variant-numeric: tabular-nums;
+  place-items: center;
+  width: var(--tap-target);
+  height: var(--tap-target);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-accent);
+  font: inherit;
+  cursor: pointer;
 }
 
-.summary__row {
-  display: flex;
-  justify-content: space-between;
+.token__remove-mark {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: border-color var(--motion-fast) var(--ease);
+}
+
+.token__remove:hover .token__remove-mark {
+  border-color: var(--color-accent);
+}
+
+/* Readout and action, pinned at the bottom. */
+.customise__fixed {
+  display: grid;
   gap: var(--space-3);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
 }
 
-.summary__row--head {
-  font-weight: 600;
-}
-
-.summary__item {
+.readout__line {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
   overflow-wrap: anywhere;
 }
 
-.summary__choices {
-  margin: 0;
-  font-size: 0.875rem;
-  opacity: 0.8;
+.readout__item {
+  color: var(--color-text);
+  font-weight: 600;
 }
 
-.summary__row--topping {
-  font-size: 0.9375rem;
-  opacity: 0.85;
-}
-
-.summary__row--total {
-  margin-top: var(--space-2);
-  padding-top: var(--space-3);
-  border-top: 1px solid color-mix(in srgb, var(--color-on-accent) 30%, transparent);
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-weight: 700;
-}
-
-/* Footer: quantity stepper and the full width action */
 .customise__foot {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .qty {
@@ -585,14 +586,72 @@
   background: var(--color-accent-hover);
 }
 
+/* Wider sheet: more room for the dials' labels, bigger tokens, roomier padding. */
+@media (min-width: 768px) {
+  .head {
+    padding: var(--space-5) var(--space-6) var(--space-3);
+  }
+
+  .head__name {
+    font-size: 1.5rem;
+  }
+
+  .stage {
+    grid-template-columns: 112px minmax(0, 1fr) 112px;
+    gap: var(--space-4);
+    padding: 0 var(--space-5);
+  }
+
+  .dial {
+    --label: 64px;
+  }
+
+  .dial__label {
+    font-size: 0.875rem;
+  }
+
+  .tray__head,
+  .tray__list {
+    padding-inline: var(--space-6);
+  }
+
+  .tray__list {
+    scroll-padding-inline: var(--space-6);
+    gap: var(--space-3);
+  }
+
+  .token {
+    flex-basis: 88px;
+  }
+
+  .token__art {
+    width: 64px;
+    height: 64px;
+    padding: 14px;
+  }
+
+  .token__name {
+    font-size: 0.8125rem;
+  }
+
+  .customise__fixed {
+    padding: var(--space-4) var(--space-6) var(--space-6);
+  }
+
+  .readout__line {
+    font-size: 0.9375rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .customise[open],
   .customise[open]::backdrop {
     animation: none;
   }
 
-  .track__dot,
-  .tile__face,
+  .dial__dot,
+  .token__art,
+  .token__remove-mark,
   .customise__add {
     transition: none;
   }

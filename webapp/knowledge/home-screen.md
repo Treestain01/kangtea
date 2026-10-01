@@ -40,11 +40,15 @@ Submitting the search navigates to `/menu?q=<text>`.
 | `DrinkCard`       | `components/menu/DrinkCard.tsx`       | Name, optional description, price, first tag, `CupIllustration`. `variant="compact"` for the home row: square art, no description. The whole card is a button when `onOpen` is provided. |
 | `CupIllustration` | `components/menu/CupIllustration.tsx` | Decorative CSS cup tinted with the item's `colour`, for cards.                                                                                                                           |
 | `LiveCup`         | `components/cup/LiveCup.tsx`          | The cup in the customise sheet that builds itself from the current choices, with physics for toppings and ice.                                                                           |
+| `ToppingArt`      | `components/cup/ToppingArt.tsx`       | A topping drawn with its cup symbol, for the tokens in the customise sheet's tray.                                                                                                       |
 
 ## Customising and adding to the cart
 
-The card opens `components/menu/CustomiseDrinkDialog.tsx`, a native `<dialog>` bottom sheet with the drink hero pinned at the top, sugar and ice tracks and topping tiles scrolling in the middle, and the itemised summary with the add button pinned at the bottom.
-The hero holds the live cup, `components/cup/LiveCup.tsx`: the tea deepens with sugar, ice floats under the surface, foam and brulee fade in on top, and every other topping drops in under a small physics world and piles at the bottom.
+The card opens `components/menu/CustomiseDrinkDialog.tsx`, a native `<dialog>` bottom sheet built around the live cup (ADR 0020).
+A compact head carries the name, Chinese name, category and price; the stage below it puts a vertical sugar dial on the left, the cup filling the middle, and a vertical ice dial on the right; a swipeable tray of topping tokens sits under the cup; a one line readout and the add button with the live total are pinned at the bottom.
+The dials are radio groups with the highest level at the top; a topping token adds a lot per tap, shows a count badge and a minus to take one away, and is drawn with `components/cup/ToppingArt.tsx` from the same symbol the cup drops in.
+The cup is `components/cup/LiveCup.tsx`: the tea deepens with sugar, ice floats under the surface, foam and brulee fade in on top, and every other topping drops in under a small physics world and piles at the bottom.
+Nothing in the sheet scrolls on a phone; the cup is sized to the height the dials and tray leave.
 `components/cup/cupParts.ts` maps menu names to art and `components/cup/cupPhysics.ts` wraps Matter.js, which loads only when the sheet opens; the rules are in `src/assets/art/README.md` and ADR 0018.
 Adding builds an `OrderLine` with `store/lines.ts#buildCartLine`, calls `cart.add`, closes the sheet, and announces the addition.
 The option lists come from `seed.json` at the repository root, transcribed from the in-store board: sugar 0, 30, 50, 70 and 100%; warm, no ice, less ice and normal ice.

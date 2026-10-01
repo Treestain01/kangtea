@@ -41,6 +41,22 @@ export const PRODUCT_COLOURS = {
   taro: '#b48fd0',
 } as const;
 
+/**
+ * The product colour variables the cup parts read, for a drink of the given colour.
+ * Shared by the live cup and the topping icons so a pearl looks the same in both.
+ */
+export function productColourVars(colour: string): Record<string, string> {
+  return {
+    '--pearl': PRODUCT_COLOURS.pearl,
+    '--pearl-mini': `color-mix(in srgb, ${colour} 60%, ${PRODUCT_COLOURS.pearl})`,
+    '--foam': PRODUCT_COLOURS.cream,
+    '--ice': PRODUCT_COLOURS.ice,
+    '--brulee': PRODUCT_COLOURS.brulee,
+    '--pudding': PRODUCT_COLOURS.pudding,
+    '--taro': PRODUCT_COLOURS.taro,
+  };
+}
+
 /** One physical body in the cup. `key` is stable across renders so the diff can keep or drop it. */
 export interface PieceSpec {
   key: string;

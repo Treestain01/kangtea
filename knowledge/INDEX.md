@@ -26,5 +26,6 @@ Read the document, not this index, for the facts.
   - [0017 Accounts behind a provider interface](decisions/0017-accounts-behind-a-provider-interface.md)
   - [0018 Live cup with a physics world](decisions/0018-live-cup-with-a-physics-world.md)
   - [0019 Pearl loyalty card on the server](decisions/0019-pearl-loyalty-card-on-the-server.md)
+  - [0020 Customise sheet built around the cup](decisions/0020-customise-sheet-built-around-the-cup.md)
 
 Project knowledge bases: `webapp/knowledge/INDEX.md`, `api/knowledge/INDEX.md`, `iosapp/knowledge/INDEX.md`.

@@ -9,6 +9,7 @@ import {
   icePieces,
   liquidTopFor,
   piecesFor,
+  productColourVars,
   showsSteam,
   teaColourMix,
   type PieceSpec,
@@ -150,13 +151,7 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
 
   const style = {
     '--tea': `color-mix(in srgb, ${colour} ${teaColourMix(sugar)}%, ${PRODUCT_COLOURS.coconutJelly})`,
-    '--pearl': PRODUCT_COLOURS.pearl,
-    '--pearl-mini': `color-mix(in srgb, ${colour} 60%, ${PRODUCT_COLOURS.pearl})`,
-    '--foam': PRODUCT_COLOURS.cream,
-    '--ice': PRODUCT_COLOURS.ice,
-    '--brulee': PRODUCT_COLOURS.brulee,
-    '--pudding': PRODUCT_COLOURS.pudding,
-    '--taro': PRODUCT_COLOURS.taro,
+    ...productColourVars(colour),
   } as CSSProperties;
 
   return (

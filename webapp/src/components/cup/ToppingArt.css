@@ -1,0 +1,10 @@
+/* A topping symbol on its own. The cup outline tokens are set so a cap's rim and shadows take the theme. */
+.toppingart {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  color: var(--color-text);
+  --cup-line: var(--color-text);
+  --cup-surface: var(--color-surface);
+}
