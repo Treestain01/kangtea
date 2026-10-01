@@ -72,20 +72,6 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
   const kitchenCupRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
 
-  // The kitchen's moments: a pour as making starts, a click as the lid goes on.
-  const status = active?.status ?? null;
-  const previousStatus = useRef(status);
-  useEffect(() => {
-    if (previousStatus.current !== status) {
-      if (status === 'making') cue('pour');
-      if (status === 'ready') {
-        cue('lid');
-        tap('success');
-      }
-    }
-    previousStatus.current = status;
-  }, [status]);
-
   const className = `order${compact ? ' order--compact' : ''}`;
   // The menu still knowing the drink gives the line its cup; a retired drink shows without one.
   const artFor = (itemId: string): LineArt | undefined => {

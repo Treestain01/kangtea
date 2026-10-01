@@ -3,9 +3,10 @@ import { Outlet } from 'react-router';
 import { useStoreInfo } from '../../api/useStoreInfo';
 import { openingStatus } from '../../lib/openingHours';
 import { shellOrderMessage } from '../../lib/shellOrder';
-import { setSoundsEnabled } from '../../lib/sounds';
+import { cue, setSoundsEnabled } from '../../lib/sounds';
 import { postToShell } from '../../platform';
 import { KITCHEN_SCHEDULE } from '../../config';
+import { tap } from '../cup/fly';
 import { activeOrder } from '../../store/orders';
 import { useOrders, usePreferences } from '../../store/hooks';
 import { applyTheme } from '../../theme/theme';
@@ -37,12 +38,24 @@ export function AppShell() {
     setSoundsEnabled(preferences.sounds);
   }, [preferences.sounds]);
 
-  // The iOS shell's Live Activity follows the active order (ADR 0021). A browser ignores these posts.
+  // The kitchen's moments happen once, here, whichever panels are mounted: a pour as making
+  // starts, a click and a haptic as the drink is ready, and the iOS shell's Live Activity follows
+  // the active order (ADR 0021). A browser ignores the posts.
   const orders = useOrders();
   const active = activeOrder(orders);
-  const activeKey = active ? `${active.id}:${active.status}` : null;
+  const status = active?.status ?? null;
+  const activeKey = active ? `${active.id}:${status}` : null;
+  const previousStatus = useRef(status);
   const hadActive = useRef(false);
   useEffect(() => {
+    if (previousStatus.current !== status) {
+      if (status === 'making') cue('pour');
+      if (status === 'ready') {
+        cue('lid');
+        tap('success');
+      }
+    }
+    previousStatus.current = status;
     if (active) {
       postToShell(shellOrderMessage(active, store, KITCHEN_SCHEDULE));
       hadActive.current = true;
