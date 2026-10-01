@@ -13,8 +13,9 @@
 
 @media (min-width: 1024px) {
   .history {
-    margin-inline: auto;
+    width: 100%;
     max-width: 44rem;
+    justify-self: center;
   }
 }
 

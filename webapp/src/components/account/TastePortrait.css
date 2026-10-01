@@ -12,7 +12,7 @@
 
 @media (min-width: 768px) {
   .taste {
-    grid-template-columns: 112px minmax(0, 1fr);
+    grid-template-columns: 96px minmax(0, 1fr);
     gap: var(--space-5);
   }
 }
