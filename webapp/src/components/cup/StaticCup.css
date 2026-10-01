@@ -50,10 +50,35 @@
   animation-delay: var(--delay);
 }
 
+/* The loader: the tea rises from the floor, rests a beat, and starts again. */
+@keyframes staticcup-pour {
+  0% {
+    y: 200;
+    height: 0;
+  }
+  70% {
+    y: 44;
+    height: 156;
+  }
+  100% {
+    y: 44;
+    height: 156;
+  }
+}
+
+.staticcup--pouring .staticcup__liquid {
+  animation: staticcup-pour calc(var(--motion-slow) * 5) var(--ease) infinite;
+  transition: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .staticcup__liquid,
   .staticcup__lid {
     transition: none;
+  }
+
+  .staticcup--pouring .staticcup__liquid {
+    animation: none;
   }
 
   .staticcup__piece--drop {

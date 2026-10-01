@@ -1,5 +1,7 @@
 import type { Order } from '@bbt/shared';
 import { Link, useNavigate } from 'react-router';
+import { PRODUCT_COLOURS } from '../components/cup/cupParts';
+import { StaticCup } from '../components/cup/StaticCup';
 import { formatPrice } from '../lib/money';
 import { useStores } from '../store/StoresProvider';
 import { useOrders } from '../store/hooks';
@@ -32,6 +34,9 @@ export function HistoryPage() {
       </h2>
       {past.length === 0 ? (
         <div className="history__empty">
+          <span className="history__cup" aria-hidden="true">
+            <StaticCup colour={PRODUCT_COLOURS.tea} level={0} lid={false} />
+          </span>
           <p>No orders yet.</p>
           <Link to="/" className="history__link">
             Browse the menu

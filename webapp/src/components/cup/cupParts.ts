@@ -28,6 +28,8 @@ export const CUP = {
 export const FRAME_MS = 1000 / 60;
 
 export const PRODUCT_COLOURS = {
+  /** A generic milk tea, for cups that stand for no drink in particular: loaders, the empty cup, 404. */
+  tea: '#b07a45',
   pearl: '#33261f',
   cream: '#f7f0e3',
   ice: '#ffffff',

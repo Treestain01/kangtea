@@ -31,6 +31,12 @@
   margin: 0;
 }
 
+.history__cup {
+  display: block;
+  width: 64px;
+  opacity: 0.8;
+}
+
 .history__link,
 .pastorder__again {
   display: inline-flex;

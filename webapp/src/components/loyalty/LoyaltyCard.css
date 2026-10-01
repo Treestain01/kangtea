@@ -1,5 +1,7 @@
 /* The pearl card: the one other accent filled card on Home, beside Your usual. */
 .pearls {
+  position: relative;
+  overflow: hidden;
   display: grid;
   gap: var(--space-3);
   padding: var(--space-4);
@@ -171,6 +173,16 @@
   }
 }
 
+@keyframes pearls-glow {
+  0%,
+  100% {
+    outline: 0 solid transparent;
+  }
+  50% {
+    outline: 8px solid color-mix(in srgb, var(--color-on-accent) 35%, transparent);
+  }
+}
+
 @keyframes pearls-wobble {
   0%,
   100% {
@@ -190,6 +202,11 @@
 
 .pearls__stamp--unlock svg {
   animation: pearls-wobble var(--motion-slow) var(--ease) 2;
+}
+
+/* The free cup glows three times as the card fills. */
+.pearls__stamp--unlock {
+  animation: pearls-glow calc(var(--motion-slow) * 4) var(--ease) 3;
 }
 
 .pearls__actions {
@@ -258,7 +275,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .pearls__stamp--new svg,
-  .pearls__stamp--unlock svg {
+  .pearls__stamp--unlock svg,
+  .pearls__stamp--unlock {
     animation: none;
   }
 

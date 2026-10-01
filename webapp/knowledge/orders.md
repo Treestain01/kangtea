@@ -34,6 +34,9 @@ Because names and prices are snapshots, a topping price change later does not al
   On desktop the flight lands on the order panel instead; whichever element carrying `data-fly-target` is on screen is the target.
 - Every cart row and recap line shows a `components/cup/StaticCup.tsx` drawn from the line's customisations and the menu item's colour and pearls, found through the catalogue; a retired drink shows without one.
 - While an order is active the panel shows a kitchen cup of the first line: empty while received, poured with its pieces dropping in while being made, lidded when ready.
+  A ring around it fills toward ready on the kitchen schedule from `config.ts`, with "Ready in m:ss" beneath (`formatCountdown`), refreshed four times a second until ready.
+- Totals in the panel are `components/ui/RollingPrice.tsx`: the real digits stay in the DOM and a CSS strip behind each digit rolls to it when the total changes.
+- An empty order shows an empty cup outline (`StaticCup` at level 0) above the copy, as does an empty History. Loading states use `components/cup/Loading.tsx`, a cup pouring itself on a loop. The not found page is a tipped cup with a puddle.
 - Collecting fires a haptic tap where available, posts the stamps, drops a pearl from the kitchen cup onto the pearl strip and then marks the order collected.
   Without motion, or with nothing to land on, collecting is immediate.
 - `fly.ts` flights resolve at once under reduced motion, in browsers without the Web Animations API and when no target is visible; nothing in the order flow waits on decoration.

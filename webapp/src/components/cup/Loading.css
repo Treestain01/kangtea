@@ -1,0 +1,15 @@
+/* The pouring loader: a small cup over the message, centred in the space the content will take. */
+.loading {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-6);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.loading__cup {
+  display: block;
+  width: 64px;
+}

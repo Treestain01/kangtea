@@ -1,0 +1,52 @@
+/* Not found: a cup on its side with a puddle, centred, and the link home. */
+.notfound {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-6);
+  text-align: center;
+}
+
+.notfound__spill {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding-bottom: var(--space-3);
+}
+
+.notfound__cup {
+  width: 96px;
+  transform: rotate(-78deg) translateY(-6px);
+  transform-origin: 50% 90%;
+}
+
+.notfound__puddle {
+  width: 120px;
+  height: 14px;
+  margin-top: -10px;
+  margin-left: -100px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--tea, var(--color-surface-muted)) 60%, transparent);
+}
+
+.notfound__heading {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.notfound__copy {
+  margin: 0;
+}
+
+.notfound__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  padding: 0 var(--space-5);
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: 700;
+  text-decoration: none;
+}

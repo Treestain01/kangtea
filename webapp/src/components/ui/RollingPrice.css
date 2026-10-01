@@ -1,0 +1,44 @@
+/* Odometer digits. Each digit is a 1em window; the strip of 0 to 9 behind it slides to the digit. */
+.roll {
+  display: inline-flex;
+  align-items: baseline;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.roll__digit {
+  position: relative;
+  display: inline-block;
+  width: 1ch;
+  height: 1em;
+  line-height: 1;
+  overflow: hidden;
+  vertical-align: baseline;
+}
+
+/* The real digit stays for the DOM and assistive technology; the strip is what is seen. */
+.roll__real {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.roll__digit::before {
+  content: '0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9';
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: pre;
+  line-height: 1;
+  transform: translateY(calc(var(--d, 0) * -1em));
+  transition: transform calc(var(--motion-slow) * 1.5) var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roll__digit::before {
+    transition: none;
+  }
+}

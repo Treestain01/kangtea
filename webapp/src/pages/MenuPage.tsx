@@ -2,6 +2,7 @@ import type { MenuItem, OrderLine } from '@bbt/shared';
 import { useCallback, useEffect, useState, type CSSProperties } from 'react';
 import { useSearchParams } from 'react-router';
 import { useCatalogue } from '../api/useCatalogue';
+import { Loading } from '../components/cup/Loading';
 import { SearchBar } from '../components/home/SearchBar';
 import { CategoryChips } from '../components/menu/CategoryChips';
 import { CustomiseDrinkDialog } from '../components/menu/CustomiseDrinkDialog';
@@ -66,11 +67,7 @@ export function MenuPage() {
   }
 
   if (catalogue.kind === 'loading') {
-    return (
-      <p className="menu__loading" role="status">
-        Loading the menu
-      </p>
-    );
+    return <Loading>Loading the menu</Loading>;
   }
 
   const { menu } = catalogue;

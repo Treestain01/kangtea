@@ -2,6 +2,7 @@ import { STAMPS_PER_CARD, type LoyaltyCard as LoyaltyCardData } from '@bbt/share
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { ApiError } from '../../api/client';
+import { rainPearls } from '../cup/celebrate';
 import { PRODUCT_COLOURS } from '../cup/cupParts';
 import { useLoyalty } from '../../loyalty/LoyaltyProvider';
 import './LoyaltyCard.css';
@@ -24,6 +25,15 @@ export function LoyaltyCard({ heading = 'Your pearls', compact = false }: Loyalt
   const [failure, setFailure] = useState('');
   const [message, setMessage] = useState('');
   const [flipped, setFlipped] = useState(false);
+
+  // The moment the card fills in front of the person, pearls rain down it once.
+  const frontRef = useRef<HTMLElement>(null);
+  const complete = loyalty.state.kind === 'ready' && loyalty.state.card.complete;
+  const wasComplete = useRef(complete);
+  useEffect(() => {
+    if (complete && !wasComplete.current && frontRef.current) void rainPearls(frontRef.current);
+    wasComplete.current = complete;
+  }, [complete]);
 
   if (compact && loyalty.state.kind !== 'ready') return null;
 
@@ -104,7 +114,12 @@ export function LoyaltyCard({ heading = 'Your pearls', compact = false }: Loyalt
 
   return (
     <div className={`pearls-flip${flipped ? ' pearls-flip--flipped' : ''}`}>
-      <section className="pearls pearls__face" aria-labelledby="pearls-heading" inert={flipped}>
+      <section
+        className="pearls pearls__face"
+        aria-labelledby="pearls-heading"
+        inert={flipped}
+        ref={frontRef}
+      >
         <div className="pearls__head">
           <h3 id="pearls-heading" className="pearls__heading">
             {heading}

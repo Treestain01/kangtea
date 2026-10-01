@@ -35,6 +35,12 @@
   margin: 0;
 }
 
+.order__cup {
+  display: block;
+  width: 64px;
+  opacity: 0.8;
+}
+
 .order__hint {
   font-size: 0.875rem;
 }
@@ -87,19 +93,69 @@
   font-size: 0.875rem;
 }
 
-/* The kitchen cup: empty while received, poured while being made, lidded when ready. */
+/* The kitchen cup: empty while received, poured while being made, lidded when ready.
+   A ring around it fills toward ready, with the time left beneath. */
 .kitchen {
   display: grid;
   justify-items: center;
+  gap: var(--space-2);
   padding-block: var(--space-2);
 }
 
+.kitchen__ring {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  display: grid;
+  place-items: center;
+}
+
+.kitchen--compact .kitchen__ring {
+  width: 160px;
+  height: 160px;
+}
+
+.kitchen__dial {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.kitchen__track,
+.kitchen__fill {
+  fill: none;
+  stroke-width: 4;
+}
+
+.kitchen__track {
+  stroke: var(--color-border);
+}
+
+.kitchen__fill {
+  stroke: var(--color-accent);
+  stroke-linecap: round;
+  stroke-dasharray: 552.92;
+  transition: stroke-dashoffset var(--motion-slow) linear;
+}
+
+/* The cup is taller than wide (120 by 214 units), so it sits inside the ring at under half its width. */
 .kitchen__cup {
-  width: 150px;
+  width: 92px;
 }
 
 .kitchen--compact .kitchen__cup {
-  width: 120px;
+  width: 78px;
+}
+
+.kitchen__eta {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
 }
 
 /* The pearl strip under the order, when signed in. */
@@ -221,7 +277,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .order__primary,
-  .order__secondary {
+  .order__secondary,
+  .kitchen__fill {
     transition: none;
   }
 }

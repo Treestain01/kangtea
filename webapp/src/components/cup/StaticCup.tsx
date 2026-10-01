@@ -30,6 +30,8 @@ type StaticCupProps = {
   lid?: boolean;
   /** Pieces that appear drop in from above rather than sitting where they land. */
   drop?: boolean;
+  /** Pours itself over and over, for a loading state. */
+  pouring?: boolean;
   /** Names the cup for assistive technology. Without it the cup is decorative. */
   label?: string;
   className?: string;
@@ -76,6 +78,7 @@ export function StaticCup({
   level = 1,
   lid = true,
   drop = false,
+  pouring = false,
   label,
   className,
 }: StaticCupProps) {
@@ -105,7 +108,7 @@ export function StaticCup({
 
   return (
     <svg
-      className={`staticcup${className ? ` ${className}` : ''}`}
+      className={`staticcup${pouring ? ' staticcup--pouring' : ''}${className ? ` ${className}` : ''}`}
       viewBox={CUP.viewBox}
       style={style}
       role={label ? 'img' : undefined}

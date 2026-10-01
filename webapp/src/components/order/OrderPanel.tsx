@@ -1,8 +1,9 @@
 import type { Order } from '@bbt/shared';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { useCatalogue } from '../../api/useCatalogue';
 import { useStoreInfo } from '../../api/useStoreInfo';
+import { KITCHEN_SCHEDULE } from '../../config';
 import { formatPrice } from '../../lib/money';
 import { useLoyalty } from '../../loyalty/LoyaltyProvider';
 import { useStores } from '../../store/StoresProvider';
@@ -15,6 +16,7 @@ import { PRODUCT_COLOURS } from '../cup/cupParts';
 import { flyPearl, tap } from '../cup/fly';
 import { cue } from '../../lib/sounds';
 import { LoyaltyCard } from '../loyalty/LoyaltyCard';
+import { RollingPrice } from '../ui/RollingPrice';
 import { CartLineRow, type LineArt } from './CartLineRow';
 import { OrderStatusSteps } from './OrderStatusSteps';
 import './OrderPanel.css';
@@ -26,6 +28,29 @@ const STATUS_COPY: Record<Order['status'], string> = {
   collected: 'Enjoy.',
   cancelled: 'This order was cancelled.',
 };
+
+/** The countdown ring's circumference, for r=88 in a 190 box. */
+const RING_LENGTH = 2 * Math.PI * 88;
+/** How often the countdown redraws while the kitchen works. */
+const ETA_TICK_MS = 250;
+
+/** "1:05" from milliseconds, rounding up so the last second still reads 0:01. */
+export function formatCountdown(ms: number): string {
+  const seconds = Math.max(0, Math.ceil(ms / 1000));
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+}
+
+/** The current time, refreshed every `intervalMs`; frozen when null. */
+function useNow(intervalMs: number | null): number {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (intervalMs === null) return;
+    setNow(Date.now());
+    const timer = setInterval(() => setNow(Date.now()), intervalMs);
+    return () => clearInterval(timer);
+  }, [intervalMs]);
+  return now;
+}
 
 type OrderPanelProps = {
   /** Compact stacks every line for the narrow desktop side panel. */
@@ -150,6 +175,9 @@ function CartView({
           Your order
         </h2>
         <div className="order__empty">
+          <span className="order__cup" aria-hidden="true">
+            <StaticCup colour={PRODUCT_COLOURS.tea} level={0} lid={false} />
+          </span>
           <p>Your order is empty.</p>
           {compact ? (
             <p className="order__hint">Add drinks from the menu and they will appear here.</p>
@@ -183,7 +211,7 @@ function CartView({
       <div className="order__summary">
         <p className="order__total">
           <span>Total</span>
-          <span>{formatPrice(cartTotalCents(lines))}</span>
+          <RollingPrice cents={cartTotalCents(lines)} />
         </p>
         <p className="order__note">Pay at the counter when you collect.</p>
         <button type="button" className="order__primary" disabled={!canPlace} onClick={onPlace}>
@@ -215,6 +243,13 @@ function ActiveOrderView({
 }: ActiveOrderViewProps) {
   const first = order.lines[0];
   const firstArt = first ? artFor(first.itemId) : undefined;
+  const now = useNow(order.status === 'ready' ? null : ETA_TICK_MS);
+  const elapsed = now - Date.parse(order.placedAt);
+  const progress =
+    order.status === 'ready'
+      ? 1
+      : Math.min(1, Math.max(0, elapsed / KITCHEN_SCHEDULE.readyAfterMs));
+  const remaining = Math.max(0, KITCHEN_SCHEDULE.readyAfterMs - elapsed);
   return (
     <section className={className} aria-labelledby="order-heading">
       <h2 id="order-heading" className="order__heading">
@@ -222,17 +257,34 @@ function ActiveOrderView({
       </h2>
       {first && firstArt && (
         <div className={`kitchen${compact ? ' kitchen--compact' : ''}`}>
-          <div className="kitchen__cup" ref={cupRef}>
-            <StaticCup
-              colour={firstArt.colour}
-              pearls={firstArt.pearls}
-              customisations={first.customisations}
-              level={order.status === 'received' ? 0 : 1}
-              lid={order.status === 'ready'}
-              drop
-              label={`${first.name} in the kitchen`}
-            />
+          <div className="kitchen__ring">
+            <svg className="kitchen__dial" viewBox="0 0 190 190" aria-hidden="true">
+              <circle className="kitchen__track" cx="95" cy="95" r="88" />
+              <circle
+                className="kitchen__fill"
+                cx="95"
+                cy="95"
+                r="88"
+                style={{ strokeDashoffset: RING_LENGTH * (1 - progress) }}
+              />
+            </svg>
+            <div className="kitchen__cup" ref={cupRef}>
+              <StaticCup
+                colour={firstArt.colour}
+                pearls={firstArt.pearls}
+                customisations={first.customisations}
+                level={order.status === 'received' ? 0 : 1}
+                lid={order.status === 'ready'}
+                drop
+                label={`${first.name} in the kitchen`}
+              />
+            </div>
           </div>
+          <p className="kitchen__eta">
+            {order.status === 'ready'
+              ? 'Ready to collect'
+              : `Ready in ${formatCountdown(remaining)}`}
+          </p>
         </div>
       )}
       <OrderStatusSteps status={order.status} />
@@ -272,7 +324,7 @@ function ActiveOrderView({
       <div className="order__summary">
         <p className="order__total">
           <span>Total</span>
-          <span>{formatPrice(order.totalCents)}</span>
+          <RollingPrice cents={order.totalCents} />
         </p>
         {order.status === 'ready' && (
           <button type="button" className="order__primary" onClick={onCollect}>

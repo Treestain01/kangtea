@@ -5,6 +5,7 @@ import { useCatalogue } from '../api/useCatalogue';
 import { PopularRow } from '../components/home/PopularRow';
 import { SearchBar } from '../components/home/SearchBar';
 import { UsualCard } from '../components/home/UsualCard';
+import { Loading } from '../components/cup/Loading';
 import { AppHeader } from '../components/layout/AppHeader';
 import { LoyaltyCard } from '../components/loyalty/LoyaltyCard';
 import { CategoryChips } from '../components/menu/CategoryChips';
@@ -73,9 +74,7 @@ export function HomePage() {
     return (
       <>
         <AppHeader store={null} actions={<SearchBar onSubmit={search} />} />
-        <p className="home__loading" role="status">
-          Loading the menu
-        </p>
+        <Loading>Loading the menu</Loading>
       </>
     );
   }

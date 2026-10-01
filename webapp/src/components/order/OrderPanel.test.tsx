@@ -88,7 +88,7 @@ describe('OrderPanel cart', () => {
     expect(screen.getByText('Signature Milk Tea')).toBeInTheDocument();
     expect(screen.getByText('$15.00')).toBeInTheDocument();
     expect(screen.getByText('$7.90')).toBeInTheDocument();
-    expect(screen.getByText('$22.90')).toBeInTheDocument();
+    expect(screen.getByText('Total').closest('p')).toHaveTextContent('$22.90');
     expect(screen.getByText('Pay at the counter when you collect.')).toBeInTheDocument();
   });
 
@@ -179,6 +179,15 @@ describe('OrderPanel active order', () => {
     expect(lid()).toHaveClass('staticcup__lid--off');
     act(() => stores.orders.setStatus(order.id, 'ready'));
     expect(lid()).not.toHaveClass('staticcup__lid--off');
+  });
+
+  it('counts down to ready around the kitchen cup, then says ready', async () => {
+    const { stores, order } = withOrder('received');
+    renderPanel(stores);
+    await screen.findByRole('img', { name: 'Signature Milk Tea in the kitchen' });
+    expect(screen.getByText(/^Ready in \d:\d\d$/)).toBeInTheDocument();
+    act(() => stores.orders.setStatus(order.id, 'ready'));
+    expect(screen.getByText('Ready to collect')).toBeInTheDocument();
   });
 
   it('shows the pickup code when ready and moves to collected on pickup', () => {
