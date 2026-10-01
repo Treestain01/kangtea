@@ -64,6 +64,28 @@ describe('LoyaltyCard', () => {
     expect(screen.getByText('7 more to a free drink.')).toBeInTheDocument();
   });
 
+  it('flips to show the drink behind each stamp, and back', async () => {
+    const { auth, stores, token } = await signedIn();
+    const loyalty = createFakeLoyaltyClient((id) => (id === 'milo' ? '#6B4A3A' : '#9DBA78'));
+    await loyalty.client.earn(token, {
+      orderId: 'o1',
+      lines: [
+        { itemId: 'milo', name: 'Milo', quantity: 1 },
+        { itemId: 'matcha-latte', name: 'Matcha Latte', quantity: 1 },
+      ],
+    });
+    renderCard({ stores, auth: auth.client, loyalty: loyalty.client });
+    fireEvent.click(await screen.findByRole('button', { name: 'See what filled the card' }));
+    const history = screen.getByRole('list', { name: 'Drinks that earned the stamps' });
+    expect(
+      within(history)
+        .getAllByRole('listitem')
+        .map((li) => li.textContent),
+    ).toEqual(['Stamp 1 · Milo', 'Stamp 2 · Matcha Latte']);
+    fireEvent.click(screen.getByRole('button', { name: 'Back to the card' }));
+    expect(screen.getByRole('button', { name: 'See what filled the card' })).toBeInTheDocument();
+  });
+
   it('offers the free drink when the card is full and starts fresh after using it', async () => {
     const { auth, stores, token } = await signedIn();
     const loyalty = createFakeLoyaltyClient();

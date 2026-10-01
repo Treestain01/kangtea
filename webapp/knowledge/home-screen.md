@@ -43,6 +43,12 @@ Submitting the search navigates to `/menu?q=<text>`.
 | `LiveCup`       | `components/cup/LiveCup.tsx`        | The cup in the customise sheet that builds itself from the current choices, with physics for toppings and ice.                                                                                 |
 | `ToppingArt`    | `components/cup/ToppingArt.tsx`     | A topping drawn with its cup symbol, for the tokens in the customise sheet's tray.                                                                                                             |
 
+## Your usual
+
+`components/home/UsualCard.tsx` shows the most recent collected order with a `StaticCup` of its first drink drawn from the saved choices.
+Re-pour empties that cup, fills it with the pieces dropping in, puts the lid on, flies it into the order and only then replaces the cart and opens the Order page.
+Under reduced motion, or where nothing can animate, the reorder is immediate.
+
 ## The Menu page
 
 Search, category chips and the drink grid, every drink drawn as its cup.

@@ -23,6 +23,7 @@ export function LoyaltyCard({ heading = 'Your pearls', compact = false }: Loyalt
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState('');
   const [message, setMessage] = useState('');
+  const [flipped, setFlipped] = useState(false);
 
   if (compact && loyalty.state.kind !== 'ready') return null;
 
@@ -102,61 +103,109 @@ export function LoyaltyCard({ heading = 'Your pearls', compact = false }: Loyalt
   }
 
   return (
-    <section className="pearls" aria-labelledby="pearls-heading">
-      <div className="pearls__head">
-        <h3 id="pearls-heading" className="pearls__heading">
-          {heading}
-        </h3>
-        <p className="pearls__count">
-          {card.complete ? 'Card full' : `${card.stamps.length} of ${STAMPS_PER_CARD}`}
+    <div className={`pearls-flip${flipped ? ' pearls-flip--flipped' : ''}`}>
+      <section className="pearls pearls__face" aria-labelledby="pearls-heading" inert={flipped}>
+        <div className="pearls__head">
+          <h3 id="pearls-heading" className="pearls__heading">
+            {heading}
+          </h3>
+          <p className="pearls__count">
+            {card.complete ? 'Card full' : `${card.stamps.length} of ${STAMPS_PER_CARD}`}
+          </p>
+        </div>
+        <Stamps card={card} />
+        <p className="pearls__copy">
+          {card.complete
+            ? card.available > 1
+              ? `You have ${card.available} free drinks waiting. Show this card at the counter.`
+              : 'Your next drink is free. Show this card at the counter.'
+            : `${STAMPS_PER_CARD - card.stamps.length} more to a free drink.`}
         </p>
-      </div>
-      <Stamps card={card} />
-      <p className="pearls__copy">
-        {card.complete
-          ? card.available > 1
-            ? `You have ${card.available} free drinks waiting. Show this card at the counter.`
-            : 'Your next drink is free. Show this card at the counter.'
-          : `${STAMPS_PER_CARD - card.stamps.length} more to a free drink.`}
-      </p>
-      {card.complete &&
-        (confirming ? (
-          <div className="pearls__confirm" role="group" aria-label="Confirm using your free drink">
-            <p className="pearls__copy">
-              Only do this at the counter, when your drink is being made.
-            </p>
-            <div className="pearls__actions">
-              <button
-                type="button"
-                className="pearls__action"
-                disabled={busy}
-                onClick={() => void redeem()}
-              >
-                Yes, use it now
-              </button>
-              <button
-                type="button"
-                className="pearls__action pearls__action--quiet"
-                onClick={() => setConfirming(false)}
-              >
-                Not yet
-              </button>
-            </div>
-          </div>
-        ) : (
-          <button type="button" className="pearls__action" onClick={() => setConfirming(true)}>
-            Use my free drink
+        {card.stamps.length > 0 && (
+          <button
+            type="button"
+            className="pearls__action pearls__action--quiet"
+            onClick={() => setFlipped(true)}
+          >
+            See what filled the card
           </button>
-        ))}
-      {failure && (
-        <p className="pearls__error" role="alert">
-          {failure}
+        )}
+        {card.complete &&
+          (confirming ? (
+            <div
+              className="pearls__confirm"
+              role="group"
+              aria-label="Confirm using your free drink"
+            >
+              <p className="pearls__copy">
+                Only do this at the counter, when your drink is being made.
+              </p>
+              <div className="pearls__actions">
+                <button
+                  type="button"
+                  className="pearls__action"
+                  disabled={busy}
+                  onClick={() => void redeem()}
+                >
+                  Yes, use it now
+                </button>
+                <button
+                  type="button"
+                  className="pearls__action pearls__action--quiet"
+                  onClick={() => setConfirming(false)}
+                >
+                  Not yet
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button type="button" className="pearls__action" onClick={() => setConfirming(true)}>
+              Use my free drink
+            </button>
+          ))}
+        {failure && (
+          <p className="pearls__error" role="alert">
+            {failure}
+          </p>
+        )}
+        <p className="visually-hidden" role="status">
+          {message}
         </p>
-      )}
-      <p className="visually-hidden" role="status">
-        {message}
-      </p>
-    </section>
+      </section>
+      <section
+        className="pearls pearls__face pearls__face--back"
+        aria-labelledby="pearls-back-heading"
+        inert={!flipped}
+      >
+        <div className="pearls__head">
+          <h3 id="pearls-back-heading" className="pearls__heading">
+            Behind each stamp
+          </h3>
+          <p className="pearls__count">{card.stamps.length} earned</p>
+        </div>
+        <ol className="pearls__history" aria-label="Drinks that earned the stamps">
+          {card.stamps.map((stamp, index) => (
+            <li key={stamp.id} className="pearls__drink">
+              <span
+                className="pearls__swatch"
+                aria-hidden="true"
+                style={{ '--tea': stamp.colour } as React.CSSProperties}
+              />
+              <span>
+                Stamp {index + 1} · {stamp.itemName}
+              </span>
+            </li>
+          ))}
+        </ol>
+        <button
+          type="button"
+          className="pearls__action pearls__action--quiet"
+          onClick={() => setFlipped(false)}
+        >
+          Back to the card
+        </button>
+      </section>
+    </div>
   );
 }
 

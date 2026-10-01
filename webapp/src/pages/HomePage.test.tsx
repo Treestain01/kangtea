@@ -155,7 +155,7 @@ describe('HomePage', () => {
     renderHome(stores);
     await screen.findByText('Calamvale Central');
     expect(screen.getByText('Your usual')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /Reorder/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Re-pour/ }));
     expect(stores.cart.read()).toEqual(order.lines);
     expect(screen.getByText('Order page')).toBeInTheDocument();
   });

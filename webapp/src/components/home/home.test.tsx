@@ -62,14 +62,25 @@ describe('UsualCard', () => {
     render(<UsualCard order={order} onReorder={vi.fn()} />);
     expect(screen.getByText('Signature Milk Tea + 1 more')).toBeInTheDocument();
     expect(screen.getByText('50% · Less ice · Pearls')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Reorder $16.20' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Re-pour $16.20' })).toBeInTheDocument();
   });
 
-  it('reorders the order', () => {
+  it('reorders at once where nothing can animate', () => {
     const onReorder = vi.fn();
-    render(<UsualCard order={order} onReorder={onReorder} />);
-    fireEvent.click(screen.getByRole('button', { name: /Reorder/ }));
+    render(
+      <UsualCard order={order} art={{ colour: '#B07A45', pearls: true }} onReorder={onReorder} />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /Re-pour/ }));
     expect(onReorder).toHaveBeenCalledWith(order);
+  });
+
+  it('draws the first drink as a cup from its saved choices', () => {
+    render(
+      <UsualCard order={order} art={{ colour: '#B07A45', pearls: true }} onReorder={vi.fn()} />,
+    );
+    const usual = screen.getByRole('region', { name: 'Your usual' });
+    expect(usual.querySelectorAll('svg.staticcup use[href="#kt-pearl"]').length).toBeGreaterThan(0);
+    expect(usual.querySelectorAll('svg.staticcup use[href="#kt-ice-cube"]')).toHaveLength(2);
   });
 });
 
