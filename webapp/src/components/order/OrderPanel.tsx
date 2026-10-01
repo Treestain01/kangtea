@@ -1,5 +1,5 @@
 import type { Order } from '@bbt/shared';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router';
 import { useCatalogue } from '../../api/useCatalogue';
 import { useStoreInfo } from '../../api/useStoreInfo';
@@ -13,6 +13,7 @@ import type { CartLine } from '../../store/types';
 import { StaticCup } from '../cup/StaticCup';
 import { PRODUCT_COLOURS } from '../cup/cupParts';
 import { flyPearl, tap } from '../cup/fly';
+import { cue } from '../../lib/sounds';
 import { LoyaltyCard } from '../loyalty/LoyaltyCard';
 import { CartLineRow, type LineArt } from './CartLineRow';
 import { OrderStatusSteps } from './OrderStatusSteps';
@@ -46,6 +47,17 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
   const kitchenCupRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
 
+  // The kitchen's moments: a pour as making starts, a click as the lid goes on.
+  const status = active?.status ?? null;
+  const previousStatus = useRef(status);
+  useEffect(() => {
+    if (previousStatus.current !== status) {
+      if (status === 'making') cue('pour');
+      if (status === 'ready') cue('lid');
+    }
+    previousStatus.current = status;
+  }, [status]);
+
   const className = `order${compact ? ' order--compact' : ''}`;
   // The menu still knowing the drink gives the line its cup; a retired drink shows without one.
   const artFor = (itemId: string): LineArt | undefined => {
@@ -71,6 +83,7 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
         ? flyPearl(kitchenCupRef.current, target, PRODUCT_COLOURS.pearl)
         : null;
     if (flight) await flight;
+    if (target) cue('pearl');
     ordersStore.setStatus(order.id, 'collected');
   };
 

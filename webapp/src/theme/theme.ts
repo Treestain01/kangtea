@@ -4,14 +4,17 @@ import type { PreferencesStore } from '../store/types';
 /**
  * Reflects the theme preference on the document.
  * An explicit choice sets `data-theme` so tokens.css overrides the device setting;
- * `system` removes it so the `prefers-color-scheme` media query decides again.
+ * `system` removes it so the `prefers-color-scheme` media query decides again,
+ * unless it is evening: then system goes dark while the shop is closed.
  */
 export function applyTheme(
   preference: ThemePreference,
   root: HTMLElement = document.documentElement,
+  { evening = false }: { evening?: boolean } = {},
 ): void {
   if (preference === 'system') {
-    root.removeAttribute('data-theme');
+    if (evening) root.setAttribute('data-theme', 'dark');
+    else root.removeAttribute('data-theme');
   } else {
     root.setAttribute('data-theme', preference);
   }

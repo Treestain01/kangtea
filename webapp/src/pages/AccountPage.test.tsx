@@ -284,6 +284,33 @@ describe('AccountPage', () => {
     });
   });
 
+  it('draws a taste portrait from collected orders, and none without them', async () => {
+    const { stores } = renderAccount();
+    await screen.findByText('Kang Tea Calamvale Central');
+    expect(screen.queryByRole('heading', { name: 'Your taste' })).not.toBeInTheDocument();
+    stores.cart.add({
+      ...cartLineFixture(),
+      quantity: 2,
+      customisations: [
+        { name: 'Sugar', value: '50%' },
+        { name: 'Ice', value: 'Less ice' },
+        { name: 'Topping', value: 'Pearls' },
+      ],
+    });
+    const order = stores.orders.place(stores.cart.read(), 'calamvale-central');
+    stores.cart.clear();
+    act(() => stores.orders.setStatus(order.id, 'collected'));
+    expect(await screen.findByRole('heading', { name: 'Your taste' })).toBeInTheDocument();
+    const portrait = screen.getByRole('region', { name: 'Your taste' });
+    expect(portrait).toHaveTextContent('Signature Milk Tea, 2 of 2 drinks');
+    expect(portrait).toHaveTextContent('50% sugar on 2 of 2 drinks');
+    expect(portrait).toHaveTextContent('Less ice on 2 of 2 drinks');
+    expect(portrait).toHaveTextContent('Pearls on 2 of 2 drinks');
+    expect(
+      screen.getByRole('img', { name: 'Signature Milk Tea the way you usually have it' }),
+    ).toBeInTheDocument();
+  });
+
   it('shows the store card with address, hours and a phone link', async () => {
     renderAccount();
     expect(await screen.findByText('Kang Tea Calamvale Central')).toBeInTheDocument();
@@ -301,6 +328,19 @@ describe('AccountPage', () => {
       renderAccount();
       expect(screen.getByRole('group', { name: 'Appearance' })).toBeInTheDocument();
       expect(screen.getByRole('radio', { name: 'System' })).toBeChecked();
+    });
+
+    it('turns evening mode and sounds on and off, saved on the device', () => {
+      const { stores } = renderAccount();
+      const evening = screen.getByRole('switch', { name: /Evening mode/ });
+      const sounds = screen.getByRole('switch', { name: /Cup sounds/ });
+      expect(evening).not.toBeChecked();
+      expect(sounds).not.toBeChecked();
+      fireEvent.click(evening);
+      fireEvent.click(sounds);
+      expect(stores.preferences.read()).toMatchObject({ eveningMode: true, sounds: true });
+      fireEvent.click(sounds);
+      expect(stores.preferences.read().sounds).toBe(false);
     });
 
     it('saves the choice as soon as it is made and keeps it through a clear', async () => {

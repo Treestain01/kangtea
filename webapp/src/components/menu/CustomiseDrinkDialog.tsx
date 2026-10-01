@@ -16,6 +16,7 @@ import {
 } from '../../store/lines';
 import { LiveCup } from '../cup/LiveCup';
 import { flyCup } from '../cup/fly';
+import { cue } from '../../lib/sounds';
 import { ToppingArt } from '../cup/ToppingArt';
 import './CustomiseDrinkDialog.css';
 
@@ -110,7 +111,8 @@ export function CustomiseDrinkDialog({
     ),
   ].join(' · ');
 
-  const changeTopping = (id: string, delta: number) =>
+  const changeTopping = (id: string, delta: number) => {
+    if (delta > 0 && (toppingCounts[id] ?? 0) < MAX_TOPPING_QUANTITY) cue('drop');
     setToppingCounts((current) => {
       const next = Math.min(MAX_TOPPING_QUANTITY, Math.max(0, (current[id] ?? 0) + delta));
       const updated = { ...current };
@@ -118,10 +120,12 @@ export function CustomiseDrinkDialog({
       else updated[id] = next;
       return updated;
     });
+  };
 
   const add = () => {
     // The built cup arcs into the Order tab while the sheet closes. Decorative; never awaited.
     if (stageCupRef.current) void flyCup(stageCupRef.current);
+    cue('pour');
     onAdd(buildCartLine(item, { sugar, ice, toppings, quantity }));
     onClose();
   };

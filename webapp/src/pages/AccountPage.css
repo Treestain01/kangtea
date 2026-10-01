@@ -123,6 +123,7 @@
 .storecard,
 .danger,
 .appearance,
+.sounds,
 .signin,
 .profile {
   display: grid;
@@ -136,6 +137,7 @@
 .storecard__heading,
 .danger__heading,
 .appearance__legend,
+.sounds__heading,
 .signin__heading {
   margin: 0;
   font-size: 1.125rem;
@@ -309,6 +311,83 @@
   outline-offset: 2px;
 }
 
+/* A switch: name and hint on the left, the toggle on the right. The checkbox is the control; the track is its face. */
+.switch {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: var(--tap-target);
+  margin-top: var(--space-2);
+  cursor: pointer;
+}
+
+.switch__text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.switch__name {
+  font-weight: 600;
+}
+
+.switch__hint {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.switch__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.switch__track {
+  position: relative;
+  flex: none;
+  width: 48px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-muted);
+  transition:
+    background var(--motion-fast) var(--ease),
+    border-color var(--motion-fast) var(--ease);
+}
+
+.switch__track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  transition: transform var(--motion-fast) var(--ease);
+}
+
+.switch__input:checked ~ .switch__track {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.switch__input:checked ~ .switch__track::after {
+  transform: translateX(20px);
+  border-color: transparent;
+}
+
+.switch__input:focus-visible ~ .switch__track {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
 /* The native radio stays in the tree for the keyboard and screen readers; the chip is its face. */
 .appearance__radio {
   position: absolute;
@@ -370,7 +449,9 @@
   .account__secondary,
   .danger__yes,
   .appearance__option,
-  .signin__mode {
+  .signin__mode,
+  .switch__track,
+  .switch__track::after {
     transition: none;
   }
 }

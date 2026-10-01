@@ -4,6 +4,7 @@ import { formatPrice } from '../../lib/money';
 import { summariseCustomisations } from '../../store/lines';
 import { StaticCup } from '../cup/StaticCup';
 import { flyCup } from '../cup/fly';
+import { cue } from '../../lib/sounds';
 import './home.css';
 
 type UsualCardProps = {
@@ -50,8 +51,14 @@ export function UsualCard({ order, art, onReorder }: UsualCardProps) {
       return;
     }
     setPour('empty');
-    later(POUR.start, () => setPour('filling'));
-    later(POUR.start + POUR.lid, () => setPour('done'));
+    later(POUR.start, () => {
+      setPour('filling');
+      cue('pour');
+    });
+    later(POUR.start + POUR.lid, () => {
+      setPour('done');
+      cue('lid');
+    });
     later(POUR.start + POUR.lid + POUR.fly, () => {
       const flight = cupRef.current ? flyCup(cupRef.current) : Promise.resolve();
       void flight.then(() => {

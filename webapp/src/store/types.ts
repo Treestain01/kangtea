@@ -1,5 +1,5 @@
 import type { AuthSession, Order, OrderLine, OrderStatus } from '@bbt/shared';
-import type { Preferences } from './preferences';
+import type { Preferences, PreferencesInput } from './preferences';
 
 /** A line in the cart has the same shape as a line in a placed order. */
 export type CartLine = OrderLine;
@@ -40,7 +40,7 @@ export interface SessionStore {
 /** Device preferences such as the theme. Always has a value; there is no clear. */
 export interface PreferencesStore {
   read(): Preferences;
-  save(preferences: Preferences): void;
+  save(preferences: PreferencesInput): void;
   subscribe(listener: () => void): () => void;
 }
 

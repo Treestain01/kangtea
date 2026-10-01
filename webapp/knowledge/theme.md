@@ -89,6 +89,9 @@ By default tokens switch under `@media (prefers-color-scheme: dark)`, and `index
 The Account page lets the person choose System, Light or Dark.
 The choice lives in the `preferences` store (`store/preferences.ts`, key `kangtea.preferences`) and `src/theme/theme.ts` reflects it on `<html>`: `data-theme="light"` or `data-theme="dark"` for an explicit choice, no attribute for System.
 `bindTheme(stores.preferences)` in `main.tsx` applies it before the first render and after every change.
+`AppShell` applies it again with the evening flag: with `eveningMode` on in the preferences and the theme on System, `applyTheme` sets `data-theme="dark"` while the shop is closed by its opening hours, checked once a minute.
+An explicit Light or Dark choice is never overridden.
+The preferences store also holds `sounds` (the cup sounds in `src/lib/sounds.ts`, off by default); both new fields default so preferences saved before they existed still parse.
 
 In `tokens.css` the dark palette appears twice and must stay identical: once under the media query for `:root:not([data-theme='light'])`, and once unconditionally for `:root[data-theme='dark']`.
 Each dark block also sets `color-scheme: dark`, and `:root[data-theme='light']` sets `color-scheme: light`, so form controls and scrollbars follow the choice.

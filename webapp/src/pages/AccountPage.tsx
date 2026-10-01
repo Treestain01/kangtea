@@ -2,11 +2,12 @@ import { AccountUpdateSchema, SignInRequestSchema, SignUpRequestSchema } from '@
 import { useState, type FormEvent } from 'react';
 import { ApiError } from '../api/client';
 import { useStoreInfo } from '../api/useStoreInfo';
+import { TastePortrait } from '../components/account/TastePortrait';
 import { LoyaltyCard } from '../components/loyalty/LoyaltyCard';
 import { useAuth } from '../auth/AuthProvider';
 import { describeOpeningStatus, openingStatus } from '../lib/openingHours';
 import { useStores } from '../store/StoresProvider';
-import { usePreferences } from '../store/hooks';
+import { useOrders, usePreferences } from '../store/hooks';
 import type { ThemePreference } from '../store/preferences';
 import './AccountPage.css';
 
@@ -38,17 +39,24 @@ function describeFailure(error: unknown): string {
   return 'Something went wrong. Check your connection and try again.';
 }
 
-/** Account: sign in or create an account, the profile, appearance, the store card, and clearing this device. */
+/** Account: sign in, the profile, the pearl card, your taste, appearance and sounds, the store card, and clearing this device. */
 export function AccountPage() {
   const stores = useStores();
   const auth = useAuth();
   const preferences = usePreferences();
+  const orders = useOrders();
   const store = useStoreInfo();
   const [confirmingClear, setConfirmingClear] = useState(false);
   const [clearedMessage, setClearedMessage] = useState('');
 
   const chooseTheme = (theme: ThemePreference) => {
     stores.preferences.save({ ...preferences, theme });
+  };
+  const setEveningMode = (eveningMode: boolean) => {
+    stores.preferences.save({ ...preferences, eveningMode });
+  };
+  const setSounds = (sounds: boolean) => {
+    stores.preferences.save({ ...preferences, sounds });
   };
 
   const clearEverything = async () => {
@@ -68,6 +76,8 @@ export function AccountPage() {
       {auth.session ? <SignedInAccount /> : <SignInCard />}
 
       <LoyaltyCard />
+
+      <TastePortrait orders={orders} />
 
       <fieldset className="appearance">
         <legend className="appearance__legend">Appearance</legend>
@@ -89,7 +99,45 @@ export function AccountPage() {
             </label>
           ))}
         </div>
+        <label className="switch">
+          <span className="switch__text">
+            <span className="switch__name">Evening mode</span>
+            <span className="switch__hint">
+              With System chosen, go dark while the shop is closed.
+            </span>
+          </span>
+          <input
+            className="switch__input"
+            type="checkbox"
+            role="switch"
+            checked={preferences.eveningMode}
+            onChange={(e) => setEveningMode(e.target.checked)}
+          />
+          <span className="switch__track" aria-hidden="true" />
+        </label>
       </fieldset>
+
+      <section className="sounds" aria-labelledby="sounds-heading">
+        <h3 id="sounds-heading" className="sounds__heading">
+          Sounds
+        </h3>
+        <label className="switch">
+          <span className="switch__text">
+            <span className="switch__name">Cup sounds</span>
+            <span className="switch__hint">
+              A soft plop when a pearl drops and a click when the lid goes on. Off by default.
+            </span>
+          </span>
+          <input
+            className="switch__input"
+            type="checkbox"
+            role="switch"
+            checked={preferences.sounds}
+            onChange={(e) => setSounds(e.target.checked)}
+          />
+          <span className="switch__track" aria-hidden="true" />
+        </label>
+      </section>
 
       <section className="storecard" aria-labelledby="storecard-heading">
         <h3 id="storecard-heading" className="storecard__heading">

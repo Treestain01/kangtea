@@ -11,6 +11,16 @@ describe('applyTheme', () => {
     expect(root.getAttribute('data-theme')).toBe('light');
   });
 
+  it('goes dark for system in the evening, and only then', () => {
+    const root = document.createElement('html');
+    applyTheme('system', root, { evening: true });
+    expect(root.getAttribute('data-theme')).toBe('dark');
+    applyTheme('light', root, { evening: true });
+    expect(root.getAttribute('data-theme')).toBe('light');
+    applyTheme('system', root, { evening: false });
+    expect(root.hasAttribute('data-theme')).toBe(false);
+  });
+
   it('removes data-theme for system so the media query decides', () => {
     const root = document.createElement('html');
     root.setAttribute('data-theme', 'dark');
