@@ -94,7 +94,8 @@
   transition: border-color var(--motion-fast) var(--ease);
 }
 
-/* Image area: a muted well with the cup on a soft disc in the drink's own colour. */
+/* Image area: a muted well with the cup on a soft disc in the drink's own colour.
+   The cup leans toward the pointer: --rx and --ry are set on the art by the card. */
 .drink__art {
   grid-area: art;
   position: relative;
@@ -105,6 +106,27 @@
   border-radius: var(--radius-md);
   background: var(--color-surface-muted);
   overflow: hidden;
+  perspective: 600px;
+}
+
+.drink__cup {
+  width: 64px;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform var(--motion-fast) var(--ease);
+  will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .drink__cup {
+    width: 88px;
+  }
+}
+
+/* Lit up as the Surprise me spin passes over, and when it lands. */
+.drink--highlighted {
+  border-color: var(--color-accent);
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
 }
 
 .drink__art::before {
@@ -228,6 +250,10 @@
   height: 96px;
 }
 
+.drink--compact .drink__cup {
+  width: 50px;
+}
+
 @media (min-width: 768px) {
   .drink--compact .drink__art {
     height: 120px;
@@ -249,91 +275,70 @@
   font-size: 1.25rem;
 }
 
+/* Can't decide? One row: the question, and the button that spins the cards. */
+.surprise {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.surprise__text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.surprise__heading {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.surprise__note {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.surprise__btn {
+  min-height: var(--tap-target);
+  padding: 0 var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-accent);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color var(--motion-fast) var(--ease),
+    background var(--motion-fast) var(--ease);
+}
+
+.surprise__btn:hover {
+  border-color: var(--color-accent);
+}
+
+.surprise__btn:disabled {
+  cursor: default;
+  color: var(--color-text-muted);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .chip,
-  .drink {
+  .drink,
+  .surprise__btn {
     transition: none;
   }
-}
 
-/* CSS cup. --tea is the drink colour from the menu, --cup-size its height. */
-.cup {
-  --tea: var(--color-surface-muted);
-  --cup-size: 72px;
-  position: relative;
-  isolation: isolate; /* keep the lid and straw layering inside the cup */
-  width: calc(var(--cup-size) * 0.72);
-  height: var(--cup-size);
-}
-
-.cup__lid {
-  position: absolute;
-  top: calc(var(--cup-size) * 0.08);
-  left: 0;
-  right: 0;
-  height: calc(var(--cup-size) * 0.12);
-  border-radius: calc(var(--cup-size) * 0.06);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  z-index: 2;
-}
-
-.cup__straw {
-  position: absolute;
-  top: calc(var(--cup-size) * -0.08);
-  left: 58%;
-  width: calc(var(--cup-size) * 0.08);
-  height: calc(var(--cup-size) * 0.4);
-  border-radius: 999px;
-  background: var(--color-accent);
-  transform: rotate(10deg);
-  z-index: 3;
-}
-
-.cup__body {
-  position: absolute;
-  top: calc(var(--cup-size) * 0.16);
-  left: 8%;
-  right: 8%;
-  bottom: 0;
-  border-radius: 12% 12% 28% 28%;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--tea) 55%, var(--color-surface)) 0%,
-    var(--tea) 100%
-  );
-  overflow: hidden;
-}
-
-.cup__body::before {
-  content: '';
-  position: absolute;
-  top: 10%;
-  left: 12%;
-  width: 6%;
-  height: 55%;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--color-surface) 45%, transparent);
-}
-
-.cup--pearls .cup__body::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 28%;
-  background:
-    radial-gradient(
-        circle at 5px 5px,
-        color-mix(in srgb, var(--tea) 25%, var(--color-text)) 4.5px,
-        transparent 5px
-      )
-      0 0 / 11px 11px,
-    radial-gradient(
-        circle at 5px 5px,
-        color-mix(in srgb, var(--tea) 35%, var(--color-text)) 4.5px,
-        transparent 5px
-      )
-      6px 6px / 11px 11px;
+  .drink__cup {
+    transform: none;
+    transition: none;
+  }
 }

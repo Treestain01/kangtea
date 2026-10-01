@@ -29,18 +29,25 @@ Submitting the search navigates to `/menu?q=<text>`.
 
 ## Components
 
-| Component         | Path                                  | Owns                                                                                                                                                                                     |
-| ----------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AppHeader`       | `components/layout/AppHeader.tsx`     | Brand row (phones), greeting, store line, `actions` slot.                                                                                                                                |
-| `SearchBar`       | `components/home/SearchBar.tsx`       | Pressed-in search field. Uncontrolled with `onSubmit` on Home, controlled with `value`/`onChange` on Menu.                                                                               |
-| `UsualCard`       | `components/home/UsualCard.tsx`       | The one accent filled card on Home.                                                                                                                                                      |
-| `PopularRow`      | `components/home/PopularRow.tsx`      | Section heading with link, two column grid of compact cards on phones, four across from 768px.                                                                                           |
-| `CategoryChips`   | `components/menu/CategoryChips.tsx`   | "All" plus categories sorted by `sortOrder`, as `aria-pressed` buttons.                                                                                                                  |
-| `DrinkGrid`       | `components/menu/DrinkGrid.tsx`       | 2 columns on phones; from 768px as many 300px cards as fit.                                                                                                                              |
-| `DrinkCard`       | `components/menu/DrinkCard.tsx`       | Name, optional description, price, first tag, `CupIllustration`. `variant="compact"` for the home row: square art, no description. The whole card is a button when `onOpen` is provided. |
-| `CupIllustration` | `components/menu/CupIllustration.tsx` | Decorative CSS cup tinted with the item's `colour`, for cards.                                                                                                                           |
-| `LiveCup`         | `components/cup/LiveCup.tsx`          | The cup in the customise sheet that builds itself from the current choices, with physics for toppings and ice.                                                                           |
-| `ToppingArt`      | `components/cup/ToppingArt.tsx`       | A topping drawn with its cup symbol, for the tokens in the customise sheet's tray.                                                                                                       |
+| Component       | Path                                | Owns                                                                                                                                                                                           |
+| --------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AppHeader`     | `components/layout/AppHeader.tsx`   | Brand row (phones), greeting, store line, `actions` slot.                                                                                                                                      |
+| `SearchBar`     | `components/home/SearchBar.tsx`     | Pressed-in search field. Uncontrolled with `onSubmit` on Home, controlled with `value`/`onChange` on Menu.                                                                                     |
+| `UsualCard`     | `components/home/UsualCard.tsx`     | The one accent filled card on Home.                                                                                                                                                            |
+| `PopularRow`    | `components/home/PopularRow.tsx`    | Section heading with link, two column grid of compact cards on phones, four across from 768px.                                                                                                 |
+| `CategoryChips` | `components/menu/CategoryChips.tsx` | "All" plus categories sorted by `sortOrder`, as `aria-pressed` buttons.                                                                                                                        |
+| `DrinkGrid`     | `components/menu/DrinkGrid.tsx`     | 2 columns on phones; from 768px as many 300px cards as fit.                                                                                                                                    |
+| `DrinkCard`     | `components/menu/DrinkCard.tsx`     | Name, optional description, price, first tag, the drink's `StaticCup`. `variant="compact"` for the home row: square art, no description. The whole card is a button when `onOpen` is provided. |
+| `StaticCup`     | `components/cup/StaticCup.tsx`      | The cup at rest, drawn from a colour and a line's choices: menu cards, Your usual, cart rows, the kitchen cup. The card's cup leans toward the pointer.                                        |
+| `SurpriseCard`  | `components/menu/SurpriseCard.tsx`  | "Can't decide?" on the Menu page: tap, or shake a phone, and the cards light up in turn until one is picked with a random sugar and ice; the customise sheet opens on it to confirm.           |
+| `LiveCup`       | `components/cup/LiveCup.tsx`        | The cup in the customise sheet that builds itself from the current choices, with physics for toppings and ice.                                                                                 |
+| `ToppingArt`    | `components/cup/ToppingArt.tsx`     | A topping drawn with its cup symbol, for the tokens in the customise sheet's tray.                                                                                                             |
+
+## The Menu page
+
+Search, category chips and the drink grid, every drink drawn as its cup.
+Choosing a category washes the top of the page with that family's colour, taken from the first drink in it, through the registered `--wash` property in `MenuPage.css` so the change fades.
+`SurpriseCard` sits under the grid; its pick opens `CustomiseDrinkDialog` with `initial` levels so the person confirms rather than getting a surprise in the cart.
 
 ## Customising and adding to the cart
 

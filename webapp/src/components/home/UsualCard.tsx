@@ -1,7 +1,7 @@
 import type { Order } from '@bbt/shared';
 import { formatPrice } from '../../lib/money';
 import { summariseCustomisations } from '../../store/lines';
-import { CupIllustration } from '../menu/CupIllustration';
+import { StaticCup } from '../cup/StaticCup';
 import './home.css';
 
 type UsualCardProps = {
@@ -29,7 +29,11 @@ export function UsualCard({ order, art, onReorder }: UsualCardProps) {
       </div>
       {art && (
         <div className="usual__art">
-          <CupIllustration colour={art.colour} pearls={art.pearls} size={64} />
+          <StaticCup
+            colour={art.colour}
+            pearls={art.pearls}
+            customisations={first.customisations}
+          />
         </div>
       )}
       <button type="button" className="usual__btn" onClick={() => onReorder(order)}>

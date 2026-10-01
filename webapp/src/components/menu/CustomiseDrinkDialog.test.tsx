@@ -136,6 +136,20 @@ describe('CustomiseDrinkDialog', () => {
     });
   });
 
+  it('opens on the levels it is given instead of the defaults', () => {
+    render(
+      <CustomiseDrinkDialog
+        item={item}
+        customisations={customisationsFixture}
+        initial={{ sugarId: 'sugar-50', iceId: 'ice-less' }}
+        onAdd={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+    expect(screen.getByRole('radio', { name: '50%' })).toBeChecked();
+    expect(screen.getByRole('radio', { name: 'Less ice' })).toBeChecked();
+  });
+
   it('will not go below one drink', () => {
     renderDialog();
     expect(screen.getByRole('button', { name: 'One fewer' })).toBeDisabled();

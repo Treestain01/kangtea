@@ -101,6 +101,29 @@ describe('MenuPage', () => {
     expect(screen.getByRole('article', { name: 'Matcha Latte' })).toBeInTheDocument();
   });
 
+  it('washes the page with the chosen category colour', async () => {
+    renderMenu();
+    await screen.findByRole('heading', { name: 'Menu' });
+    const page = screen.getByRole('region', { name: 'Menu' });
+    expect(page.style.getPropertyValue('--wash')).toBe('transparent');
+    fireEvent.click(screen.getByRole('button', { name: 'Matcha' }));
+    expect(page.style.getPropertyValue('--wash')).toBe('#B07A45');
+  });
+
+  it('picks a drink with Surprise me and opens the sheet on random levels', async () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    renderMenu();
+    await screen.findByRole('heading', { name: 'Menu' });
+    fireEvent.click(screen.getByRole('button', { name: 'Surprise me' }));
+    // No motion in tests, so the pick lands at once on the first of everything.
+    expect(
+      await screen.findByRole('heading', { name: 'Signature Milk Tea', level: 2 }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: '50%' })).toBeChecked();
+    expect(screen.getByRole('radio', { name: 'Less ice' })).toBeChecked();
+    vi.restoreAllMocks();
+  });
+
   it('adds a customised drink to the cart', async () => {
     const stores = renderMenu();
     await screen.findByRole('heading', { name: 'Menu' });

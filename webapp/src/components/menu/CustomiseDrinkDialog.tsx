@@ -25,6 +25,8 @@ type CustomiseDrinkDialogProps = {
   /** Category name shown beside the drink name. */
   categoryName?: string;
   customisations: MenuCustomisations;
+  /** Levels to start on instead of the defaults, for example from Surprise me. Keep the object stable. */
+  initial?: { sugarId?: string; iceId?: string };
   onAdd: (line: OrderLine) => void;
   onClose: () => void;
 };
@@ -51,6 +53,7 @@ export function CustomiseDrinkDialog({
   item,
   categoryName,
   customisations,
+  initial,
   onAdd,
   onClose,
 }: CustomiseDrinkDialogProps) {
@@ -66,8 +69,8 @@ export function CustomiseDrinkDialog({
     const dialog = dialogRef.current;
     if (!dialog) return;
     if (item) {
-      setSugarId(defaultOf(customisations.sugarLevels).id);
-      setIceId(defaultOf(customisations.iceLevels).id);
+      setSugarId(initial?.sugarId ?? defaultOf(customisations.sugarLevels).id);
+      setIceId(initial?.iceId ?? defaultOf(customisations.iceLevels).id);
       setToppingCounts({});
       setQuantity(1);
       if (!dialog.open) {
@@ -78,7 +81,7 @@ export function CustomiseDrinkDialog({
       if (typeof dialog.close === 'function') dialog.close();
       else dialog.removeAttribute('open');
     }
-  }, [item, customisations]);
+  }, [item, customisations, initial]);
 
   if (!item) {
     return <dialog ref={dialogRef} className="customise" onClose={onClose} />;

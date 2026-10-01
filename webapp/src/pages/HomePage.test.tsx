@@ -133,7 +133,7 @@ describe('HomePage', () => {
     renderHome(stores);
     await screen.findByText('Your usual');
     const usual = screen.getByRole('region', { name: 'Your usual' });
-    expect(usual.querySelector('[data-testid="cup"]')).toHaveStyle({ '--tea': '#B07A45' });
+    expect(usual.querySelector('svg.staticcup')?.getAttribute('style')).toContain('#B07A45');
   });
 
   it('sends a search to the menu page', async () => {

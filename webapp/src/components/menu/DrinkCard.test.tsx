@@ -42,6 +42,20 @@ describe('DrinkCard', () => {
     expect(onOpen).toHaveBeenCalledWith(signature);
   });
 
+  it('draws the drink as its cup, with pearls when the menu says so', () => {
+    const { rerender } = render(<DrinkCard item={signature} />);
+    expect(document.querySelectorAll('svg.staticcup use[href="#kt-pearl"]').length).toBeGreaterThan(
+      0,
+    );
+    rerender(<DrinkCard item={{ ...signature, pearls: false }} />);
+    expect(document.querySelectorAll('svg.staticcup use[href="#kt-pearl"]')).toHaveLength(0);
+  });
+
+  it('lights up when highlighted', () => {
+    render(<DrinkCard item={signature} highlighted />);
+    expect(screen.getByRole('article')).toHaveClass('drink--highlighted');
+  });
+
   it('has no button without a handler', () => {
     render(<DrinkCard item={signature} />);
     expect(screen.queryByRole('button')).not.toBeInTheDocument();

@@ -88,10 +88,15 @@
 .usual__art {
   grid-area: art;
   justify-self: end;
+  width: 56px;
 }
 
-.usual__art .cup__straw {
-  background: var(--color-on-accent);
+/* On the accent card the cup's outline and straw take the on-accent colour. */
+.usual__art .staticcup {
+  color: var(--color-on-accent);
+  --cup-line: var(--color-on-accent);
+  --straw: var(--color-on-accent);
+  --cup-surface: var(--color-accent);
 }
 
 .usual__btn {

@@ -1,7 +1,38 @@
+/* The category wash is a registered colour property so a change of family fades rather than cuts. */
+@property --wash {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
 .menu {
+  position: relative;
+  isolation: isolate;
   display: grid;
   gap: var(--space-4);
   padding-block: var(--space-4) var(--space-6);
+  transition: --wash var(--motion-slow) var(--ease);
+}
+
+/* The wash itself: a soft band of the family's colour behind the top of the page, out to the gutters. */
+.menu::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) auto;
+  height: 280px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--wash) 18%, transparent),
+    transparent
+  );
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu {
+    transition: none;
+  }
 }
 
 .menu__top {
