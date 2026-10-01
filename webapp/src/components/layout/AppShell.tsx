@@ -2,6 +2,7 @@ import { Outlet } from 'react-router';
 import { useStoreInfo } from '../../api/useStoreInfo';
 import { isInIosShell } from '../../platform';
 import { CupSprite } from '../cup/CupSprite';
+import { FLY_TARGET_ATTRIBUTE } from '../cup/fly';
 import { OrderPanel } from '../order/OrderPanel';
 import { TabBar } from './TabBar';
 import './AppShell.css';
@@ -20,7 +21,7 @@ export function AppShell() {
         <Outlet />
         {isInIosShell() && <p className="shell-note">Running inside the Kang Tea iOS app.</p>}
       </main>
-      <aside className="orderpanel" aria-label="Your order">
+      <aside className="orderpanel" aria-label="Your order" {...{ [FLY_TARGET_ATTRIBUTE]: '' }}>
         <OrderPanel compact />
       </aside>
       <TabBar store={store} />

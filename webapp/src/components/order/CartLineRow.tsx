@@ -1,19 +1,26 @@
 import { formatPrice } from '../../lib/money';
 import { lineKey, summariseCustomisations } from '../../store/lines';
 import type { CartLine } from '../../store/types';
+import { StaticCup } from '../cup/StaticCup';
 import './order.css';
+
+/** Colour and pearls of the drink on the menu, for the mini cup. */
+export type LineArt = { colour: string; pearls: boolean };
 
 type CartLineRowProps = {
   line: CartLine;
+  /** Draws the line as a small cup when the menu still has the drink. */
+  art?: LineArt;
   /** Keeps the two row layout at every width, for the narrow desktop panel. */
   compact?: boolean;
   onChangeQuantity: (lineKey: string, quantity: number) => void;
   onRemove: (lineKey: string) => void;
 };
 
-/** One line in the cart with its customisations and quantity controls. Every control is a 44px target. */
+/** One line in the cart: a mini cup of it, its customisations and quantity controls. Every control is a 44px target. */
 export function CartLineRow({
   line,
+  art,
   compact = false,
   onChangeQuantity,
   onRemove,
@@ -22,6 +29,11 @@ export function CartLineRow({
   const summary = summariseCustomisations(line);
   return (
     <li className={`cartline${compact ? ' cartline--compact' : ''}`}>
+      {art && (
+        <div className="cartline__art">
+          <StaticCup colour={art.colour} pearls={art.pearls} customisations={line.customisations} />
+        </div>
+      )}
       <div className="cartline__info">
         <p className="cartline__name">{line.name}</p>
         {summary && <p className="cartline__options">{summary}</p>}

@@ -4,6 +4,7 @@ import { describeOpeningStatus, openingStatus } from '../../lib/openingHours';
 import { useCart, useOrders } from '../../store/hooks';
 import { activeOrder } from '../../store/orders';
 import { KangTeaLogo } from '../brand/KangTeaLogo';
+import { FLY_TARGET_ATTRIBUTE } from '../cup/fly';
 import './TabBar.css';
 
 const icons = {
@@ -68,11 +69,12 @@ export function TabBar({ store = null }: TabBarProps) {
         <span className="tab__label">Menu</span>
       </NavLink>
       <NavLink to="/order" className={(state) => `${tabClass(state)} tab--order`}>
-        <span className="tab__icon">
+        <span className="tab__icon" {...{ [FLY_TARGET_ATTRIBUTE]: '' }}>
           {icons.order}
           {inProgress && <span className="tab__dot" data-testid="order-dot" />}
           {!inProgress && cartCount > 0 && (
-            <span className="tab__badge" aria-hidden="true">
+            // Keyed on the count so every change remounts the badge and replays its bump.
+            <span key={cartCount} className="tab__badge" aria-hidden="true">
               {cartCount}
             </span>
           )}

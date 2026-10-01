@@ -28,6 +28,16 @@ Storage keys are `kangtea.cart`, `kangtea.orders`, `kangtea.session`, `kangtea.p
 
 Because names and prices are snapshots, a topping price change later does not alter a placed order.
 
+## The order panel in motion
+
+- Adding from the customise sheet flies a clone of the built cup into the Order tab (`components/cup/fly.ts#flyCup`); the tab badge is keyed on the count so it bumps on every change.
+  On desktop the flight lands on the order panel instead; whichever element carrying `data-fly-target` is on screen is the target.
+- Every cart row and recap line shows a `components/cup/StaticCup.tsx` drawn from the line's customisations and the menu item's colour and pearls, found through the catalogue; a retired drink shows without one.
+- While an order is active the panel shows a kitchen cup of the first line: empty while received, poured with its pieces dropping in while being made, lidded when ready.
+- Collecting fires a haptic tap where available, posts the stamps, drops a pearl from the kitchen cup onto the pearl strip and then marks the order collected.
+  Without motion, or with nothing to land on, collecting is immediate.
+- `fly.ts` flights resolve at once under reduced motion, in browsers without the Web Animations API and when no target is visible; nothing in the order flow waits on decoration.
+
 ## Lifecycle
 
 ```

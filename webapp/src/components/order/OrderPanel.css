@@ -66,14 +66,63 @@
 
 .order__recapline {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
   font-variant-numeric: tabular-nums;
 }
 
+.order__recapart {
+  flex: none;
+  width: 28px;
+}
+
+.order__recaptext {
+  flex: 1;
+  min-width: 0;
+}
+
 .order__recapoptions {
   color: var(--color-text-muted);
   font-size: 0.875rem;
+}
+
+/* The kitchen cup: empty while received, poured while being made, lidded when ready. */
+.kitchen {
+  display: grid;
+  justify-items: center;
+  padding-block: var(--space-2);
+}
+
+.kitchen__cup {
+  width: 150px;
+}
+
+.kitchen--compact .kitchen__cup {
+  width: 120px;
+}
+
+/* The pearl strip under the order, when signed in. */
+.order__pearls {
+  max-width: 40rem;
+  padding-bottom: var(--space-6);
+}
+
+.order__pearls:empty {
+  display: none;
+}
+
+.order__pearls--compact {
+  max-width: none;
+  padding-top: var(--space-4);
+  padding-bottom: 0;
+}
+
+@media (min-width: 1024px) {
+  .order__pearls:not(.order__pearls--compact) {
+    margin-inline: auto;
+    max-width: 44rem;
+  }
 }
 
 /* Totals block, ruled off from the lines. */

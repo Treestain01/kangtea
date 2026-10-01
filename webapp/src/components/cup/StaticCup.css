@@ -1,0 +1,62 @@
+/* A cup at rest. Product colours arrive as data; the outline, lid and straw take the theme. */
+.staticcup {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  color: var(--color-text);
+  --cup-line: var(--color-text);
+  --cup-surface: var(--color-surface);
+  --straw: var(--color-accent);
+}
+
+/* The kitchen pours: the tea's top edge moves over twice the slow beat. */
+.staticcup__liquid {
+  transition:
+    y calc(var(--motion-slow) * 2) var(--ease),
+    height calc(var(--motion-slow) * 2) var(--ease),
+    fill var(--motion-slow) var(--ease);
+}
+
+.staticcup__lid {
+  transform-origin: 60px 30px;
+  transition:
+    opacity var(--motion-slow) var(--ease),
+    transform var(--motion-slow) var(--ease);
+}
+
+.staticcup__lid--off {
+  opacity: 0;
+  transform: translateY(-14px);
+}
+
+@keyframes staticcup-drop {
+  0% {
+    transform: translateY(-170px);
+  }
+  62% {
+    transform: translateY(0);
+  }
+  78% {
+    transform: translateY(-9px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.staticcup__piece--drop {
+  animation: staticcup-drop calc(var(--motion-slow) * 2) var(--ease) both;
+  animation-delay: var(--delay);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .staticcup__liquid,
+  .staticcup__lid {
+    transition: none;
+  }
+
+  .staticcup__piece--drop {
+    animation: none;
+  }
+}

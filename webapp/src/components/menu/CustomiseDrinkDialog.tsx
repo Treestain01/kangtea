@@ -15,6 +15,7 @@ import {
   type ToppingChoice,
 } from '../../store/lines';
 import { LiveCup } from '../cup/LiveCup';
+import { flyCup } from '../cup/fly';
 import { ToppingArt } from '../cup/ToppingArt';
 import './CustomiseDrinkDialog.css';
 
@@ -54,6 +55,7 @@ export function CustomiseDrinkDialog({
   onClose,
 }: CustomiseDrinkDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const stageCupRef = useRef<HTMLDivElement>(null);
   const [sugarId, setSugarId] = useState(defaultOf(customisations.sugarLevels).id);
   const [iceId, setIceId] = useState(defaultOf(customisations.iceLevels).id);
   const [toppingCounts, setToppingCounts] = useState<ToppingCounts>({});
@@ -115,6 +117,8 @@ export function CustomiseDrinkDialog({
     });
 
   const add = () => {
+    // The built cup arcs into the Order tab while the sheet closes. Decorative; never awaited.
+    if (stageCupRef.current) void flyCup(stageCupRef.current);
     onAdd(buildCartLine(item, { sugar, ice, toppings, quantity }));
     onClose();
   };
@@ -158,7 +162,7 @@ export function CustomiseDrinkDialog({
               selectedId={sugarId}
               onSelect={setSugarId}
             />
-            <div className="stage__cup">
+            <div className="stage__cup" ref={stageCupRef}>
               <LiveCup
                 colour={item.colour}
                 sugar={sugar}

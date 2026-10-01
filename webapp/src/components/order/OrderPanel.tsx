@@ -1,5 +1,7 @@
 import type { Order } from '@bbt/shared';
+import { useRef } from 'react';
 import { Link } from 'react-router';
+import { useCatalogue } from '../../api/useCatalogue';
 import { useStoreInfo } from '../../api/useStoreInfo';
 import { formatPrice } from '../../lib/money';
 import { useLoyalty } from '../../loyalty/LoyaltyProvider';
@@ -8,7 +10,11 @@ import { useCart, useOrders } from '../../store/hooks';
 import { lineKey, summariseCustomisations } from '../../store/lines';
 import { activeOrder, cartTotalCents } from '../../store/orders';
 import type { CartLine } from '../../store/types';
-import { CartLineRow } from './CartLineRow';
+import { StaticCup } from '../cup/StaticCup';
+import { PRODUCT_COLOURS } from '../cup/cupParts';
+import { flyPearl, tap } from '../cup/fly';
+import { LoyaltyCard } from '../loyalty/LoyaltyCard';
+import { CartLineRow, type LineArt } from './CartLineRow';
 import { OrderStatusSteps } from './OrderStatusSteps';
 import './OrderPanel.css';
 
@@ -36,38 +42,70 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
   const active = activeOrder(orders);
   const store = useStoreInfo();
   const loyalty = useLoyalty();
+  const { catalogue } = useCatalogue();
+  const kitchenCupRef = useRef<HTMLDivElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
 
   const className = `order${compact ? ' order--compact' : ''}`;
+  // The menu still knowing the drink gives the line its cup; a retired drink shows without one.
+  const artFor = (itemId: string): LineArt | undefined => {
+    if (catalogue.kind !== 'ready') return undefined;
+    const item = catalogue.menu.items.find((candidate) => candidate.id === itemId);
+    return item ? { colour: item.colour, pearls: item.pearls } : undefined;
+  };
 
-  if (active) {
-    return (
-      <ActiveOrderView
-        className={className}
-        order={active}
-        onCollect={() => {
-          ordersStore.setStatus(active.id, 'collected');
-          // Stamps are a bonus: a failed call must never block collecting the drink.
-          void loyalty.earnFromOrder(active).catch(() => undefined);
-        }}
-        onCancel={() => ordersStore.setStatus(active.id, 'cancelled')}
-      />
-    );
-  }
+  // The next stamp still to earn on the strip, where the pearl lands.
+  const nextStamp = (): Element | null => {
+    if (loyalty.state.kind !== 'ready') return null;
+    const stamps = stripRef.current?.querySelectorAll('.pearls__stamp');
+    return stamps?.[loyalty.state.card.stamps.length] ?? null;
+  };
+
+  const collect = async (order: Order) => {
+    tap();
+    // Stamps are a bonus: a failed call must never block collecting the drink.
+    void loyalty.earnFromOrder(order).catch(() => undefined);
+    const target = nextStamp();
+    const flight =
+      kitchenCupRef.current && target
+        ? flyPearl(kitchenCupRef.current, target, PRODUCT_COLOURS.pearl)
+        : null;
+    if (flight) await flight;
+    ordersStore.setStatus(order.id, 'collected');
+  };
 
   return (
-    <CartView
-      className={className}
-      compact={compact}
-      lines={cart}
-      canPlace={store !== null && cart.length > 0}
-      onChangeQuantity={(key, quantity) => cartStore.setQuantity(key, quantity)}
-      onRemove={(key) => cartStore.setQuantity(key, 0)}
-      onPlace={() => {
-        if (!store) return;
-        ordersStore.place(cart, store.id);
-        cartStore.clear();
-      }}
-    />
+    <>
+      {active ? (
+        <ActiveOrderView
+          className={className}
+          compact={compact}
+          order={active}
+          artFor={artFor}
+          cupRef={kitchenCupRef}
+          onCollect={() => void collect(active)}
+          onCancel={() => ordersStore.setStatus(active.id, 'cancelled')}
+        />
+      ) : (
+        <CartView
+          className={className}
+          compact={compact}
+          lines={cart}
+          artFor={artFor}
+          canPlace={store !== null && cart.length > 0}
+          onChangeQuantity={(key, quantity) => cartStore.setQuantity(key, quantity)}
+          onRemove={(key) => cartStore.setQuantity(key, 0)}
+          onPlace={() => {
+            if (!store) return;
+            ordersStore.place(cart, store.id);
+            cartStore.clear();
+          }}
+        />
+      )}
+      <div ref={stripRef} className={`order__pearls${compact ? ' order__pearls--compact' : ''}`}>
+        <LoyaltyCard compact />
+      </div>
+    </>
   );
 }
 
@@ -75,6 +113,7 @@ type CartViewProps = {
   className: string;
   compact: boolean;
   lines: CartLine[];
+  artFor: (itemId: string) => LineArt | undefined;
   canPlace: boolean;
   onChangeQuantity: (itemId: string, quantity: number) => void;
   onRemove: (itemId: string) => void;
@@ -85,6 +124,7 @@ function CartView({
   className,
   compact,
   lines,
+  artFor,
   canPlace,
   onChangeQuantity,
   onRemove,
@@ -120,6 +160,7 @@ function CartView({
           <CartLineRow
             key={lineKey(line)}
             line={line}
+            art={artFor(line.itemId)}
             compact={compact}
             onChangeQuantity={onChangeQuantity}
             onRemove={onRemove}
@@ -142,17 +183,45 @@ function CartView({
 
 type ActiveOrderViewProps = {
   className: string;
+  compact: boolean;
   order: Order;
+  artFor: (itemId: string) => LineArt | undefined;
+  cupRef: React.RefObject<HTMLDivElement | null>;
   onCollect: () => void;
   onCancel: () => void;
 };
 
-function ActiveOrderView({ className, order, onCollect, onCancel }: ActiveOrderViewProps) {
+function ActiveOrderView({
+  className,
+  compact,
+  order,
+  artFor,
+  cupRef,
+  onCollect,
+  onCancel,
+}: ActiveOrderViewProps) {
+  const first = order.lines[0];
+  const firstArt = first ? artFor(first.itemId) : undefined;
   return (
     <section className={className} aria-labelledby="order-heading">
       <h2 id="order-heading" className="order__heading">
         Your order
       </h2>
+      {first && firstArt && (
+        <div className={`kitchen${compact ? ' kitchen--compact' : ''}`}>
+          <div className="kitchen__cup" ref={cupRef}>
+            <StaticCup
+              colour={firstArt.colour}
+              pearls={firstArt.pearls}
+              customisations={first.customisations}
+              level={order.status === 'received' ? 0 : 1}
+              lid={order.status === 'ready'}
+              drop
+              label={`${first.name} in the kitchen`}
+            />
+          </div>
+        </div>
+      )}
       <OrderStatusSteps status={order.status} />
       <p className="order__copy" role="status">
         {STATUS_COPY[order.status]}
@@ -168,7 +237,16 @@ function ActiveOrderView({ className, order, onCollect, onCancel }: ActiveOrderV
       <ul className="order__recap" aria-label="Drinks in this order">
         {order.lines.map((line) => (
           <li key={lineKey(line)} className="order__recapline">
-            <span>
+            {artFor(line.itemId) && (
+              <span className="order__recapart">
+                <StaticCup
+                  colour={artFor(line.itemId)?.colour ?? ''}
+                  pearls={artFor(line.itemId)?.pearls}
+                  customisations={line.customisations}
+                />
+              </span>
+            )}
+            <span className="order__recaptext">
               {line.quantity} × {line.name}
               {summariseCustomisations(line) && (
                 <span className="order__recapoptions"> ({summariseCustomisations(line)})</span>

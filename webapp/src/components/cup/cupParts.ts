@@ -187,14 +187,14 @@ export function liquidTopFor(caps: readonly CapSpec[]): number {
 }
 
 /** Cubes for an ice level, from its name: warm and no ice give none, less gives two, anything else four. */
-export function iceCubeCount(level: OptionLevel): number {
+export function iceCubeCount(level: Pick<OptionLevel, 'name'>): number {
   const name = level.name.toLowerCase();
   if (name.includes('warm') || name.includes('hot') || name.includes('no ')) return 0;
   if (name.includes('less') || name.includes('light')) return 2;
   return 4;
 }
 
-export function showsSteam(level: OptionLevel): boolean {
+export function showsSteam(level: Pick<OptionLevel, 'name'>): boolean {
   const name = level.name.toLowerCase();
   return name.includes('warm') || name.includes('hot');
 }
@@ -210,7 +210,7 @@ export function icePieces(level: OptionLevel): PieceSpec[] {
 }
 
 /** Percentage of the drink colour in the tea: 0% sugar is 55% colour and 45% white, 100% sugar is the colour as given. */
-export function teaColourMix(level: OptionLevel): number {
+export function teaColourMix(level: Pick<OptionLevel, 'name'>): number {
   const percent = Number.parseInt(level.name, 10);
   const sugar = Number.isFinite(percent) ? Math.min(100, Math.max(0, percent)) : 100;
   return Math.round(55 + 45 * (sugar / 100));

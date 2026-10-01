@@ -166,6 +166,21 @@ describe('OrderPanel active order', () => {
     expect(screen.queryByRole('button', { name: 'Cancel order' })).not.toBeInTheDocument();
   });
 
+  it('pours the kitchen cup as the order moves along: empty, then full, then lidded', async () => {
+    const { stores, order } = withOrder('received');
+    renderPanel(stores);
+    const cup = await screen.findByRole('img', { name: 'Signature Milk Tea in the kitchen' });
+    const liquid = () => cup.querySelector('.staticcup__liquid') as SVGRectElement;
+    const lid = () => cup.querySelector('.staticcup__lid') as SVGUseElement;
+    expect(Number(liquid().getAttribute('y'))).toBe(200);
+    expect(lid()).toHaveClass('staticcup__lid--off');
+    act(() => stores.orders.setStatus(order.id, 'making'));
+    expect(liquid().getAttribute('y')).toBe('44');
+    expect(lid()).toHaveClass('staticcup__lid--off');
+    act(() => stores.orders.setStatus(order.id, 'ready'));
+    expect(lid()).not.toHaveClass('staticcup__lid--off');
+  });
+
   it('shows the pickup code when ready and moves to collected on pickup', () => {
     const { stores, order } = withOrder('ready');
     renderPanel(stores);
@@ -211,6 +226,38 @@ describe('OrderPanel and the pearl card', () => {
     });
     await waitFor(() => expect(loyalty.stamps).toHaveLength(3));
     expect(stores.orders.read()[0]?.status).toBe('collected');
+  });
+
+  it('shows the pearl strip under the order for a signed in person, and stamps it on collect', async () => {
+    const auth = createFakeAuthClient();
+    const loyalty = createFakeLoyaltyClient();
+    const stores = createTestStores();
+    stores.session.save(
+      await auth.client.signUp({
+        email: 't@example.com',
+        password: 'correct horse',
+        displayName: 'T',
+      }),
+    );
+    stores.cart.add(signature);
+    const order = stores.orders.place(stores.cart.read(), 's');
+    stores.cart.clear();
+    stores.orders.setStatus(order.id, 'ready');
+    render(
+      <TestProviders stores={stores} auth={auth.client} loyalty={loyalty.client}>
+        <MemoryRouter initialEntries={['/order']}>
+          <OrderPanel />
+        </MemoryRouter>
+      </TestProviders>,
+    );
+    const strip = await screen.findByRole('region', { name: 'Your pearls' });
+    expect(strip).toHaveTextContent('0 of 10');
+    expect(strip.querySelectorAll('li')).toHaveLength(10);
+    await act(async () => {
+      fireEvent.click(await screen.findByRole('button', { name: /picked it up/i }));
+    });
+    await waitFor(() => expect(strip).toHaveTextContent('1 of 10'));
+    expect(screen.getByText('Your order is empty.')).toBeInTheDocument();
   });
 
   it('still collects the order when nobody is signed in', async () => {

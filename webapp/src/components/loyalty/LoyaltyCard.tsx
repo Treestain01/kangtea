@@ -9,18 +9,22 @@ import './LoyaltyCard.css';
 type LoyaltyCardProps = {
   /** Headline over the stamps. */
   heading?: string;
+  /** One row of ten small stamps with the count and no copy, for the order panel. Signed in only. */
+  compact?: boolean;
 };
 
 /**
  * The pearl card: ten cups, the tenth free. Signed out it invites people to sign in; signed in it
  * shows the stamps earned on the current card in the colours of the drinks that earned them.
  */
-export function LoyaltyCard({ heading = 'Your pearls' }: LoyaltyCardProps) {
+export function LoyaltyCard({ heading = 'Your pearls', compact = false }: LoyaltyCardProps) {
   const loyalty = useLoyalty();
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState('');
   const [message, setMessage] = useState('');
+
+  if (compact && loyalty.state.kind !== 'ready') return null;
 
   if (loyalty.state.kind === 'signed-out') {
     return (
@@ -82,6 +86,20 @@ export function LoyaltyCard({ heading = 'Your pearls' }: LoyaltyCardProps) {
       setBusy(false);
     }
   };
+
+  if (compact) {
+    return (
+      <section className="pearls pearls--compact" aria-label={heading}>
+        <div className="pearls__head">
+          <p className="pearls__heading">{heading}</p>
+          <p className="pearls__count">
+            {card.complete ? 'Card full' : `${card.stamps.length} of ${STAMPS_PER_CARD}`}
+          </p>
+        </div>
+        <Stamps card={card} />
+      </section>
+    );
+  }
 
   return (
     <section className="pearls" aria-labelledby="pearls-heading">

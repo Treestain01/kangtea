@@ -66,6 +66,22 @@
   font-variant-numeric: tabular-nums;
 }
 
+@keyframes tab-bump {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.tab__badge {
+  animation: tab-bump var(--motion-slow) var(--ease);
+}
+
 .tab__dot {
   position: absolute;
   top: -3px;
@@ -79,6 +95,10 @@
 @media (prefers-reduced-motion: reduce) {
   .tab {
     transition: none;
+  }
+
+  .tab__badge {
+    animation: none;
   }
 }
 

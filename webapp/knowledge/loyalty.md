@@ -27,6 +27,7 @@ It reads the session token from `useAuth()`; with no session the state is `signe
 - Signed out: a bordered card inviting the person to sign in, linking to `/account`.
 - Signed in: an accent card, "Your pearls", "n of 10" or "Card full", ten stamps five across, and one line of copy about how many more to go.
 - Stamps use the `kt-stamp-empty`, `kt-stamp-full` and `kt-stamp-free` symbols from `src/assets/art/cup-parts.svg`, tinted with each stamp's drink colour. A new stamp scales in; the tenth wobbles when it unlocks. `CupSprite` is rendered once in `AppShell` so the symbols are available on every page.
+- `compact`: one row of ten small stamps with the count and no copy, rendered under the order panel for signed in people; it is the landing spot for the pearl that drops on collect (see `orders.md`). It renders nothing while signed out, loading or in error.
 - Card full: "Use my free drink" opens an in page confirmation ("Only do this at the counter"), then `redeem()`. The card resets to the next one and a visually hidden status announces it.
 
 ## Testing

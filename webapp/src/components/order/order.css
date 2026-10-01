@@ -1,10 +1,10 @@
-/* Cart line: name and total on the first row, controls on the second. From 768px one row. */
+/* Cart line: a mini cup, name and total on the first row, controls on the second. From 768px one row. */
 .cartline {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr auto;
   grid-template-areas:
-    'info total'
-    'qty remove';
+    'art info total'
+    'art qty remove';
   align-items: center;
   gap: var(--space-2) var(--space-3);
   padding: var(--space-3) var(--space-4);
@@ -15,10 +15,20 @@
 
 @media (min-width: 768px) {
   .cartline:not(.cartline--compact) {
-    grid-template-columns: 1fr auto auto auto;
-    grid-template-areas: 'info qty total remove';
+    grid-template-columns: auto 1fr auto auto auto;
+    grid-template-areas: 'art info qty total remove';
     gap: var(--space-4);
   }
+}
+
+.cartline__art {
+  grid-area: art;
+  align-self: start;
+  width: 36px;
+}
+
+.cartline--compact .cartline__art {
+  width: 30px;
 }
 
 /* In the desktop order panel, lines are plain rows separated by hairlines, as in the mockup. */
