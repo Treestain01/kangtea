@@ -29,7 +29,7 @@
   min-height: var(--tap-target);
   padding: var(--space-1) var(--space-2);
   border-radius: 999px;
-  color: color-mix(in srgb, var(--color-bg) 62%, transparent);
+  color: color-mix(in srgb, var(--color-bg) 88%, transparent);
   text-decoration: none;
   font-size: 0.625rem;
   font-weight: 700;
@@ -46,7 +46,7 @@
 
 .tab--active {
   color: var(--color-bg);
-  background: color-mix(in srgb, var(--color-bg) 14%, transparent);
+  background: color-mix(in srgb, var(--color-bg) 20%, transparent);
 }
 
 .tab__icon {
