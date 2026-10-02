@@ -44,9 +44,16 @@
   height: 22px;
 }
 
+/* The current tab inverts: a solid page-colour pill with ink icon and label. */
 .tab--active {
-  color: var(--color-bg);
-  background: color-mix(in srgb, var(--color-bg) 20%, transparent);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.tab--active .tab__badge,
+.tab--active .tab__dot {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 
 .tab__icon {
