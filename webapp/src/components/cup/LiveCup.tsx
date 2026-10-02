@@ -170,6 +170,7 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
           height={CUP.height - liquidTop}
           fill="var(--tea)"
         />
+        <use href="#kt-tea-sheen" width={CUP.width} height={CUP.height} />
         <g ref={pieceLayer} data-layer="pieces" />
         <g data-layer="caps">
           {caps.map((cap) => (
@@ -185,7 +186,6 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
           ))}
         </g>
       </g>
-      <use href="#kt-tea-sheen" width={CUP.width} height={CUP.height} />
       <use href="#kt-cup-body" width={CUP.width} height={CUP.height} />
       <use href="#kt-cup-lid" width={CUP.width} height={CUP.height} />
       {showsSteam(ice) && <use href="#kt-steam" width={CUP.width} height={CUP.height} />}

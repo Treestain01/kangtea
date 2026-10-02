@@ -59,7 +59,7 @@
 
   <!-- Ice -->
   <symbol id="kt-ice-cube" viewBox="0 0 24 24">
-    <rect x="2" y="2" width="20" height="20" rx="5" fill="var(--ice, #ffffff)" fill-opacity="0.82" stroke="#ffffff" stroke-width="2" />
+    <rect x="2" y="2" width="20" height="20" rx="5" fill="var(--ice, #ffffff)" fill-opacity="0.82" stroke="var(--cup-line, #2b2826)" stroke-opacity="0.22" stroke-width="1.5" />
     <path d="M7 16.5 L16.5 7" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" />
   </symbol>
 

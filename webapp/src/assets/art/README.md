@@ -6,27 +6,27 @@ Compose parts with `<use href="#kt-...">`; nothing here is a finished picture.
 
 ## Parts
 
-| Symbol               | Space     | Use                                                                                                  |
-| -------------------- | --------- | ---------------------------------------------------------------------------------------------------- |
-| `kt-cup-body`        | 120 x 200 | Translucent cup wall.                                                                                |
-| `kt-cup-lid`         | 120 x 200 | Dome lid and rim.                                                                                    |
-| `kt-straw`           | 120 x 200 | Straw at 8 degrees, coloured `--straw`.                                                              |
-| `kt-tea-sheen`       | 120 x 200 | Gradient laid over the liquid so any tea colour reads as a drink.                                    |
-| `kt-steam`           | 120 x 200 | Two wisps above the lid, for the Warm ice level.                                                     |
-| `kt-ice-cube`        | 24 x 24   | One cube. Two for Less ice, four for Normal ice; floats fully under the surface.                     |
-| `kt-pearl`           | 24 x 24   | Boba. Sinks to the bottom rows.                                                                      |
-| `kt-pearl-mini`      | 24 x 24   | Mini pearl. Sinks.                                                                                   |
-| `kt-taro-ball`       | 24 x 24   | Mini taro ball. Sinks.                                                                               |
-| `kt-agar-ball`       | 24 x 24   | Agar ball. Sinks, translucent.                                                                       |
-| `kt-jelly-cube`      | 24 x 24   | Grass, coconut or tea jelly. Sinks, tinted by `--jelly`.                                             |
-| `kt-popping-ball`    | 24 x 24   | Water chestnut or barley popping ball. Sinks.                                                        |
-| `kt-foam-cap`        | 120 x 40  | Milk foam, a flat topped band across the full cup width, surface line at y=30. Draw inside the clip. |
-| `kt-ice-cream-scoop` | 24 x 24   | Vanilla ice cream, one big round scoop. One sinking body per lot, about three pearls wide.           |
-| `kt-brulee`          | 120 x 16  | Caramel crust, full cup width, surface line at y=6. Draw inside the clip.                            |
-| `kt-pudding`         | 24 x 24   | Pudding. One large block per lot, sinks with the pearls.                                             |
-| `kt-stamp-empty`     | 40 x 40   | Loyalty card: a cup still to earn, dashed.                                                           |
-| `kt-stamp-full`      | 40 x 40   | Loyalty card: an earned cup, tinted by `--tea`.                                                      |
-| `kt-stamp-free`      | 40 x 40   | Loyalty card: the tenth cup, accent filled with a star.                                              |
+| Symbol               | Space     | Use                                                                                                                                     |
+| -------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `kt-cup-body`        | 120 x 200 | Translucent cup wall.                                                                                                                   |
+| `kt-cup-lid`         | 120 x 200 | Dome lid and rim.                                                                                                                       |
+| `kt-straw`           | 120 x 200 | Straw at 8 degrees, coloured `--straw`.                                                                                                 |
+| `kt-tea-sheen`       | 120 x 200 | Gradient laid over the liquid so any tea colour reads as a drink. Draw it inside the clip, under the pieces.                            |
+| `kt-steam`           | 120 x 200 | Two wisps above the lid, for the Warm ice level.                                                                                        |
+| `kt-ice-cube`        | 24 x 24   | One cube with a faint `--cup-line` edge so it reads in pale tea. Two for Less ice, four for Normal ice; floats fully under the surface. |
+| `kt-pearl`           | 24 x 24   | Boba. Sinks to the bottom rows.                                                                                                         |
+| `kt-pearl-mini`      | 24 x 24   | Mini pearl. Sinks.                                                                                                                      |
+| `kt-taro-ball`       | 24 x 24   | Mini taro ball. Sinks.                                                                                                                  |
+| `kt-agar-ball`       | 24 x 24   | Agar ball. Sinks, translucent.                                                                                                          |
+| `kt-jelly-cube`      | 24 x 24   | Grass, coconut or tea jelly. Sinks, tinted by `--jelly`.                                                                                |
+| `kt-popping-ball`    | 24 x 24   | Water chestnut or barley popping ball. Sinks.                                                                                           |
+| `kt-foam-cap`        | 120 x 40  | Milk foam, a flat topped band across the full cup width, surface line at y=30. Draw inside the clip.                                    |
+| `kt-ice-cream-scoop` | 24 x 24   | Vanilla ice cream, one big round scoop. One sinking body per lot, about three pearls wide.                                              |
+| `kt-brulee`          | 120 x 16  | Caramel crust, full cup width, surface line at y=6. Draw inside the clip.                                                               |
+| `kt-pudding`         | 24 x 24   | Pudding. One large block per lot, sinks with the pearls.                                                                                |
+| `kt-stamp-empty`     | 40 x 40   | Loyalty card: a cup still to earn, dashed.                                                                                              |
+| `kt-stamp-full`      | 40 x 40   | Loyalty card: an earned cup, tinted by `--tea`.                                                                                         |
+| `kt-stamp-free`      | 40 x 40   | Loyalty card: the tenth cup, accent filled with a star.                                                                                 |
 
 `#kt-cup-inner` is a clip path in the cup space.
 Draw the liquid as a `<rect>` filled with `var(--tea)` inside it and move the rect's top edge to set the level.

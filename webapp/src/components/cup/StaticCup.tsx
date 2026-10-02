@@ -129,6 +129,7 @@ export function StaticCup({
           height={Math.max(0, CUP.height - liquidTop)}
           fill="var(--tea)"
         />
+        <use href="#kt-tea-sheen" width={CUP.width} height={CUP.height} />
         {!empty &&
           pieces.map((piece, index) => (
             <Piece
@@ -161,7 +162,6 @@ export function StaticCup({
             />
           ))}
       </g>
-      <use href="#kt-tea-sheen" width={CUP.width} height={CUP.height} />
       <use href="#kt-cup-body" width={CUP.width} height={CUP.height} />
       <use
         href="#kt-cup-lid"

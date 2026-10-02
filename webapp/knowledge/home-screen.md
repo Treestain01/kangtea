@@ -74,6 +74,7 @@ The PNG is drawn on a canvas from a standalone copy of the cup's svg with the sp
 The card opens `components/menu/CustomiseDrinkDialog.tsx`, a native `<dialog>` bottom sheet built around the live cup (ADR 0020).
 A compact head carries the name, Chinese name, category and price; the stage below it puts a vertical sugar dial on the left, the cup filling the middle, and a vertical ice dial on the right; a swipeable tray of topping tokens sits under the cup; a one line readout and the add button with the live total are pinned at the bottom.
 The dials are radio groups with the highest level at the top; a topping token adds a lot per tap, shows a count badge and a minus to take one away, and is drawn with `components/cup/ToppingArt.tsx` from the same symbol the cup drops in.
+The tray shows an arrow at whichever edge still has tokens beyond it (`TrayScroller`), tapping it scrolls a page, and the live cup casts `--shadow-object`.
 The cup is `components/cup/LiveCup.tsx`: the tea deepens with sugar, ice floats under the surface, foam and brulee fade in on top, and every other topping drops in under a small physics world and piles at the bottom.
 Nothing in the sheet scrolls on a phone; the cup is sized to the height the dials and tray leave.
 `components/cup/cupParts.ts` maps menu names to art and `components/cup/cupPhysics.ts` wraps Matter.js, which loads only when the sheet opens; the rules are in `src/assets/art/README.md` and ADR 0018.

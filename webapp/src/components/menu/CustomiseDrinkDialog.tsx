@@ -6,7 +6,7 @@ import type {
   OrderLine,
   Topping,
 } from '@bbt/shared';
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { formatPrice } from '../../lib/money';
 import {
   buildCartLine,
@@ -238,7 +238,7 @@ export function CustomiseDrinkDialog({
                   Tap to drop one in, up to {MAX_TOPPING_QUANTITY} of each.
                 </p>
               </div>
-              <ul className="tray__list">
+              <TrayScroller>
                 {customisations.toppings.map((topping) => (
                   <ToppingToken
                     key={topping.id}
@@ -249,7 +249,7 @@ export function CustomiseDrinkDialog({
                     onRemove={() => changeTopping(topping.id, -1)}
                   />
                 ))}
-              </ul>
+              </TrayScroller>
             </div>
           )}
         </div>
@@ -298,6 +298,74 @@ export function CustomiseDrinkDialog({
         </div>
       </div>
     </dialog>
+  );
+}
+
+/** How far an arrow tap scrolls the tray, as a share of its visible width. */
+const TRAY_PAGE = 0.8;
+
+/**
+ * The topping tray with an arrow at whichever edge still has tokens beyond it, so the swipe is
+ * discoverable. Tapping an arrow scrolls a page. The arrows are decorative for assistive technology;
+ * the list itself is reachable by keyboard.
+ */
+function TrayScroller({ children }: { children: React.ReactNode }) {
+  const listRef = useRef<HTMLUListElement>(null);
+  const [edges, setEdges] = useState({ left: false, right: false });
+
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const measure = () => {
+      const max = list.scrollWidth - list.clientWidth;
+      setEdges({ left: list.scrollLeft > 4, right: max - list.scrollLeft > 4 });
+    };
+    measure();
+    list.addEventListener('scroll', measure, { passive: true });
+    const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(measure) : null;
+    observer?.observe(list);
+    return () => {
+      list.removeEventListener('scroll', measure);
+      observer?.disconnect();
+    };
+  }, []);
+
+  const page = (direction: -1 | 1) => {
+    const list = listRef.current;
+    if (!list) return;
+    list.scrollBy({ left: direction * list.clientWidth * TRAY_PAGE, behavior: 'smooth' });
+  };
+
+  return (
+    <div className="tray__scroller">
+      <ul className="tray__list" ref={listRef}>
+        {children}
+      </ul>
+      {edges.left && (
+        <button
+          type="button"
+          className="tray__arrow tray__arrow--left"
+          aria-label="Earlier toppings"
+          onClick={() => page(-1)}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m14 6-6 6 6 6" />
+          </svg>
+        </button>
+      )}
+      {edges.right && (
+        <button
+          type="button"
+          className="tray__arrow tray__arrow--right"
+          aria-label="More toppings"
+          onClick={() => page(1)}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m10 6 6 6-6 6" />
+          </svg>
+        </button>
+      )}
+    </div>
   );
 }
 
