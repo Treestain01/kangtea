@@ -80,11 +80,29 @@ describe('createCupWorld', () => {
     world.destroy();
   });
 
-  it('gets a pearl to the bottom in under a second', () => {
+  it('gets a pearl to the bottom in about a second and a half', () => {
     const world = createCupWorld(seeded(11));
     world.sync([pearl(0)]);
-    for (let i = 0; i < 54; i += 1) world.step(); // 54 frames, 900ms
+    for (let i = 0; i < 90; i += 1) world.step(); // 90 frames, 1.5s
     expect(world.pieces()[0]?.body.position.y).toBeGreaterThan(170);
+    world.destroy();
+  });
+
+  it('falls fast through the air and slows once it is in the tea', () => {
+    const world = createCupWorld(seeded(11));
+    world.sync([pearl(0)]);
+    const body = () => world.pieces()[0]!.body;
+    let fastest = 0;
+    while (body().position.y < 44) {
+      world.step();
+      fastest = Math.max(fastest, body().velocity.y);
+    }
+    // Well under the surface and before the floor, it is moving at a fraction of its entry speed.
+    while (body().position.y < 120) world.step();
+    const inTea = body().velocity.y;
+    expect(fastest).toBeGreaterThan(4);
+    expect(inTea).toBeLessThan(fastest / 2);
+    expect(inTea).toBeGreaterThan(0.5);
     world.destroy();
   });
 });

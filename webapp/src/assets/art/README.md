@@ -53,7 +53,7 @@ Colours that are product data (the tea, tapioca, foam, a topping's tint) are fix
 - **Ice** sets what floats at the top: Warm shows steam and no cubes, No ice shows nothing, Less ice two cubes, Normal ice four cubes. Cubes sit just below the liquid line.
 - **Toppings** are rigid bodies in a small 2D physics world (Matter.js), rendered as these symbols.
   Sinkers (boba, mini pearls, taro, agar) fall in from above the lid, bounce once and pile at the bottom, five bodies per lot.
-  Gravity is tuned so a pearl reaches the bottom in well under a second (engine gravity scale 0.0011 in cup units, light air drag).
+  Gravity is tuned so a piece falls fast through the air (engine gravity scale 0.0011 in cup units, light air drag) and then, once under the surface, meets thicker drag, partial buoyancy and a lower speed cap, so it slows as it enters the tea and settles in about a second and a half.
   Jellies and popping balls sink too, four bodies per lot; the vanilla ice cream scoop is one large sinking body per lot.
   Caps (milk foam and brulee) are not physical; they fade in on the surface over `--motion-slow`, lower the tea by their own thickness (brulee 6, milk foam 16 cup units), and are drawn inside the cup clip so the slanted walls trim them to the inner width.
   Pudding is one large block per lot, about twice a pearl, that sinks and piles with them.

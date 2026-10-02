@@ -12,6 +12,8 @@ import { CUP, FRAME_MS, type PieceSpec } from './cupParts';
 export interface LivePiece {
   spec: PieceSpec;
   body: Matter.Body;
+  /** The body's air drag above the tea; it thickens once the piece is under the surface. */
+  airAbove: number;
 }
 
 export interface CupWorld {
@@ -33,6 +35,10 @@ const GROUP = { cup: 0x1, sink: 0x2, ice: 0x4 } as const;
 const GRAVITY_SCALE = 0.0011;
 /** Units per frame. Well under the 24 unit walls and 40 unit floor. */
 const MAX_SPEED = 14;
+/** A sinking piece under the surface: thicker air and a share of its weight held up, so it slows as it enters the tea. */
+const LIQUID_DRAG = 0.085;
+const LIQUID_BUOYANCY = 0.42;
+const LIQUID_MAX_SPEED = 4;
 
 export function createCupWorld(random: () => number = Math.random): CupWorld {
   const engine = Matter.Engine.create();
@@ -87,20 +93,30 @@ export function createCupWorld(random: () => number = Math.random): CupWorld {
           });
     Matter.Body.setAngularVelocity(body, (random() - 0.5) * 0.2);
     Matter.Composite.add(world, body);
-    return { spec, body };
+    return { spec, body, airAbove: options.frictionAir ?? 0.012 };
   };
 
-  // Cap speed so a hard shove from a neighbour can never carry a piece through a wall in one frame,
-  // then buoyancy for the ice only: held with its top edge about 3 units under the surface.
+  // Cap speed so a hard shove from a neighbour can never carry a piece through a wall in one frame.
+  // Sinking pieces fall freely until they meet the tea, then thicker drag and partial buoyancy slow
+  // them so they settle rather than drop. Ice is held with its top edge about 3 units under the surface.
   Matter.Events.on(engine, 'beforeUpdate', () => {
-    for (const { spec, body } of live) {
+    for (const { spec, body, airAbove } of live) {
+      const depth = body.position.y - liquidTop;
+      const inLiquid = depth > 0;
+      const maxSpeed = spec.kind !== 'ice' && inLiquid ? LIQUID_MAX_SPEED : MAX_SPEED;
       const speed = Math.hypot(body.velocity.x, body.velocity.y);
-      if (speed > MAX_SPEED) {
-        const scale = MAX_SPEED / speed;
+      if (speed > maxSpeed) {
+        const scale = maxSpeed / speed;
         Matter.Body.setVelocity(body, { x: body.velocity.x * scale, y: body.velocity.y * scale });
       }
-      if (spec.kind !== 'ice') continue;
-      const depth = body.position.y - liquidTop;
+      if (spec.kind !== 'ice') {
+        body.frictionAir = inLiquid ? LIQUID_DRAG : airAbove;
+        if (inLiquid) {
+          const weight = body.mass * engine.gravity.y * engine.gravity.scale;
+          Matter.Body.applyForce(body, body.position, { x: 0, y: -weight * LIQUID_BUOYANCY });
+        }
+        continue;
+      }
       if (depth <= -spec.size) continue;
       const weight = body.mass * engine.gravity.y * engine.gravity.scale;
       const factor = Math.max(0, 1 + (depth - (spec.size / 2 + 3)) * 0.1);
