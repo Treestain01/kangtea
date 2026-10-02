@@ -18,7 +18,7 @@
 }
 
 .brand-logo__cjk {
-  font-family: 'Songti TC', 'PMingLiU', 'Noto Serif TC', 'Noto Serif CJK TC', serif;
+  font-family: var(--font-zh);
   font-size: calc(var(--brand-size) * 0.21);
   letter-spacing: 0.35em;
   margin-left: 0.35em; /* balances the trailing letter-spacing so the pair sits centred */

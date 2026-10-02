@@ -21,14 +21,14 @@ Test files are exempt because their fixtures carry drink colours as data; compon
 
 ## Neutrals (derived from the brand grey)
 
-| Token                   | Light     | Dark      | Role                                                                                   |
-| ----------------------- | --------- | --------- | -------------------------------------------------------------------------------------- |
-| `--color-bg`            | `#F5F3F2` | `#1B1917` | Page background, a light tint of the brand grey.                                       |
-| `--color-surface`       | `#FFFFFF` | `#262321` | Cards, chips, inputs, the tab bar and order panel. Always with a 1px `--color-border`. |
-| `--color-surface-muted` | `#E9E5E3` | `#322E2B` | Secondary fills: the drink art well, status pills, disabled buttons.                   |
-| `--color-border`        | `#CBC6C3` | `#4A4541` | Dividers and outlines. Light mode uses the brand grey directly.                        |
-| `--color-text`          | `#2B2826` | `#EDEAE8` | Body text.                                                                             |
-| `--color-text-muted`    | `#6B655F` | `#A8A19C` | Secondary text, captions, placeholders. Passes 4.5:1 on `--color-bg`.                  |
+| Token                   | Light     | Dark      | Role                                                                        |
+| ----------------------- | --------- | --------- | --------------------------------------------------------------------------- |
+| `--color-bg`            | `#F4EFE8` | `#1D1A17` | Page background, the brand grey warmed toward cream. The first tier.        |
+| `--color-surface`       | `#FFFDF9` | `#27221E` | Cards, panels, inputs, the desktop order panel. The second tier; no border. |
+| `--color-surface-muted` | `#ECE4D8` | `#332C26` | The third tier: wells inside cards, quiet buttons, steppers, status pills.  |
+| `--color-border`        | `#D9D0C4` | `#4A4541` | Form field outlines and dashed rules only (ADR 0022).                       |
+| `--color-text`          | `#2A2522` | `#F1EBE3` | Body text, and the ink of the floating tab bar and the drink card's plus.   |
+| `--color-text-muted`    | `#6F655C` | `#AA9F93` | Secondary text, captions, placeholders. Passes 4.5:1 on `--color-bg`.       |
 
 ## Semantic
 
@@ -38,19 +38,21 @@ Test files are exempt because their fixtures carry drink colours as data; compon
 | `--color-warning` | `#A35D00` | `#E0A04A` | Caution.                     |
 | `--color-danger`  | `#B3261E` | `#EF7B74` | Errors, destructive actions. |
 
-## Surfaces (flat)
+## Surfaces (tonal tiers)
 
-The UI is flat, faithful to the design mockup: white cards on the warm grey page, separated by 1px borders in the brand grey.
-Depth is not a device.
-The only shadow in the app is `--shadow-float`, on the customise sheet, because it floats above the page.
-`tokens.test.ts` fails on any other `box-shadow`.
+The UI is the tea house direction (ADR 0022): surfaces are separated by tone, not by lines.
+The page is `--color-bg`, cards and panels sit on it as `--color-surface`, and the wells inside them are `--color-surface-muted`.
+The only `box-shadow` in the app is `--shadow-float`, on the customise sheet, because it floats above the page; `tokens.test.ts` fails on any other.
+The cup is an object on a surface, so it alone takes `filter: drop-shadow(var(--shadow-object))`.
 
 Rules:
 
-- Surfaces are `--color-surface` with `1px solid var(--color-border)` and `--radius-lg` (cards) or `--radius-md` (fields, tiles).
-- Selected means accent filled: a chosen chip, a filled step dot, the active phone tab in accent text, the active sidebar row as a white bordered card with accent text.
-- Primary actions are accent pills with `--color-on-accent` text (Place order, Reorder, Add to order, Save). Secondary actions are quiet text or a white bordered pill.
-- The drink card's "+" is an accent disc; the whole card is the button.
+- Cards are `--color-surface` with `--radius-xl` and no border. Wells and small controls take `--radius-md` or `--radius-lg`. `--color-border` outlines form fields and draws dashed rules above totals.
+- Drink cards are tinted by the drink: the well is the drink colour at 16% on the surface, the cup stands proud of its top edge, the tag sits at the well's foot in the drink colour deepened toward `--color-text`.
+- Selected means accent filled or accent marked: a chosen category is heavier text with a short accent rule, a filled step dot, the active phone tab a lighter pill inside the ink bar, the active sidebar row ink text with an accent dot.
+- Primary actions are accent pills with `--color-on-accent` text that settle to 0.97 on press. Secondary actions are quiet text or a `--color-surface-muted` pill.
+- The drink card's "+" is an ink square (`--color-text` on `--color-bg`); the whole card is the button.
+- Type: the greeting is `--font-display` at optical size 144, weight 500, with the time of day in italic accent; Chinese names are `--font-zh` at reading size.
 - Hover on interactive surfaces changes the border to the accent, never adds a shadow.
 - Every transition and animation eases in and out via `--ease`, at `--motion-fast` (160ms) for state changes and `--motion-slow` (320ms) for sheets, and is disabled under `prefers-reduced-motion: reduce`. `tokens.test.ts` fails on a literal duration or easing outside `tokens.css`.
 
@@ -69,7 +71,8 @@ Headings carry `letter-spacing: -0.01em` and `text-wrap: balance`.
 
 - `--focus-outline`: `3px solid` accent at 60%. Applied globally on `:focus-visible` as an outline so it never replaces a surface's shadow.
 - `--space-1` to `--space-6`: 4, 8, 12, 16, 24, 32px as rem.
-- `--radius-sm`, `--radius-md`, `--radius-lg`: 4, 8, 20px. Soft shapes need the larger radius.
+- `--radius-sm`, `--radius-md`, `--radius-lg`, `--radius-xl`: 4, 8, 16, 22px. Cards take xl, inner panels lg, wells and small controls md, fields sm.
+- `--shadow-object`: the cup's drop shadow, used only as a `filter`. `--font-zh`: the serif for Chinese names.
 - `--tap-target`: 44px minimum height for tappable elements on phones.
 - `--ease` (`ease-in-out`), `--motion-fast` (160ms), `--motion-slow` (320ms): the only timing values used by transitions and animations.
 - `--tab-bar-height` (64px), `--cart-panel-width` (300px), `--sidebar-width` (locked to `--cart-panel-width`): the fixed layout pieces `.app` leaves room for. Change the panel width and the sidebar follows. See `navigation.md`.

@@ -1,7 +1,7 @@
 # 0011 Flat surfaces, faithful to the mockup
 
 Date: 2026-09-25
-Status: Accepted. Supersedes 0008.
+Status: Accepted. Supersedes 0008. Superseded in part by 0022, which separates surfaces by tone instead of borders; the single shadow rule stands.
 
 ## Context
 

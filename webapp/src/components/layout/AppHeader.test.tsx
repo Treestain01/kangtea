@@ -31,7 +31,11 @@ describe('AppHeader', () => {
   it('shows the brand, greeting and pickup store with opening status', () => {
     render(<AppHeader store={store} now={noonBrisbane} />);
     expect(screen.getByRole('img', { name: 'Kang Tea' })).toBeInTheDocument();
-    expect(screen.getByText(greetingFor(noonBrisbane.getHours()))).toBeInTheDocument();
+    // The greeting is split so its second word can be set in italic.
+    const greeting = greetingFor(noonBrisbane.getHours());
+    expect(
+      screen.getByText((_, node) => node?.tagName === 'P' && node.textContent === greeting),
+    ).toBeInTheDocument();
     expect(screen.getByText('Calamvale Central')).toBeInTheDocument();
     expect(screen.getByText(/Open until 8:00 pm/)).toBeInTheDocument();
   });

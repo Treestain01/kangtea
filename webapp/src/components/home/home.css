@@ -4,10 +4,9 @@
   align-items: center;
   gap: var(--space-2);
   min-height: var(--tap-target);
-  padding: 0 var(--space-3);
-  border-radius: var(--radius-lg);
+  padding: 0 var(--space-4);
+  border-radius: 999px;
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
   color: var(--color-text-muted);
 }
 
@@ -37,7 +36,6 @@
 }
 
 .search:focus-within {
-  border-color: var(--color-accent);
   outline: var(--focus-outline);
   outline-offset: 2px;
 }
@@ -58,9 +56,28 @@
   align-items: end;
   gap: var(--space-3);
   padding: var(--space-4);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   background: var(--color-accent);
   color: var(--color-on-accent);
+  position: relative;
+  overflow: hidden;
+}
+
+/* The brand's two characters, large and faint, behind the card's top right corner. */
+.usual::before {
+  content: '康緹';
+  position: absolute;
+  right: -0.1em;
+  top: -0.3em;
+  font-family: var(--font-zh);
+  font-size: 7rem;
+  line-height: 1;
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.usual > * {
+  position: relative;
 }
 
 @media (min-width: 768px) {
@@ -129,8 +146,8 @@
 .usual__name {
   margin: 2px 0 0;
   font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.375rem;
+  font-weight: 500;
   line-height: 1.2;
   overflow-wrap: anywhere;
 }
@@ -167,17 +184,20 @@
   align-items: center;
   gap: var(--space-4);
   padding: var(--space-4);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
 }
 
 .cotd__art {
   display: grid;
   place-items: center;
   height: 132px;
-  border-radius: var(--radius-md);
-  background: color-mix(in srgb, var(--tea) 22%, var(--color-surface-muted));
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--tea) 18%, var(--color-surface));
+}
+
+.cotd__cup svg {
+  filter: drop-shadow(var(--shadow-object));
 }
 
 .cotd__cup {
@@ -224,14 +244,15 @@
   margin: 0;
   font-family: var(--font-display);
   font-size: 1.125rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.2;
   overflow-wrap: anywhere;
 }
 
 .cotd__description {
   margin: 0;
-  font-size: 0.8125rem;
+  font-family: var(--font-zh);
+  font-size: 0.875rem;
   color: var(--color-text-muted);
 }
 
@@ -264,14 +285,12 @@
 }
 
 .cotd__btn--quiet {
-  background: var(--color-surface);
-  border-color: var(--color-border);
+  background: var(--color-surface-muted);
   color: var(--color-accent);
 }
 
 .cotd__btn--quiet:hover {
-  background: var(--color-surface);
-  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-surface-muted) 70%, var(--color-surface));
 }
 
 .cotd__btn:disabled {
@@ -288,10 +307,10 @@
 .popular__list {
   list-style: none;
   margin: 0;
-  padding: var(--space-1) 0 var(--space-3);
+  padding: calc(var(--space-1) + var(--cup-overflow, 30px)) 0 var(--space-3);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-3);
+  gap: calc(var(--space-3) + var(--cup-overflow, 30px)) var(--space-3);
 }
 
 /* Three across, two rows of the six most popular, once the page is wide enough for it. The home page
@@ -300,8 +319,14 @@
 @container home (min-width: 34rem) {
   .popular__list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-4);
+    gap: calc(var(--space-4) + var(--cup-overflow, 30px)) var(--space-4);
   }
+}
+
+/* Pressing a button settles it. */
+.usual__btn:active,
+.cotd__btn:active {
+  transform: scale(0.97);
 }
 
 @media (prefers-reduced-motion: reduce) {

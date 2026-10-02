@@ -17,7 +17,7 @@ Read the document, not this index, for the facts.
   - [0008 Neumorphic surface treatment](decisions/0008-neumorphic-surface-treatment.md) (superseded by 0011)
   - [0009 Local first orders with the shared contract](decisions/0009-local-first-orders-with-shared-contract.md)
   - [0010 Drink customisations as menu level options](decisions/0010-drink-customisations-as-menu-level-options.md)
-  - [0011 Flat surfaces, faithful to the mockup](decisions/0011-flat-surfaces-faithful-to-the-mockup.md)
+  - [0011 Flat surfaces, faithful to the mockup](decisions/0011-flat-surfaces-faithful-to-the-mockup.md) (superseded in part by 0022)
   - [0012 Postgres on Vercel with Drizzle and a seed file](decisions/0012-postgres-on-vercel-with-drizzle-and-a-seed-file.md)
   - [0013 Deploy the api with Vercel's Hono preset](decisions/0013-deploy-the-api-with-vercels-hono-preset.md) (superseded by 0015)
   - [0014 Explicit ESM specifiers in api and shared](decisions/0014-explicit-esm-specifiers-in-api-and-shared.md)
@@ -28,5 +28,6 @@ Read the document, not this index, for the facts.
   - [0019 Pearl loyalty card on the server](decisions/0019-pearl-loyalty-card-on-the-server.md)
   - [0020 Customise sheet built around the cup](decisions/0020-customise-sheet-built-around-the-cup.md)
   - [0021 One way bridge from the webapp to the iOS shell](decisions/0021-one-way-bridge-from-the-webapp-to-the-ios-shell.md)
+  - [0022 Tea house surfaces in tonal tiers](decisions/0022-tea-house-surfaces-in-tonal-tiers.md)
 
 Project knowledge bases: `webapp/knowledge/INDEX.md`, `api/knowledge/INDEX.md`, `iosapp/knowledge/INDEX.md`.

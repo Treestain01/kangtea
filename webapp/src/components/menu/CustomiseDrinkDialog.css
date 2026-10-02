@@ -96,7 +96,8 @@
   gap: var(--space-2);
   margin: 0;
   color: var(--color-text-muted);
-  font-size: 0.8125rem;
+  font-family: var(--font-zh);
+  font-size: 0.875rem;
 }
 
 .head__tag {
@@ -122,9 +123,9 @@
 .customise__close {
   width: var(--tap-target);
   height: var(--tap-target);
-  border: 1px solid var(--color-border);
+  border: 0;
   border-radius: 50%;
-  background: var(--color-surface);
+  background: var(--color-surface-muted);
   color: var(--color-text-muted);
   font-size: 1.5rem;
   line-height: 1;
@@ -132,7 +133,6 @@
 }
 
 .customise__close:hover {
-  border-color: var(--color-accent);
   color: var(--color-accent);
 }
 
@@ -509,9 +509,8 @@
   place-items: center;
   width: 24px;
   height: 24px;
-  border: 1px solid var(--color-border);
   border-radius: 50%;
-  background: var(--color-surface);
+  background: var(--color-surface-muted);
   font-size: 1.125rem;
   font-weight: 700;
   line-height: 1;
@@ -519,7 +518,7 @@
 }
 
 .token__remove:hover .token__remove-mark {
-  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 16%, var(--color-surface-muted));
 }
 
 /* Readout and action, pinned at the bottom. */
@@ -527,7 +526,7 @@
   display: grid;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4) var(--space-4);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px dashed var(--color-border);
   background: var(--color-surface);
 }
 
@@ -555,9 +554,8 @@
   grid-template-columns: var(--tap-target) auto var(--tap-target);
   align-items: center;
   height: 56px;
-  border: 1px solid var(--color-border);
   border-radius: 999px;
-  background: var(--color-bg);
+  background: var(--color-surface-muted);
 }
 
 .qty__step {
@@ -604,6 +602,10 @@
 
 .customise__add:hover {
   background: var(--color-accent-hover);
+}
+
+.customise__add:active {
+  transform: scale(0.97);
 }
 
 /* Wider sheet: more room for the dials' labels, bigger tokens, roomier padding. */

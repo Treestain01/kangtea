@@ -1,17 +1,18 @@
-/* Phone: fixed bottom bar on a white surface with a hairline top border. */
+/* Phone: a floating ink pill above the bottom edge, clear of the safe area. */
 .tabbar {
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
   z-index: 10;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: var(--space-1);
   min-height: var(--tab-bar-height);
-  padding: var(--space-2) var(--space-2) calc(var(--space-2) + env(safe-area-inset-bottom));
-  background: var(--color-surface);
-  border-top: 1px solid var(--color-border);
+  padding: 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-text) 92%, var(--color-accent));
+  color: var(--color-bg);
 }
 
 .tabbar__brand,
@@ -27,13 +28,15 @@
   gap: 2px;
   min-height: var(--tap-target);
   padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--color-bg) 62%, transparent);
   text-decoration: none;
-  font-size: 0.6875rem;
+  font-size: 0.625rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  transition: color var(--motion-fast) var(--ease);
+  transition:
+    color var(--motion-fast) var(--ease),
+    background var(--motion-fast) var(--ease);
 }
 
 .tab svg {
@@ -42,7 +45,8 @@
 }
 
 .tab--active {
-  color: var(--color-accent);
+  color: var(--color-bg);
+  background: color-mix(in srgb, var(--color-bg) 14%, transparent);
 }
 
 .tab__icon {
@@ -58,8 +62,8 @@
   height: 18px;
   padding: 0 5px;
   border-radius: 999px;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+  background: var(--color-bg);
+  color: var(--color-text);
   font-size: 0.6875rem;
   line-height: 18px;
   text-align: center;
@@ -89,7 +93,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--color-accent);
+  background: var(--color-bg);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -102,20 +106,22 @@
   }
 }
 
-/* Desktop: the same nav as a left sidebar on the page colour with a hairline right border. */
+/* Desktop: the same nav as a left sidebar on the page colour, text with a dot for the current page. */
 @media (min-width: 1024px) {
   .tabbar {
     top: 0;
+    left: 0;
     right: auto;
+    bottom: 0;
     width: var(--sidebar-width);
     grid-template-columns: 1fr;
     grid-auto-rows: max-content;
     align-content: start;
     gap: var(--space-1);
-    padding: var(--space-6) var(--space-4);
+    padding: var(--space-6) var(--space-5);
+    border-radius: 0;
     background: var(--color-bg);
-    border-top: 0;
-    border-right: 1px solid var(--color-border);
+    color: var(--color-text);
   }
 
   .tabbar__brand {
@@ -136,28 +142,39 @@
     align-items: center;
     gap: var(--space-3);
     min-height: 48px;
-    padding: 0 var(--space-3);
-    border: 1px solid transparent;
-    border-radius: var(--radius-md);
-    color: var(--color-text);
-    font-size: 1rem;
+    padding: 0 var(--space-3) 0 var(--space-5);
+    border-radius: var(--radius-lg);
+    color: var(--color-text-muted);
+    font-size: 1.0625rem;
     font-weight: 600;
     letter-spacing: 0;
     transition:
       color var(--motion-fast) var(--ease),
-      background var(--motion-fast) var(--ease),
-      border-color var(--motion-fast) var(--ease);
+      background var(--motion-fast) var(--ease);
   }
 
   .tab:hover {
+    color: var(--color-text);
     background: var(--color-surface);
   }
 
-  /* Active: a white card with a border and accent text, as in the mockup sidebar. */
+  /* Active: ink text with an accent dot in the margin, no box. */
   .tab--active {
-    background: var(--color-surface);
-    border-color: var(--color-border);
-    color: var(--color-accent);
+    background: transparent;
+    color: var(--color-text);
+    font-weight: 800;
+  }
+
+  .tab--active::before {
+    content: '';
+    position: absolute;
+    left: var(--space-2);
+    top: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    transform: translateY(-50%);
   }
 
   .tab svg {
@@ -165,14 +182,13 @@
     height: 20px;
   }
 
-  /* The pickup card from the mockup sidebar. */
+  /* The pickup card, on the surface tier. */
   .tabbar__store {
     display: grid;
     gap: 2px;
     margin-top: var(--space-4);
-    padding: var(--space-3);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
     background: var(--color-surface);
     color: var(--color-text-muted);
     font-size: 0.8125rem;

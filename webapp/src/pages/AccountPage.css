@@ -79,7 +79,7 @@
   justify-self: start;
   min-height: var(--tap-target);
   padding: 0 var(--space-5);
-  border: 1px solid transparent;
+  border: 0;
   border-radius: 999px;
   font: inherit;
   font-weight: 700;
@@ -100,13 +100,12 @@
 }
 
 .account__secondary {
-  background: var(--color-surface);
-  border-color: var(--color-border);
+  background: var(--color-surface-muted);
   color: var(--color-text);
 }
 
 .account__secondary:hover {
-  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .danger__yes {
@@ -130,9 +129,8 @@
   display: grid;
   gap: var(--space-2);
   padding: var(--space-4);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
 }
 
 .storecard__heading,
@@ -200,26 +198,24 @@
   flex: 1 1 auto;
   min-height: var(--tap-target);
   padding: 0 var(--space-4);
-  border: 1px solid var(--color-border);
+  border: 0;
   border-radius: 999px;
-  background: var(--color-surface);
+  background: var(--color-surface-muted);
   color: var(--color-text);
   font: inherit;
   font-weight: 600;
   cursor: pointer;
   transition:
     background var(--motion-fast) var(--ease),
-    color var(--motion-fast) var(--ease),
-    border-color var(--motion-fast) var(--ease);
+    color var(--motion-fast) var(--ease);
 }
 
 .signin__mode:hover {
-  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .signin__mode[aria-pressed='true'] {
   background: var(--color-accent);
-  border-color: var(--color-accent);
   color: var(--color-on-accent);
 }
 
@@ -285,25 +281,22 @@
   justify-content: center;
   min-height: var(--tap-target);
   padding: 0 var(--space-4);
-  border: 1px solid var(--color-border);
   border-radius: 999px;
-  background: var(--color-surface);
+  background: var(--color-surface-muted);
   color: var(--color-text);
   font-weight: 600;
   cursor: pointer;
   transition:
     background var(--motion-fast) var(--ease),
-    color var(--motion-fast) var(--ease),
-    border-color var(--motion-fast) var(--ease);
+    color var(--motion-fast) var(--ease);
 }
 
 .appearance__option:hover {
-  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 .appearance__option:has(input:checked) {
   background: var(--color-accent);
-  border-color: var(--color-accent);
   color: var(--color-on-accent);
 }
 
@@ -354,11 +347,8 @@
   width: 48px;
   height: 28px;
   border-radius: 999px;
-  border: 1px solid var(--color-border);
   background: var(--color-surface-muted);
-  transition:
-    background var(--motion-fast) var(--ease),
-    border-color var(--motion-fast) var(--ease);
+  transition: background var(--motion-fast) var(--ease);
 }
 
 .switch__track::after {
@@ -370,18 +360,15 @@
   height: 20px;
   border-radius: 50%;
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
   transition: transform var(--motion-fast) var(--ease);
 }
 
 .switch__input:checked ~ .switch__track {
   background: var(--color-accent);
-  border-color: var(--color-accent);
 }
 
 .switch__input:checked ~ .switch__track::after {
   transform: translateX(20px);
-  border-color: transparent;
 }
 
 .switch__input:focus-visible ~ .switch__track {

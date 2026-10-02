@@ -58,18 +58,26 @@
   min-width: 0;
 }
 
+/* Fraunces at its display optical size, one weight lighter, the time of day in italic navy. */
 .header__greeting {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.625rem;
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+  font-size: 1.875rem;
+  font-weight: 500;
+  font-variation-settings: 'opsz' 144;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.header__greeting i {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-accent);
 }
 
 @media (min-width: 768px) {
   .header__greeting {
-    font-size: 2rem;
+    font-size: 2.25rem;
   }
 }
 
@@ -80,7 +88,7 @@
 }
 
 .header__store strong {
-  color: var(--color-accent);
+  color: var(--color-text);
   font-weight: 700;
 }
 

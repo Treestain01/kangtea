@@ -187,7 +187,7 @@
   display: grid;
   gap: var(--space-3);
   padding-top: var(--space-4);
-  border-top: 1px solid var(--color-border);
+  border-top: 1px dashed var(--color-border);
 }
 
 .order__total {
@@ -215,9 +215,8 @@
   margin: 0;
   justify-self: center;
   padding: var(--space-3) var(--space-6);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface-muted);
   color: var(--color-accent);
   font-family: var(--font-display);
   font-size: 2.5rem;
@@ -275,6 +274,10 @@
     max-width: 44rem;
     justify-self: center;
   }
+}
+
+.order__primary:active {
+  transform: scale(0.97);
 }
 
 @media (prefers-reduced-motion: reduce) {

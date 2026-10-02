@@ -8,9 +8,8 @@
   align-items: center;
   gap: var(--space-2) var(--space-3);
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   background: var(--color-surface);
-  border: 1px solid var(--color-border);
 }
 
 @media (min-width: 768px) {
@@ -35,7 +34,7 @@
 .cartline--compact {
   padding: var(--space-3) 0;
   border: 0;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px dashed var(--color-border);
   border-radius: 0;
 }
 
@@ -82,9 +81,8 @@
   grid-template-columns: var(--tap-target) auto var(--tap-target);
   align-items: center;
   justify-self: start;
-  border: 1px solid var(--color-border);
   border-radius: 999px;
-  background: var(--color-bg);
+  background: var(--color-surface-muted);
 }
 
 .cartline__step {

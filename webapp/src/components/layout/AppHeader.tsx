@@ -35,7 +35,10 @@ export function AppHeader({ store, now = new Date(), actions }: AppHeaderProps) 
       </div>
       <div className="header__row">
         <div className="header__text">
-          <p className="header__greeting">{greetingFor(now.getHours())}</p>
+          <p className="header__greeting">
+            {greetingFor(now.getHours()).split(' ')[0]}{' '}
+            <i>{greetingFor(now.getHours()).split(' ').slice(1).join(' ')}</i>
+          </p>
           {store ? (
             <p className="header__store">
               Pick up at <strong>{store.shortName}</strong>

@@ -36,7 +36,7 @@ Work through every line. Do not skip a line because it "obviously" holds.
 - [ ] The component looks right in dark mode. Tokens switch automatically; check that nothing assumes a light background.
 - [ ] Spacing and radius come from `--space-*` and `--radius-*`.
 - [ ] Motion uses `var(--motion-fast)` or `var(--motion-slow)` with `var(--ease)`, never a literal duration or easing, and is disabled under `prefers-reduced-motion: reduce`.
-- [ ] Surfaces are flat: `--color-surface` with `1px solid var(--color-border)`. No `box-shadow` anywhere except `var(--shadow-float)` on the customise sheet. Selected states are accent filled; primary actions are accent pills; hover changes the border colour.
+- [ ] Surfaces are tonal tiers, not bordered boxes (ADR 0022): the page is `--color-bg`, cards and panels `--color-surface` with `--radius-xl`, wells inside them `--color-surface-muted`. `--color-border` is for form fields and dashed rules only. No `box-shadow` anywhere except `var(--shadow-float)` on the customise sheet; the cup takes `filter: drop-shadow(var(--shadow-object))` because it is an object, not a surface. Selected states are accent filled; primary actions are accent pills that settle to 0.97 on press; cards lift 2px on hover.
 
 ### Verification
 

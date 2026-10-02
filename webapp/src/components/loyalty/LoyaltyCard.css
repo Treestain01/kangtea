@@ -5,7 +5,7 @@
   display: grid;
   gap: var(--space-3);
   padding: var(--space-4);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
   background: var(--color-accent);
   color: var(--color-on-accent);
 }
@@ -90,7 +90,6 @@
 .pearls--invite {
   background: var(--color-surface);
   color: var(--color-text);
-  border: 1px solid var(--color-border);
 }
 
 .pearls__head {
