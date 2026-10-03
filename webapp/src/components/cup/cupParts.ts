@@ -86,7 +86,8 @@ type ToppingArt =
   | {
       kind: 'sink';
       symbol: string;
-      alt?: string;
+      /** Symbols cycled piece by piece, for combos that pour several things in together. */
+      mix?: readonly string[];
       size: number;
       shape: 'circle' | 'box';
       perLot: number;
@@ -116,7 +117,7 @@ const sink = (
   size: number,
   shape: 'circle' | 'box',
   perLot: number,
-  extra: { alt?: string; tint?: string } = {},
+  extra: { mix?: readonly string[]; tint?: string } = {},
 ): ToppingArt => ({ kind: 'sink', symbol, size, shape, perLot, ...extra });
 
 /**
@@ -146,12 +147,16 @@ export function artForTopping(topping: Topping): ToppingArt {
       : has('coconut')
         ? PRODUCT_COLOURS.coconutJelly
         : PRODUCT_COLOURS.teaJelly;
-    // "Boba, Mini Pearls & Grass Jelly": pearls with jelly cubes in between.
+    // "Boba, Mini Pearls & Grass Jelly": pearls, mini pearls and jelly cubes in turn.
     if (has('boba') || has('pearl'))
-      return sink('kt-pearl', 14, 'circle', 10, { alt: 'kt-jelly-cube', tint });
+      return sink('kt-pearl', 14, 'circle', 12, {
+        mix: ['kt-pearl', 'kt-pearl-mini', 'kt-jelly-cube'],
+        tint,
+      });
     return sink('kt-jelly-cube', 16, 'box', 8, { tint });
   }
-  if (has('mixed')) return sink('kt-pearl', 14, 'circle', 10, { alt: 'kt-pearl-mini' });
+  if (has('mixed'))
+    return sink('kt-pearl', 14, 'circle', 10, { mix: ['kt-pearl', 'kt-pearl-mini'] });
   if (has('mini')) return sink('kt-pearl-mini', 12, 'circle', 36);
   return sink('kt-pearl', 14, 'circle', 10);
 }
@@ -164,9 +169,9 @@ export function piecesFor(toppings: readonly ToppingChoice[]): PieceSpec[] {
     if (art.kind !== 'sink') continue;
     for (let lot = 0; lot < quantity; lot += 1) {
       for (let n = 0; n < art.perLot; n += 1) {
-        const symbol = art.alt && n % 2 ? art.alt : art.symbol;
+        const symbol = art.mix ? (art.mix[n % art.mix.length] ?? art.symbol) : art.symbol;
         const size =
-          symbol === 'kt-pearl-mini' ? 12 : symbol === 'kt-jelly-cube' && art.alt ? 14 : art.size;
+          symbol === 'kt-pearl-mini' ? 12 : symbol === 'kt-jelly-cube' && art.mix ? 14 : art.size;
         specs.push({
           key: `${topping.id}:${lot}:${n}`,
           symbol,

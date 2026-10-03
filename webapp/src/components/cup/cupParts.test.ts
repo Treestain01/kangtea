@@ -32,7 +32,7 @@ describe('artForTopping', () => {
     });
     expect(artForTopping(topping('Mixed Pearls'))).toMatchObject({
       symbol: 'kt-pearl',
-      alt: 'kt-pearl-mini',
+      mix: ['kt-pearl', 'kt-pearl-mini'],
     });
     expect(artForTopping(topping('Grass Jelly'))).toMatchObject({
       symbol: 'kt-jelly-cube',
@@ -57,7 +57,13 @@ describe('artForTopping', () => {
     expect(artForTopping(topping('Mini Taro Ball'))).toMatchObject({ symbol: 'kt-taro-ball' });
     expect(artForTopping(topping('Boba, Mini Pearls & Grass Jelly'))).toMatchObject({
       symbol: 'kt-pearl',
-      alt: 'kt-jelly-cube',
+      mix: ['kt-pearl', 'kt-pearl-mini', 'kt-jelly-cube'],
+      perLot: 12,
+      tint: PRODUCT_COLOURS.pearl,
+    });
+    expect(artForTopping(topping('Boba, Mini Pearls & Coconut Jelly'))).toMatchObject({
+      mix: ['kt-pearl', 'kt-pearl-mini', 'kt-jelly-cube'],
+      tint: PRODUCT_COLOURS.coconutJelly,
     });
   });
 
@@ -111,6 +117,22 @@ describe('piecesFor', () => {
     for (const spec of mixed.filter((s) => s.symbol === 'kt-pearl')) {
       expect(spec.bodySize).toBeUndefined();
     }
+  });
+
+  it('cycles pearls, mini pearls and jelly cubes for the boba combos', () => {
+    const specs = piecesFor([{ topping: topping('Boba, Mini Pearls & Grass Jelly'), quantity: 1 }]);
+    expect(specs).toHaveLength(12);
+    expect(specs.filter((s) => s.symbol === 'kt-pearl')).toHaveLength(4);
+    expect(specs.filter((s) => s.symbol === 'kt-pearl-mini')).toHaveLength(4);
+    expect(specs.filter((s) => s.symbol === 'kt-jelly-cube')).toHaveLength(4);
+    expect(specs.find((s) => s.symbol === 'kt-pearl-mini')).toMatchObject({
+      size: 12,
+      bodySize: 8,
+    });
+    expect(specs.find((s) => s.symbol === 'kt-jelly-cube')).toMatchObject({
+      size: 14,
+      shape: 'box',
+    });
   });
 });
 
