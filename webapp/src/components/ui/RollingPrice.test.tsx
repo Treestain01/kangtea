@@ -22,6 +22,7 @@ describe('RollingPrice', () => {
     const before = [...container.querySelectorAll('.roll__digit')];
     rerender(<RollingPrice cents={1290} />);
     const after = [...container.querySelectorAll('.roll__digit')];
+    expect(after).toHaveLength(4);
     expect(after[0]).toBe(before[0]);
     expect(after[1]).toBe(before[1]);
     expect(after[2]).not.toBe(before[2]);

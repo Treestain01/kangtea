@@ -1,19 +1,23 @@
-/* Rolling digits. Each digit is a 1em window; a changed digit's face drops in from above. */
+/* Rolling digits. Every character sits in a 1em window of its own, so they share one baseline;
+   a changed digit's face drops in from above. */
 .roll {
   display: inline-flex;
-  align-items: baseline;
+  align-items: flex-end;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-.roll__digit {
+.roll__char {
   position: relative;
   display: inline-block;
-  width: 1ch;
   height: 1em;
   line-height: 1;
   overflow: hidden;
-  vertical-align: baseline;
+}
+
+.roll__digit {
+  width: 1ch;
 }
 
 /* The real digit stays for the DOM and assistive technology; the face is what is seen. */
@@ -37,12 +41,15 @@
   }
 }
 
-.roll__digit::before {
+.roll__char::before {
   content: attr(data-digit);
-  position: absolute;
-  inset: 0;
+  position: relative;
+  display: block;
   line-height: 1;
   text-align: center;
+}
+
+.roll__digit::before {
   animation: roll-in var(--motion-slow) var(--ease);
 }
 
