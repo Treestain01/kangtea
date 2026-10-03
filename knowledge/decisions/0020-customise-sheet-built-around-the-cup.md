@@ -39,4 +39,4 @@ On a very short screen the builder band scrolls rather than letting the cup shri
 - The hand drawn topping icons in the old tile grid are retired in favour of the SVG part library, so a new topping gets its icon from the same name rules as its cup art.
 - The sheet depends on its height now: the cup is sized to the space the dials and tray leave.
   Any new control added to the sheet must earn its vertical pixels.
-- The brainstorm artifact with the three directions is at https://claude.ai/artifact/5nBXqqVn4ttg2GVhHUDGj3 (private to Tristan's account).
+- The brainstorm artifact with the three directions has since been deleted; this record and the shipped sheet are what remain of it.

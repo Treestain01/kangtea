@@ -36,4 +36,4 @@ Surfaces are separated by tone, not by lines.
 - Every component stylesheet dropped its card border in one pass; the token names are unchanged apart from the additions `--radius-xl`, `--shadow-object` and `--font-zh`.
 - The drink grid leaves room above each row for the cup that stands proud of its card (`--cup-overflow`).
 - Dark mode is the same tiers in reverse with a slightly brighter accent, so the chosen colours stay readable on the ink pill and the tinted wells.
-- The mockup of the three directions is at https://claude.ai/artifact/PNQnpMz8axTrdy9WMUYQDx (private to Tristan's account).
+- The mockup of the three directions has since been deleted; this record and the shipped styles are what remain of it.

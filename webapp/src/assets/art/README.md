@@ -71,5 +71,5 @@ A new stamp scales up from the centre over `--motion-slow` with `--ease` and the
 
 In the app: `src/components/cup/LiveCup.tsx` composes these parts, `cupParts.ts` maps menu names to them (change it with this file), and `cupPhysics.ts` runs the world. `CupSprite.tsx` injects this file into the document. It must stay zero sized rather than `display: none`, or the clip path and gradient inside it stop resolving; `LiveCup` also carries its own copy of the inner clip (`CUP.innerPath`) so the tea is always trimmed to the walls.
 The loyalty stamps are drawn by `src/components/loyalty/LoyaltyCard.tsx` from the same library.
-The preview lab for both is the Cup Lab artifact: https://claude.ai/artifact/H9wmEpxuGnWqrBaUQ65jFb (private to Tristan's account).
+The Cup Lab preview artifact used while drawing these parts has since been deleted; the parts and rules here are the reference.
 In the app the engine will load with the customise sheet only, through a dynamic import, so the rest of the site pays nothing for it.
