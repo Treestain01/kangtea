@@ -30,8 +30,8 @@ The seed never touches them; `db-wipe` drops them.
 Stamps are ordered by `earned_at` then id; a batch is written one millisecond apart so an order keeps its line order on the card.
 Cards are consecutive runs of ten in that order.
 `completed = floor(earned / 10)`, `available = completed - redeemed`, `complete = available > 0`.
-When complete, the card shown is card number `redeemed` (the oldest not yet redeemed); otherwise it is card number `completed`, the one in progress.
-So a full card stays on screen until it is used, and the next drink starts a fresh one.
+The card shown is always card number `completed`, the one being filled now; stamps past a multiple of ten already sit on it.
+A finished card is a free drink waiting (`available`), which the webapp takes off the next order and redeems as it places it (ADR 0023).
 
 ## Routes
 

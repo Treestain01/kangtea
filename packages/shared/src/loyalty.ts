@@ -16,13 +16,14 @@ export type Stamp = z.infer<typeof StampSchema>;
 /**
  * The signed in person's loyalty state.
  * `stamps` are the pearls shown on the current card, oldest first, at most `STAMPS_PER_CARD`.
- * When `complete` is true the card is full and `available` is at least one; a redemption clears
+ * `stamps` are always the card being filled now. When `complete` is true a finished card is waiting
+ * to be used (`available` is at least one) and the next order takes a free drink; a redemption clears
  * it and the next drink starts a fresh card.
  */
 export const LoyaltyCardSchema = z
   .object({
     stampsPerCard: z.literal(STAMPS_PER_CARD),
-    /** Every stamp ever earned. */
+    /** Every stamp ever earned, across every card. */
     earned: z.number().int().nonnegative(),
     /** Free drinks used. */
     redeemed: z.number().int().nonnegative(),

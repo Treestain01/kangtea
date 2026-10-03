@@ -67,14 +67,16 @@ export function LoyaltyProvider({ client, children }: LoyaltyProviderProps) {
       state,
       async earnFromOrder(order) {
         if (!token) return;
-        const card = await client.earn(token, {
-          orderId: order.id,
-          lines: order.lines.map((line) => ({
+        // The free drink earned nothing; the paid drinks on the order each earn a stamp.
+        const lines = order.lines
+          .map((line, index) => ({
             itemId: line.itemId,
             name: line.name,
-            quantity: line.quantity,
-          })),
-        });
+            quantity: line.quantity - (order.freeDrink?.lineIndex === index ? 1 : 0),
+          }))
+          .filter((line) => line.quantity > 0);
+        if (lines.length === 0) return;
+        const card = await client.earn(token, { orderId: order.id, lines });
         setState({ kind: 'ready', card });
       },
       async redeem() {

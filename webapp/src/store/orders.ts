@@ -1,4 +1,10 @@
-import { orderLinesTotalCents, type Order, type OrderLine, type OrderStatus } from '@bbt/shared';
+import {
+  orderLinesTotalCents,
+  orderTotalCents as sharedOrderTotalCents,
+  type Order,
+  type OrderLine,
+  type OrderStatus,
+} from '@bbt/shared';
 
 const ACTIVE_STATUSES: ReadonlySet<OrderStatus> = new Set(['received', 'making', 'ready']);
 
@@ -19,6 +25,8 @@ export function pastOrders(orders: readonly Order[]): Order[] {
 }
 
 export const cartTotalCents = orderLinesTotalCents;
+/** The order total with the free drink taken off, when there is one. */
+export const orderTotalCents = sharedOrderTotalCents;
 
 /** "2 × Signature Milk Tea, 1 × Matcha Latte" */
 export function summariseLines(lines: readonly OrderLine[]): string {

@@ -92,6 +92,21 @@
   color: var(--color-text);
 }
 
+/* The free drink note above the card, on the card's own colour. */
+.pearls__banner {
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.pearls__banner-note {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
 .pearls__head {
   display: flex;
   justify-content: space-between;

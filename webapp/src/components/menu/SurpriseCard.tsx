@@ -24,6 +24,8 @@ type SurpriseCardProps = {
   onPick: (pick: SurprisePick) => void;
   /** Injectable randomness, for tests. Returns a number in [0, 1). */
   random?: () => number;
+  /** False while the customise sheet is open, so a shake cannot pick again behind it. */
+  enabled?: boolean;
 };
 
 /** Motion is off when the person asked for it, and in environments without matchMedia (tests). */
@@ -42,6 +44,7 @@ export function SurpriseCard({
   onHighlight,
   onPick,
   random = Math.random,
+  enabled = true,
 }: SurpriseCardProps) {
   const [spinning, setSpinning] = useState(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -83,7 +86,7 @@ export function SurpriseCard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spinning, items, customisations, onHighlight, onPick, random]);
 
-  useShake(spin, !spinning);
+  useShake(spin, enabled && !spinning);
 
   return (
     <section className="surprise" aria-labelledby="surprise-heading">

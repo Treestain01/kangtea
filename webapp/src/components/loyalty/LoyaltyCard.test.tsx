@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { createFakeAuthClient } from '../../auth/testing';
@@ -86,46 +86,32 @@ describe('LoyaltyCard', () => {
     expect(screen.getByRole('button', { name: 'See what filled the card' })).toBeInTheDocument();
   });
 
-  it('offers the free drink when the card is full and starts fresh after using it', async () => {
+  it('keeps filling the next card once one is full, with the free drink noted above it', async () => {
     const { auth, stores, token } = await signedIn();
     const loyalty = createFakeLoyaltyClient();
     await loyalty.client.earn(token, {
       orderId: 'o1',
-      lines: [{ itemId: 'milo', name: 'Milo', quantity: 11 }],
+      lines: [{ itemId: 'milo', name: 'Milo', quantity: 12 }],
     });
     renderCard({ stores, auth: auth.client, loyalty: loyalty.client });
-    expect(await screen.findByText('Card full')).toBeInTheDocument();
-    expect(screen.getByText(/Your next drink is free/)).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Use my free drink' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Not yet' }));
-    expect(screen.getByRole('button', { name: 'Use my free drink' })).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole('button', { name: 'Use my free drink' }));
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Yes, use it now' }));
-    });
-    await waitFor(() => expect(screen.getByText('1 of 10')).toBeInTheDocument());
-    expect(screen.queryByRole('button', { name: 'Use my free drink' })).not.toBeInTheDocument();
-    expect(screen.getByRole('status')).toHaveTextContent('Free drink used');
+    expect(await screen.findByText(/You have a free drink to claim/)).toHaveTextContent(
+      'You have a free drink to claim. It comes off your next order. Toppings are still charged.',
+    );
+    // The two stamps past ten already sit on the next card; nothing here asks to redeem.
+    expect(screen.getByText('2 of 10')).toBeInTheDocument();
+    expect(screen.getByText('8 more to a free drink.')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /free drink/i })).not.toBeInTheDocument();
   });
 
-  it('shows the api message when redeeming fails', async () => {
+  it('counts two finished cards as two free drinks', async () => {
     const { auth, stores, token } = await signedIn();
     const loyalty = createFakeLoyaltyClient();
     await loyalty.client.earn(token, {
       orderId: 'o1',
-      lines: [{ itemId: 'milo', name: 'Milo', quantity: 10 }],
+      lines: [{ itemId: 'milo', name: 'Milo', quantity: 20 }],
     });
-    const failing = {
-      ...loyalty.client,
-      redeem: () => Promise.reject(new Error('offline')),
-    };
-    renderCard({ stores, auth: auth.client, loyalty: failing });
-    fireEvent.click(await screen.findByRole('button', { name: 'Use my free drink' }));
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Yes, use it now' }));
-    });
-    expect(await screen.findByRole('alert')).toHaveTextContent('Something went wrong');
+    renderCard({ stores, auth: auth.client, loyalty: loyalty.client });
+    expect(await screen.findByText(/You have 2 free drinks to claim/)).toBeInTheDocument();
+    expect(screen.getByText('0 of 10')).toBeInTheDocument();
   });
 });

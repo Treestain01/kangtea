@@ -1,7 +1,6 @@
 import { STAMPS_PER_CARD, type LoyaltyCard as LoyaltyCardData } from '@bbt/shared';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import { ApiError } from '../../api/client';
 import { rainPearls } from '../cup/celebrate';
 import { PRODUCT_COLOURS } from '../cup/cupParts';
 import { useLoyalty } from '../../loyalty/LoyaltyProvider';
@@ -16,14 +15,11 @@ type LoyaltyCardProps = {
 
 /**
  * The pearl card: ten cups, the tenth free. Signed out it invites people to sign in; signed in it
- * shows the stamps earned on the current card in the colours of the drinks that earned them.
+ * shows the card being filled now in the colours of the drinks that earned its stamps, with a note
+ * above it while a finished card waits to come off the next order (ADR 0023).
  */
 export function LoyaltyCard({ heading = 'Your pearls', compact = false }: LoyaltyCardProps) {
   const loyalty = useLoyalty();
-  const [confirming, setConfirming] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [failure, setFailure] = useState('');
-  const [message, setMessage] = useState('');
   const [flipped, setFlipped] = useState(false);
 
   // The moment the card fills in front of the person, pearls rain down it once.
@@ -84,27 +80,13 @@ export function LoyaltyCard({ heading = 'Your pearls', compact = false }: Loyalt
 
   const { card } = loyalty.state;
 
-  const redeem = async () => {
-    setBusy(true);
-    setFailure('');
-    try {
-      await loyalty.redeem();
-      setConfirming(false);
-      setMessage('Free drink used. Enjoy.');
-    } catch (error) {
-      setFailure(error instanceof ApiError ? error.message : 'Something went wrong. Try again.');
-    } finally {
-      setBusy(false);
-    }
-  };
-
   if (compact) {
     return (
       <section className="pearls pearls--compact" aria-label={heading}>
         <div className="pearls__head">
           <p className="pearls__heading">{heading}</p>
           <p className="pearls__count">
-            {card.complete ? 'Card full' : `${card.stamps.length} of ${STAMPS_PER_CARD}`}
+            {card.complete ? 'Free drink waiting' : `${card.stamps.length} of ${STAMPS_PER_CARD}`}
           </p>
         </div>
         <Stamps card={card} />
@@ -120,22 +102,24 @@ export function LoyaltyCard({ heading = 'Your pearls', compact = false }: Loyalt
         inert={flipped}
         ref={frontRef}
       >
+        {card.complete && (
+          <p className="pearls__banner" role="status">
+            {card.available > 1
+              ? `You have ${card.available} free drinks to claim. One comes off each of your next orders.`
+              : 'You have a free drink to claim. It comes off your next order.'}
+            <span className="pearls__banner-note"> Toppings are still charged.</span>
+          </p>
+        )}
         <div className="pearls__head">
           <h3 id="pearls-heading" className="pearls__heading">
             {heading}
           </h3>
           <p className="pearls__count">
-            {card.complete ? 'Card full' : `${card.stamps.length} of ${STAMPS_PER_CARD}`}
+            {card.stamps.length} of {STAMPS_PER_CARD}
           </p>
         </div>
         <Stamps card={card} />
-        <p className="pearls__copy">
-          {card.complete
-            ? card.available > 1
-              ? `You have ${card.available} free drinks waiting. Show this card at the counter.`
-              : 'Your next drink is free. Show this card at the counter.'
-            : `${STAMPS_PER_CARD - card.stamps.length} more to a free drink.`}
-        </p>
+        <p className="pearls__copy">{STAMPS_PER_CARD - card.stamps.length} more to a free drink.</p>
         {card.stamps.length > 0 && (
           <button
             type="button"
@@ -145,47 +129,6 @@ export function LoyaltyCard({ heading = 'Your pearls', compact = false }: Loyalt
             See what filled the card
           </button>
         )}
-        {card.complete &&
-          (confirming ? (
-            <div
-              className="pearls__confirm"
-              role="group"
-              aria-label="Confirm using your free drink"
-            >
-              <p className="pearls__copy">
-                Only do this at the counter, when your drink is being made.
-              </p>
-              <div className="pearls__actions">
-                <button
-                  type="button"
-                  className="pearls__action"
-                  disabled={busy}
-                  onClick={() => void redeem()}
-                >
-                  Yes, use it now
-                </button>
-                <button
-                  type="button"
-                  className="pearls__action pearls__action--quiet"
-                  onClick={() => setConfirming(false)}
-                >
-                  Not yet
-                </button>
-              </div>
-            </div>
-          ) : (
-            <button type="button" className="pearls__action" onClick={() => setConfirming(true)}>
-              Use my free drink
-            </button>
-          ))}
-        {failure && (
-          <p className="pearls__error" role="alert">
-            {failure}
-          </p>
-        )}
-        <p className="visually-hidden" role="status">
-          {message}
-        </p>
       </section>
       <section
         className="pearls pearls__face pearls__face--back"

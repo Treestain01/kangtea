@@ -269,6 +269,103 @@ describe('OrderPanel and the pearl card', () => {
     expect(screen.getByText('Your order is empty.')).toBeInTheDocument();
   });
 
+  async function withFreeDrink(redeem?: () => Promise<never>) {
+    const auth = createFakeAuthClient();
+    const loyalty = createFakeLoyaltyClient();
+    const stores = createTestStores();
+    const session = await auth.client.signUp({
+      email: 't@example.com',
+      password: 'correct horse',
+      displayName: 'T',
+    });
+    stores.session.save(session);
+    await loyalty.client.earn(session.token, {
+      orderId: 'past',
+      lines: [{ itemId: 'milo', name: 'Milo', quantity: 10 }],
+    });
+    // Two signature milk teas with pearls: $7.50 base plus $0.80 of pearls each.
+    stores.cart.add({
+      ...signature,
+      unitPriceCents: 830,
+      quantity: 2,
+      customisations: [{ name: 'Topping', value: 'Pearls' }],
+    });
+    stores.cart.add(matcha);
+    const client = redeem ? { ...loyalty.client, redeem } : loyalty.client;
+    render(
+      <TestProviders stores={stores} auth={auth.client} loyalty={client}>
+        <MemoryRouter initialEntries={['/order']}>
+          <OrderPanel />
+        </MemoryRouter>
+      </TestProviders>,
+    );
+    return { stores, loyalty, token: session.token };
+  }
+
+  it('takes the free drink off the first drink at its menu price, leaving toppings charged', async () => {
+    const { stores, loyalty } = await withFreeDrink();
+    // 2 × $8.30 + $7.90 = $24.50, less the $7.50 base of one milk tea.
+    await screen.findByText('Free drink · Signature Milk Tea');
+    expect(screen.getByText('Total').closest('p')).toHaveTextContent('$17.00');
+    const place = screen.getByRole('button', { name: 'Place order' });
+    await vi.waitFor(() => expect(place).toBeEnabled());
+    await act(async () => {
+      fireEvent.click(place);
+    });
+    await waitFor(() => expect(stores.orders.read()[0]).toBeDefined());
+    expect(stores.orders.read()[0]).toMatchObject({
+      totalCents: 1700,
+      freeDrink: { lineIndex: 0, cents: 750 },
+    });
+    // The free drink is used on the server; the card is a fresh one.
+    expect(loyalty.card().redeemed).toBe(1);
+    expect(await screen.findByRole('region', { name: 'Your pearls' })).toHaveTextContent('0 of 10');
+  });
+
+  it('places at full price and says so when the free drink cannot be used', async () => {
+    const { stores } = await withFreeDrink(() => Promise.reject(new Error('offline')));
+    const place = screen.getByRole('button', { name: 'Place order' });
+    await vi.waitFor(() => expect(place).toBeEnabled());
+    await act(async () => {
+      fireEvent.click(place);
+    });
+    await waitFor(() => expect(stores.orders.read()[0]).toBeDefined());
+    expect(stores.orders.read()[0]).toMatchObject({ totalCents: 2450 });
+    expect(stores.orders.read()[0]?.freeDrink).toBeUndefined();
+    expect(screen.getByText(/could not use your free drink/)).toBeInTheDocument();
+  });
+
+  it('earns stamps for the paid drinks only when a free drink order is collected', async () => {
+    const auth = createFakeAuthClient();
+    const loyalty = createFakeLoyaltyClient();
+    const stores = createTestStores();
+    const session = await auth.client.signUp({
+      email: 't@example.com',
+      password: 'correct horse',
+      displayName: 'T',
+    });
+    stores.session.save(session);
+    stores.cart.add({ ...signature, quantity: 2 });
+    const order = stores.orders.place(stores.cart.read(), 's', new Date(), {
+      lineIndex: 0,
+      cents: 750,
+    });
+    stores.cart.clear();
+    stores.orders.setStatus(order.id, 'ready');
+    render(
+      <TestProviders stores={stores} auth={auth.client} loyalty={loyalty.client}>
+        <MemoryRouter initialEntries={['/order']}>
+          <OrderPanel />
+        </MemoryRouter>
+      </TestProviders>,
+    );
+    expect(await screen.findByText('Free drink · Signature Milk Tea')).toBeInTheDocument();
+    await act(async () => {
+      fireEvent.click(await screen.findByRole('button', { name: /picked it up/i }));
+    });
+    await waitFor(() => expect(loyalty.stamps).toHaveLength(1));
+  });
+
   it('still collects the order when nobody is signed in', async () => {
     const loyalty = createFakeLoyaltyClient();
     const stores = createTestStores();

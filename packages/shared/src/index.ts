@@ -25,13 +25,15 @@ export type {
 
 export {
   CustomisationSchema,
+  FreeDrinkSchema,
   OrderLineSchema,
   OrderSchema,
   OrderStatusSchema,
   PickupCodeSchema,
   orderLinesTotalCents,
+  orderTotalCents,
 } from './order.js';
-export type { Customisation, Order, OrderLine, OrderStatus } from './order.js';
+export type { Customisation, FreeDrink, Order, OrderLine, OrderStatus } from './order.js';
 
 export { AccountSchema } from './account.js';
 export type { Account } from './account.js';

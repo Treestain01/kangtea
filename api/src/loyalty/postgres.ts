@@ -8,8 +8,9 @@ import { LoyaltyError, type LoyaltyProvider } from './types.js';
 /**
  * Stamps and redemptions in our own tables.
  *
- * The card shown is the oldest completed card that has not been redeemed, when there is one,
- * otherwise the card in progress. Cards are consecutive runs of ten stamps in earning order.
+ * The card shown is always the one being filled now; a finished card waits as a free drink
+ * (`available`) that the webapp takes off the next order. Cards are consecutive runs of ten
+ * stamps in earning order.
  */
 export function createPostgresLoyalty(db: Db, now: () => Date = () => new Date()): LoyaltyProvider {
   async function card(userId: string): Promise<LoyaltyCard> {
@@ -25,7 +26,7 @@ export function createPostgresLoyalty(db: Db, now: () => Date = () => new Date()
     const completed = Math.floor(earned / STAMPS_PER_CARD);
     const available = Math.max(0, completed - redeemed);
     const complete = available > 0;
-    const shownCard = complete ? redeemed : completed;
+    const shownCard = completed;
     const rows = await db
       .select()
       .from(loyaltyStamps)

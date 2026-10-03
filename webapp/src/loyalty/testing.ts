@@ -13,7 +13,7 @@ export function createFakeLoyaltyClient(colourOf: (itemId: string) => string = (
     const completed = Math.floor(earned / STAMPS_PER_CARD);
     const available = Math.max(0, completed - redeemed);
     const complete = available > 0;
-    const shown = complete ? redeemed : completed;
+    const shown = completed;
     return {
       stampsPerCard: STAMPS_PER_CARD,
       earned,

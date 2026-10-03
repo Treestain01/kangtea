@@ -28,6 +28,13 @@ Storage keys are `kangtea.cart`, `kangtea.orders`, `kangtea.session`, `kangtea.p
 
 Because names and prices are snapshots, a topping price change later does not alter a placed order.
 
+## The free drink
+
+When a signed in person has a finished pearl card (`card.available` above zero), the cart shows "Free drink · <first drink>" and the total drops by that drink's menu price, toppings still charged (ADR 0023).
+Placing the order redeems on the server first, then calls `orders.place(lines, storeId, now, freeDrink)`, which records `freeDrink` (line index and cents) on the order and sets the total through `orderTotalCents`.
+If redeeming fails the order is placed at full price and a notice says the free drink stays on the card.
+The active order and History show the free drink line; stamping on collect skips it.
+
 ## The order panel in motion
 
 - Adding from the customise sheet flies a clone of the built cup into the Order tab (`components/cup/fly.ts#flyCup`); the tab badge is keyed on the count so it bumps on every change.
