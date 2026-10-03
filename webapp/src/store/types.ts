@@ -1,4 +1,4 @@
-import type { AuthSession, Order, OrderLine, OrderStatus } from '@bbt/shared';
+import type { AuthSession, Order, OrderLine, OrderStatus, FreeDrink } from '@bbt/shared';
 import type { Preferences, PreferencesInput } from './preferences';
 
 /** A line in the cart has the same shape as a line in a placed order. */
@@ -19,8 +19,8 @@ export interface CartStore {
 export interface OrdersStore {
   /** Every order, newest first. */
   read(): Order[];
-  /** Creates a received order from the lines and returns it. */
-  place(lines: CartLine[], storeId: string, now?: Date): Order;
+  /** Creates a received order from the lines and returns it. A free drink comes off the total. */
+  place(lines: CartLine[], storeId: string, now?: Date, freeDrink?: FreeDrink): Order;
   setStatus(orderId: string, status: OrderStatus, now?: Date): void;
   clear(): void;
   subscribe(listener: () => void): () => void;

@@ -9,7 +9,11 @@ import {
   type ReactNode,
 } from 'react';
 import { useAuth } from '../auth/AuthProvider';
+import { PRODUCT_COLOURS } from '../components/cup/cupParts';
 import type { LoyaltyClient } from './LoyaltyClient';
+
+/** A provisional stamp for a drink the menu no longer names. Product colour, like the drink colours. */
+const FALLBACK_STAMP_COLOUR = PRODUCT_COLOURS.tea;
 
 export type LoyaltyState =
   | { kind: 'signed-out' }
@@ -19,8 +23,12 @@ export type LoyaltyState =
 
 export interface Loyalty {
   state: LoyaltyState;
-  /** Stamps every drink in a collected order. Safe to call twice; the api ignores repeats. */
-  earnFromOrder(order: Order): Promise<void>;
+  /**
+   * Stamps every paid drink in a collected order. The card updates at once with provisional stamps,
+   * in the colours given, and the server's card replaces them when it answers. Safe to call twice;
+   * the api ignores repeats.
+   */
+  earnFromOrder(order: Order, colourOf?: (itemId: string) => string | undefined): Promise<void>;
   /** Uses one free drink. Rejects with the api's message when none is available. */
   redeem(): Promise<void>;
   refresh(): Promise<void>;
@@ -65,16 +73,46 @@ export function LoyaltyProvider({ client, children }: LoyaltyProviderProps) {
   const value = useMemo<Loyalty>(
     () => ({
       state,
-      async earnFromOrder(order) {
+      async earnFromOrder(order, colourOf = () => undefined) {
         if (!token) return;
-        const card = await client.earn(token, {
-          orderId: order.id,
-          lines: order.lines.map((line) => ({
+        // The free drink earned nothing; the paid drinks on the order each earn a stamp.
+        const lines = order.lines
+          .map((line, index) => ({
             itemId: line.itemId,
             name: line.name,
-            quantity: line.quantity,
-          })),
+            quantity: line.quantity - (order.freeDrink?.lineIndex === index ? 1 : 0),
+          }))
+          .filter((line) => line.quantity > 0);
+        if (lines.length === 0) return;
+        // Provisional stamps go on the card now, so it fills as the pearl lands rather than when
+        // the network answers. The api's rules apply: a tenth stamp finishes the card and the
+        // rest start the next one.
+        setState((current) => {
+          if (current.kind !== 'ready') return current;
+          const earnedAt = new Date().toISOString();
+          const pending = lines.flatMap((line) =>
+            Array.from({ length: line.quantity }, (_, n) => ({
+              id: `pending:${order.id}:${line.itemId}:${n}`,
+              itemName: line.name,
+              colour: colourOf(line.itemId) ?? FALLBACK_STAMP_COLOUR,
+              earnedAt,
+            })),
+          );
+          const combined = [...current.card.stamps, ...pending];
+          const finished = Math.floor(combined.length / current.card.stampsPerCard);
+          const available = current.card.available + finished;
+          return {
+            kind: 'ready',
+            card: {
+              ...current.card,
+              earned: current.card.earned + pending.length,
+              available,
+              complete: available > 0,
+              stamps: combined.slice(finished * current.card.stampsPerCard),
+            },
+          };
         });
+        const card = await client.earn(token, { orderId: order.id, lines });
         setState({ kind: 'ready', card });
       },
       async redeem() {

@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 /** Total acceleration, in m/s², above which a movement counts as a shake. Gravity alone is about 9.8. */
-const SHAKE_THRESHOLD = 24;
-/** Minimum gap between two shakes, so one vigorous shake fires once. */
-const SHAKE_GAP_MS = 1500;
+const SHAKE_THRESHOLD = 28;
+/** Minimum gap between two shakes, so one vigorous shake fires once and settling the phone does not fire again. */
+const SHAKE_GAP_MS = 2500;
 
 type MotionPermission = { requestPermission?: () => Promise<'granted' | 'denied'> };
 
@@ -12,15 +12,17 @@ type MotionPermission = { requestPermission?: () => Promise<'granted' | 'denied'
  * iOS that needs `requestMotionAccess()` from a tap first. Everywhere else this is silent.
  */
 export function useShake(onShake: () => void, enabled = true): void {
+  // The last shake lives in a ref so re-subscribing (a new onShake identity) cannot reset the gap
+  // and let the phone, still moving from the first shake, fire again and again.
+  const last = useRef(0);
   useEffect(() => {
     if (!enabled || typeof window === 'undefined' || !('DeviceMotionEvent' in window)) return;
-    let last = 0;
     const handle = (event: DeviceMotionEvent) => {
       const a = event.accelerationIncludingGravity;
       if (!a) return;
       const force = Math.hypot(a.x ?? 0, a.y ?? 0, a.z ?? 0);
-      if (force > SHAKE_THRESHOLD && Date.now() - last > SHAKE_GAP_MS) {
-        last = Date.now();
+      if (force > SHAKE_THRESHOLD && Date.now() - last.current > SHAKE_GAP_MS) {
+        last.current = Date.now();
         onShake();
       }
     };

@@ -111,11 +111,12 @@ describe('POST /loyalty/stamps', () => {
 });
 
 describe('completing a card and redeeming', () => {
-  it('fills the card at ten, keeps showing it until redeemed, then starts fresh', async () => {
+  it('fills the card at ten, keeps filling the next one, and holds the free drink until it is used', async () => {
     await collect('big', [{ itemId: 'milo', name: 'Milo', quantity: 12 }]);
     let card = await cardOf(await request('/loyalty/card'));
     expect(card).toMatchObject({ earned: 12, available: 1, complete: true });
-    expect(card.stamps).toHaveLength(10);
+    // The two stamps past ten are already on the next card.
+    expect(card.stamps).toHaveLength(2);
 
     const redeemed = await request('/loyalty/redeem', 'POST');
     expect(redeemed.status).toBe(200);
@@ -135,10 +136,11 @@ describe('completing a card and redeeming', () => {
     await collect('o', [{ itemId: 'milo', name: 'Milo', quantity: 21 }]);
     let card = await cardOf(await request('/loyalty/card'));
     expect(card).toMatchObject({ earned: 21, available: 2, complete: true });
+    expect(card.stamps).toHaveLength(1);
     await request('/loyalty/redeem', 'POST');
     card = await cardOf(await request('/loyalty/card'));
     expect(card).toMatchObject({ available: 1, complete: true });
-    expect(card.stamps).toHaveLength(10);
+    expect(card.stamps).toHaveLength(1);
     await request('/loyalty/redeem', 'POST');
     card = await cardOf(await request('/loyalty/card'));
     expect(card).toMatchObject({ available: 0, complete: false });

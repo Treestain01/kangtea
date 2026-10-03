@@ -2,7 +2,7 @@ import {
   AuthSessionSchema,
   OrderLineSchema,
   OrderSchema,
-  orderLinesTotalCents,
+  orderTotalCents,
   type AuthSession,
   type Order,
   type OrderStatus,
@@ -139,17 +139,18 @@ function createOrdersStore(storage: Storage): OrdersStore {
   return {
     read: store.read,
     subscribe: store.subscribe,
-    place(lines, storeId, now = new Date()) {
+    place(lines, storeId, now = new Date(), freeDrink) {
       const timestamp = now.toISOString();
       const order = OrderSchema.parse({
         id: randomId(),
         storeId,
         lines,
-        totalCents: orderLinesTotalCents(lines),
+        totalCents: orderTotalCents(lines, freeDrink),
         status: 'received',
         placedAt: timestamp,
         updatedAt: timestamp,
         pickupCode: randomPickupCode(),
+        ...(freeDrink ? { freeDrink } : {}),
       });
       store.write([order, ...store.read()]);
       return order;

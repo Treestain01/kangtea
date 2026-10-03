@@ -28,6 +28,13 @@ Storage keys are `kangtea.cart`, `kangtea.orders`, `kangtea.session`, `kangtea.p
 
 Because names and prices are snapshots, a topping price change later does not alter a placed order.
 
+## The free drink
+
+When a signed in person has a finished pearl card (`card.available` above zero), the cart shows "Free drink · <first drink>" and the total drops by that drink's menu price, toppings still charged (ADR 0023).
+Placing the order redeems on the server first, then calls `orders.place(lines, storeId, now, freeDrink)`, which records `freeDrink` (line index and cents) on the order and sets the total through `orderTotalCents`.
+If redeeming fails the order is placed at full price and a notice says the free drink stays on the card.
+The active order and History show the free drink line; stamping on collect skips it.
+
 ## The order panel in motion
 
 - Adding from the customise sheet flies a clone of the built cup into the Order tab (`components/cup/fly.ts#flyCup`); the tab badge is keyed on the count so it bumps on every change.
@@ -39,7 +46,7 @@ Because names and prices are snapshots, a topping price change later does not al
 - History draws each past order's drinks as cups, three at most and then a count, from the catalogue's colours; Order again pours them (`usePour`) and flies them into the order before the cart is replaced.
 - An empty order shows an empty cup outline (`StaticCup` at level 0) above the copy, as does an empty History. Loading states use `components/cup/Loading.tsx`, a cup pouring itself on a loop. The not found page is a tipped cup with a puddle.
 - The kitchen's sounds and the ready haptic fire once from `AppShell`, which also posts the order's status to the iOS shell, so a mounted but hidden panel never doubles them.
-- Collecting fires a haptic tap where available, posts the stamps, drops a pearl from the kitchen cup onto the pearl strip and then marks the order collected.
+- Collecting fires a haptic tap where available, drops a pearl from the kitchen cup onto the stamp strip, stamps the card the moment it lands (provisionally, with the server confirming behind) and then marks the order collected.
   Without motion, or with nothing to land on, collecting is immediate.
 - `fly.ts` flights resolve at once under reduced motion, in browsers without the Web Animations API and when no target is visible; nothing in the order flow waits on decoration.
 

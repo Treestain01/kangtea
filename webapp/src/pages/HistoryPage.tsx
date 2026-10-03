@@ -129,7 +129,10 @@ function PastOrder({ order, artFor, onReorder }: PastOrderProps) {
       )}
       <p className="pastorder__lines">{summariseLines(order.lines)}</p>
       <div className="pastorder__foot">
-        <span className="pastorder__total">{formatPrice(order.totalCents)}</span>
+        <span className="pastorder__total">
+          {formatPrice(order.totalCents)}
+          {order.freeDrink && <span className="pastorder__free"> · free drink used</span>}
+        </span>
         <button type="button" className="pastorder__again" disabled={pouring} onClick={again}>
           {pouring ? 'Pouring' : 'Order again'}
         </button>

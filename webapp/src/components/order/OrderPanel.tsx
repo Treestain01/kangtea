@@ -1,4 +1,4 @@
-import type { Order } from '@bbt/shared';
+import type { FreeDrink, Order } from '@bbt/shared';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { useCatalogue } from '../../api/useCatalogue';
@@ -9,7 +9,7 @@ import { useLoyalty } from '../../loyalty/LoyaltyProvider';
 import { useStores } from '../../store/StoresProvider';
 import { useCart, useOrders } from '../../store/hooks';
 import { lineKey, summariseCustomisations } from '../../store/lines';
-import { activeOrder, cartTotalCents } from '../../store/orders';
+import { activeOrder, orderTotalCents } from '../../store/orders';
 import type { CartLine } from '../../store/types';
 import { StaticCup } from '../cup/StaticCup';
 import { PRODUCT_COLOURS } from '../cup/cupParts';
@@ -71,6 +71,7 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
   const { catalogue } = useCatalogue();
   const kitchenCupRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
+  const [notice, setNotice] = useState('');
 
   const className = `order${compact ? ' order--compact' : ''}`;
   // The menu still knowing the drink gives the line its cup; a retired drink shows without one.
@@ -78,6 +79,41 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
     if (catalogue.kind !== 'ready') return undefined;
     const item = catalogue.menu.items.find((candidate) => candidate.id === itemId);
     return item ? { colour: item.colour, pearls: item.pearls } : undefined;
+  };
+
+  // A finished card is a free drink: the first drink in the cart, at its menu price without
+  // toppings, comes off this order (ADR 0023).
+  const freeDrink = ((): FreeDrink | undefined => {
+    if (loyalty.state.kind !== 'ready' || loyalty.state.card.available < 1) return undefined;
+    const first = cart[0];
+    if (!first) return undefined;
+    const base = artFor(first.itemId) ? basePriceFor(first.itemId) : undefined;
+    return { lineIndex: 0, cents: Math.min(first.unitPriceCents, base ?? first.unitPriceCents) };
+  })();
+  function basePriceFor(itemId: string): number | undefined {
+    if (catalogue.kind !== 'ready') return undefined;
+    return catalogue.menu.items.find((candidate) => candidate.id === itemId)?.priceCents;
+  }
+
+  const placeNow = (storeId: string, taken?: FreeDrink) => {
+    ordersStore.place(cart, storeId, new Date(), taken);
+    cartStore.clear();
+  };
+  const place = () => {
+    if (!store) return;
+    setNotice('');
+    if (!freeDrink) {
+      placeNow(store.id);
+      return;
+    }
+    // Use the free drink on the server first; if that fails the order still goes through at full price.
+    void loyalty.redeem().then(
+      () => placeNow(store.id, freeDrink),
+      () => {
+        setNotice('We could not use your free drink just now, so it stays on your card.');
+        placeNow(store.id);
+      },
+    );
   };
 
   // The next stamp still to earn on the strip, where the pearl lands.
@@ -89,8 +125,6 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
 
   const collect = async (order: Order) => {
     tap();
-    // Stamps are a bonus: a failed call must never block collecting the drink.
-    void loyalty.earnFromOrder(order).catch(() => undefined);
     const target = nextStamp();
     const flight =
       kitchenCupRef.current && target
@@ -98,6 +132,9 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
         : null;
     if (flight) await flight;
     if (target) cue('pearl');
+    // The card stamps itself the moment the pearl lands; the server confirms behind it.
+    // Stamps are a bonus: a failed call must never block collecting the drink.
+    void loyalty.earnFromOrder(order, (itemId) => artFor(itemId)?.colour).catch(() => undefined);
     ordersStore.setStatus(order.id, 'collected');
   };
 
@@ -119,15 +156,17 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
           compact={compact}
           lines={cart}
           artFor={artFor}
+          freeDrink={freeDrink}
           canPlace={store !== null && cart.length > 0}
           onChangeQuantity={(key, quantity) => cartStore.setQuantity(key, quantity)}
           onRemove={(key) => cartStore.setQuantity(key, 0)}
-          onPlace={() => {
-            if (!store) return;
-            ordersStore.place(cart, store.id);
-            cartStore.clear();
-          }}
+          onPlace={place}
         />
+      )}
+      {notice && (
+        <p className="order__notice" role="status">
+          {notice}
+        </p>
       )}
       <div ref={stripRef} className={`order__pearls${compact ? ' order__pearls--compact' : ''}`}>
         <LoyaltyCard compact />
@@ -141,6 +180,8 @@ type CartViewProps = {
   compact: boolean;
   lines: CartLine[];
   artFor: (itemId: string) => LineArt | undefined;
+  /** The free drink that will come off this order when it is placed. */
+  freeDrink?: FreeDrink;
   canPlace: boolean;
   onChangeQuantity: (itemId: string, quantity: number) => void;
   onRemove: (itemId: string) => void;
@@ -152,6 +193,7 @@ function CartView({
   compact,
   lines,
   artFor,
+  freeDrink,
   canPlace,
   onChangeQuantity,
   onRemove,
@@ -198,11 +240,21 @@ function CartView({
         ))}
       </ul>
       <div className="order__summary">
+        {freeDrink && (
+          <p className="order__free">
+            <span>Free drink · {lines[freeDrink.lineIndex]?.name}</span>
+            <span>−{formatPrice(freeDrink.cents)}</span>
+          </p>
+        )}
         <p className="order__total">
           <span>Total</span>
-          <RollingPrice cents={cartTotalCents(lines)} />
+          <RollingPrice cents={orderTotalCents(lines, freeDrink)} />
         </p>
-        <p className="order__note">Pay at the counter when you collect.</p>
+        <p className="order__note">
+          {freeDrink
+            ? 'Your free drink comes off this order. Toppings are still charged. Pay at the counter when you collect.'
+            : 'Pay at the counter when you collect.'}
+        </p>
         <button type="button" className="order__primary" disabled={!canPlace} onClick={onPlace}>
           Place order
         </button>
@@ -311,6 +363,12 @@ function ActiveOrderView({
         ))}
       </ul>
       <div className="order__summary">
+        {order.freeDrink && (
+          <p className="order__free">
+            <span>Free drink · {order.lines[order.freeDrink.lineIndex]?.name}</span>
+            <span>−{formatPrice(order.freeDrink.cents)}</span>
+          </p>
+        )}
         <p className="order__total">
           <span>Total</span>
           <RollingPrice cents={order.totalCents} />

@@ -1,5 +1,5 @@
 import type { MenuItem, OrderLine } from '@bbt/shared';
-import { useCallback, useEffect, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { useSearchParams } from 'react-router';
 import { useCatalogue } from '../api/useCatalogue';
 import { Loading } from '../components/cup/Loading';
@@ -81,6 +81,19 @@ export function MenuPage() {
     [],
   );
 
+  // Memoised so the Surprise me spin, which depends on the list, keeps its identity between renders.
+  const items = useMemo(
+    () =>
+      catalogue.kind === 'ready'
+        ? catalogue.menu.items.filter(
+            (item) =>
+              (selectedCategory === null || item.categoryId === selectedCategory) &&
+              matchesQuery(item, query),
+          )
+        : [],
+    [catalogue, selectedCategory, query],
+  );
+
   if (catalogue.kind === 'error') {
     return (
       <div className="menu__error" role="alert">
@@ -97,11 +110,6 @@ export function MenuPage() {
   }
 
   const { menu } = catalogue;
-  const items = menu.items.filter(
-    (item) =>
-      (selectedCategory === null || item.categoryId === selectedCategory) &&
-      matchesQuery(item, query),
-  );
   // The page washes with the chosen family's colour: the first drink in the category sets it.
   const wash = selectedCategory
     ? menu.items.find((item) => item.categoryId === selectedCategory)?.colour
@@ -136,6 +144,7 @@ export function MenuPage() {
         customisations={menu.customisations}
         onHighlight={setHighlightedId}
         onPick={openPick}
+        enabled={customising === null}
       />
       <CustomiseDrinkDialog
         item={customising?.item ?? null}

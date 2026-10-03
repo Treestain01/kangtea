@@ -114,4 +114,87 @@ describe('LoyaltyProvider', () => {
     act(() => stores.session.clear());
     await waitFor(() => expect(screen.getByText('signed-out')).toBeInTheDocument());
   });
+
+  it('stamps the card at once when an order is collected, then takes the server card', async () => {
+    const auth = createFakeAuthClient();
+    const stores = createTestStores();
+    const loyalty = createFakeLoyaltyClient();
+    stores.session.save(
+      await auth.client.signUp({
+        email: 't@example.com',
+        password: 'correct horse',
+        displayName: 'T',
+      }),
+    );
+    // The server answers only when released, so the provisional card can be seen first.
+    let release: (() => void) | undefined;
+    const slow = {
+      ...loyalty.client,
+      earn: (token: string, request: Parameters<typeof loyalty.client.earn>[1]) =>
+        new Promise<Awaited<ReturnType<typeof loyalty.client.earn>>>((resolve) => {
+          release = () => void loyalty.client.earn(token, request).then(resolve);
+        }),
+    };
+    render(
+      <TestProviders stores={stores} auth={auth.client} loyalty={slow}>
+        <Probe />
+      </TestProviders>,
+    );
+    await waitFor(() => expect(screen.getByText('ready:0:0')).toBeInTheDocument());
+
+    let earning: Promise<void> | undefined;
+    act(() => {
+      earning = captured?.earnFromOrder(order, (itemId) =>
+        itemId === 'milo' ? '#6B4A3A' : undefined,
+      );
+    });
+    expect(screen.getByText('ready:3:0')).toBeInTheDocument();
+    const provisional = captured?.state;
+    expect(provisional?.kind === 'ready' ? provisional.card.stamps.map((s) => s.id) : []).toEqual([
+      'pending:order-1:milo:0',
+      'pending:order-1:milo:1',
+      'pending:order-1:matcha-latte:0',
+    ]);
+    expect(provisional?.kind === 'ready' ? provisional.card.stamps[0]?.colour : '').toBe('#6B4A3A');
+
+    await act(async () => {
+      release?.();
+      await earning;
+    });
+    const confirmed = captured?.state;
+    expect(confirmed?.kind === 'ready' ? confirmed.card.stamps.map((s) => s.id) : []).toEqual([
+      'stamp-1',
+      'stamp-2',
+      'stamp-3',
+    ]);
+  });
+
+  it('finishes the card on the tenth provisional stamp and starts the next one', async () => {
+    const auth = createFakeAuthClient();
+    const stores = createTestStores();
+    const loyalty = createFakeLoyaltyClient();
+    const session = await auth.client.signUp({
+      email: 't@example.com',
+      password: 'correct horse',
+      displayName: 'T',
+    });
+    stores.session.save(session);
+    await loyalty.client.earn(session.token, {
+      orderId: 'earlier',
+      lines: [{ itemId: 'milo', name: 'Milo', quantity: 9 }],
+    });
+    const never = { ...loyalty.client, earn: () => new Promise<never>(() => {}) };
+    render(
+      <TestProviders stores={stores} auth={auth.client} loyalty={never}>
+        <Probe />
+      </TestProviders>,
+    );
+    await waitFor(() => expect(screen.getByText('ready:9:0')).toBeInTheDocument());
+    act(() => {
+      void captured?.earnFromOrder(order);
+    });
+    // Nine plus three: the tenth finishes the card, two start the next.
+    expect(screen.getByText('ready:12:1')).toBeInTheDocument();
+    expect(captured?.state.kind === 'ready' ? captured.state.card.stamps : []).toHaveLength(2);
+  });
 });

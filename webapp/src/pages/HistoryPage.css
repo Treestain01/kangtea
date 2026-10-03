@@ -140,6 +140,13 @@
   font-variant-numeric: tabular-nums;
 }
 
+.pastorder__free {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-success);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .history__link,
   .pastorder__again {

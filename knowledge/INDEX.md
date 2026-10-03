@@ -25,9 +25,10 @@ Read the document, not this index, for the facts.
   - [0016 Theme choice as a device preference](decisions/0016-theme-choice-as-a-device-preference.md)
   - [0017 Accounts behind a provider interface](decisions/0017-accounts-behind-a-provider-interface.md)
   - [0018 Live cup with a physics world](decisions/0018-live-cup-with-a-physics-world.md)
-  - [0019 Pearl loyalty card on the server](decisions/0019-pearl-loyalty-card-on-the-server.md)
+  - [0019 Pearl loyalty card on the server](decisions/0019-pearl-loyalty-card-on-the-server.md) (amended by 0023)
   - [0020 Customise sheet built around the cup](decisions/0020-customise-sheet-built-around-the-cup.md)
   - [0021 One way bridge from the webapp to the iOS shell](decisions/0021-one-way-bridge-from-the-webapp-to-the-ios-shell.md)
   - [0022 Tea house surfaces in tonal tiers](decisions/0022-tea-house-surfaces-in-tonal-tiers.md)
+  - [0023 The free drink comes off the next order](decisions/0023-free-drink-comes-off-the-next-order.md)
 
 Project knowledge bases: `webapp/knowledge/INDEX.md`, `api/knowledge/INDEX.md`, `iosapp/knowledge/INDEX.md`.

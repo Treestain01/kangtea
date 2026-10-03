@@ -34,6 +34,21 @@ export function orderLinesTotalCents(lines: readonly OrderLine[]): number {
   return lines.reduce((sum, line) => sum + line.unitPriceCents * line.quantity, 0);
 }
 
+/**
+ * A loyalty free drink taken off an order: one unit of the line at `lineIndex`, worth `cents`,
+ * which is the drink's base price without its toppings.
+ */
+export const FreeDrinkSchema = z.object({
+  lineIndex: z.number().int().nonnegative(),
+  cents: z.number().int().nonnegative(),
+});
+export type FreeDrink = z.infer<typeof FreeDrinkSchema>;
+
+/** The order total: the lines, less the free drink when there is one. */
+export function orderTotalCents(lines: readonly OrderLine[], freeDrink?: FreeDrink): number {
+  return Math.max(0, orderLinesTotalCents(lines) - (freeDrink?.cents ?? 0));
+}
+
 export const OrderSchema = z
   .object({
     id: z.string().min(1),
@@ -44,9 +59,17 @@ export const OrderSchema = z
     placedAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
     pickupCode: PickupCodeSchema,
+    freeDrink: FreeDrinkSchema.optional(),
   })
-  .refine((order) => order.totalCents === orderLinesTotalCents(order.lines), {
-    message: 'totalCents must equal the sum of line prices',
+  .refine((order) => order.totalCents === orderTotalCents(order.lines, order.freeDrink), {
+    message: 'totalCents must equal the sum of line prices less the free drink',
     path: ['totalCents'],
-  });
+  })
+  .refine(
+    (order) =>
+      order.freeDrink === undefined ||
+      (order.freeDrink.lineIndex < order.lines.length &&
+        order.freeDrink.cents <= (order.lines[order.freeDrink.lineIndex]?.unitPriceCents ?? 0)),
+    { message: 'freeDrink must name a line and cost no more than one of it', path: ['freeDrink'] },
+  );
 export type Order = z.infer<typeof OrderSchema>;
