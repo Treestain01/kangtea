@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   artForTopping,
   capsFor,
+  foamBandFor,
   iceCubeCount,
   icePieces,
   liquidTopFor,
@@ -125,12 +126,23 @@ describe('caps and the tea level', () => {
     expect(liquidTopFor(capsFor([{ topping: topping('Brulee'), quantity: 1 }]))).toBe(50);
   });
 
-  it('grows the foam downward with every extra lot, pushing the tea down', () => {
+  it('drops the tea further with every extra foam lot', () => {
     const foam = (quantity: number) => capsFor([{ topping: topping('Milk Foam'), quantity }])[0];
-    expect(foam(1)).toMatchObject({ drop: 16, height: 40, surfaceLine: 30 });
-    expect(foam(2)).toMatchObject({ drop: 30, height: 60, surfaceLine: 50 });
-    expect(foam(3)).toMatchObject({ drop: 44, height: 80, surfaceLine: 70 });
+    expect(foam(1)).toMatchObject({ drop: 16 });
+    expect(foam(2)).toMatchObject({ drop: 30 });
+    expect(foam(3)).toMatchObject({ drop: 44 });
     expect(liquidTopFor(capsFor([{ topping: topping('Milk Foam'), quantity: 2 }]))).toBe(74);
+  });
+
+  it('sizes the foam band to sit on the tea and rise a lip above the resting line', () => {
+    expect(foamBandFor([])).toBe(0);
+    expect(foamBandFor(capsFor([{ topping: topping('Brulee'), quantity: 1 }]))).toBe(0);
+    const band = (quantity: number) =>
+      foamBandFor(capsFor([{ topping: topping('Milk Foam'), quantity }]));
+    // liquidTop - band keeps the top edge at 42 whatever the quantity.
+    expect(band(1)).toBe(18);
+    expect(band(2)).toBe(32);
+    expect(band(3)).toBe(46);
   });
 
   it('keeps the brulee crust one lot thick no matter the quantity', () => {

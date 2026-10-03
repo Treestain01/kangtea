@@ -187,20 +187,25 @@ export function piecesFor(toppings: readonly ToppingChoice[]): PieceSpec[] {
 const FOAM_LOT_DROP = 14;
 
 /**
- * The foam cap for a number of lots. The first lot pours onto the surface; every lot after it grows
- * the cap downward instead, pushing the tea (and the ice floating in it) down by `FOAM_LOT_DROP`.
- * The symbol stretches with `preserveAspectRatio="none"`: its 28-unit band maps onto the 28 + extra
- * units between the cap's fixed top edge and the lowered tea, scaling the 40-unit viewBox by 40/28.
+ * The foam cap for a number of lots: every lot past the first drops the tea another `FOAM_LOT_DROP`.
+ * The live cup draws the foam itself from the drop (see `foamBandFor`); the symbol's height and
+ * surface line only place the static cup's cap and size the tray token.
  */
 function foamFor(quantity: number): CapSpec {
-  const extra = FOAM_LOT_DROP * Math.max(0, quantity - 1);
-  const stretch = (extra * 40) / 28;
-  return {
-    ...FOAM,
-    drop: FOAM.drop + extra,
-    height: FOAM.height + stretch,
-    surfaceLine: FOAM.surfaceLine + stretch,
-  };
+  return { ...FOAM, drop: FOAM.drop + FOAM_LOT_DROP * Math.max(0, quantity - 1) };
+}
+
+/** How far the foam band rises above where the tea would rest without it. */
+const FOAM_LIP = 2;
+
+/**
+ * The thickness of the live cup's foam band, zero without foam. The band's bottom edge sits exactly
+ * on the lowered tea (`liquidTopFor`) and its top edge stays at `CUP.liquidTop - FOAM_LIP` whatever
+ * the quantity, so more foam expands the same band downward and it never overlaps the tea.
+ */
+export function foamBandFor(caps: readonly CapSpec[]): number {
+  const foam = caps.find((cap) => cap.symbol === 'kt-foam-cap');
+  return foam ? foam.drop + FOAM_LIP : 0;
 }
 
 /** Surface layers for the chosen toppings, brulee under foam. Foam thickens with its quantity. */

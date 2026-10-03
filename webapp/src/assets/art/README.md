@@ -59,9 +59,9 @@ Colours that are product data (the tea, tapioca, foam, a topping's tint) are fix
   A body normally spans its symbol's box; a mini pearl's circle fills just over half of its box, so its body is 8 units to the art's 12 (`PieceSpec.bodySize`) and the pile packs as close as it looks.
   Caps (milk foam and brulee) are not physical and are drawn inside the cup clip so the slanted walls trim them to the inner width.
   Brulee fades in over `--motion-slow` and lowers the tea by its 6 unit thickness.
-  The first milk foam lot pours in: it rises from the tea's surface to its resting top over `--motion-pour` (1100ms) and lowers the tea by 16 units.
-  Every foam lot after the first grows the cap downward instead, dropping the tea (and the ice floating in it) another 14 units; the symbol stretches (`preserveAspectRatio="none"`) so the band's top edge stays put.
-  The liquid's level and the caps' `y`/`height` all glide over `--motion-pour` with the same ease, so the foam grows exactly as fast as the tea falls and no gap opens between them.
+  In the live cup milk foam is not the symbol but a band of plain rects (`foamBandFor` in `cupParts.ts`) whose bottom edge is always exactly the tea's top edge, never overlapping it; the `kt-foam-cap` symbol still draws the tray token and the static cup.
+  The first lot lowers the tea 16 units and the band pours in over the vacated room; every lot after it drops the tea (and the ice floating in it) another 14 units and the same band expands downward to meet it, its top edge fixed two units above the resting line.
+  The liquid's level and the band's `y`/`height` are rect geometry gliding over `--motion-pour` with the same ease, so at every frame the foam's bottom and the tea's top interpolate to the same value and no gap or overlap ever shows.
   Pudding is one large block per lot, about twice a pearl, that sinks and piles with them.
   Each kind collides only with the cup and its own kind, so pearls sink straight through the ice.
   The static cup (menu cards, cart rows, the kitchen) keeps its fixed dozen piece slots, so a full serving fills them all.

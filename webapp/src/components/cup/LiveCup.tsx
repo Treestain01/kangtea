@@ -6,6 +6,7 @@ import {
   FRAME_MS,
   PRODUCT_COLOURS,
   capsFor,
+  foamBandFor,
   icePieces,
   liquidTopFor,
   piecesFor,
@@ -50,8 +51,11 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
   // The cup owns its clip so the tea is trimmed to the walls even if the sprite is elsewhere.
   const clipId = useId();
 
-  const caps = capsFor(toppings);
-  const liquidTop = liquidTopFor(caps);
+  const allCaps = capsFor(toppings);
+  const liquidTop = liquidTopFor(allCaps);
+  // Foam is drawn as a band of rects flush with the tea, not as a symbol; see foamBandFor.
+  const foamThickness = foamBandFor(allCaps);
+  const caps = allCaps.filter((cap) => cap.symbol !== 'kt-foam-cap');
   const specs = useMemo(() => [...piecesFor(toppings), ...icePieces(ice)], [toppings, ice]);
   specsRef.current = specs;
 
@@ -184,6 +188,35 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
               className={newCaps.includes(cap) ? 'livecup__cap--new' : undefined}
             />
           ))}
+        </g>
+        {/* The foam band is always in the tree so pouring, growing and draining are one y/height
+            transition in lockstep with the liquid: its bottom edge is always the tea's top edge. */}
+        <g
+          data-layer="foam"
+          className={`livecup__foamband${foamThickness === 0 ? ' livecup__foamband--empty' : ''}`}
+        >
+          <rect
+            className="livecup__foam"
+            x="18"
+            y={liquidTop - foamThickness}
+            width="84"
+            height={foamThickness}
+          />
+          <rect
+            className="livecup__foam-line"
+            x="18"
+            y={liquidTop - foamThickness}
+            width="84"
+            height="1.5"
+          />
+          <rect
+            className="livecup__foam-gloss"
+            x="26"
+            y={liquidTop - foamThickness + 4}
+            width="30"
+            height="4"
+            rx="2"
+          />
         </g>
       </g>
       <use href="#kt-cup-body" width={CUP.width} height={CUP.height} />

@@ -19,11 +19,42 @@
     fill var(--motion-slow) var(--ease);
 }
 
-/* A cap that grows or moves (more foam, the tea dropping under it) glides with the liquid. */
+/* A cap that moves (the tea dropping under the brulee) glides with the liquid. */
 .livecup [data-layer='caps'] use {
   transition:
     y var(--motion-pour) var(--ease),
     height var(--motion-pour) var(--ease);
+}
+
+/* The foam band: plain rects whose y and height run on the same clock as the liquid, so the first
+   lot pours in (height 0 upward), later lots expand the same band, and no gap or overlap ever opens
+   between the foam's bottom edge and the tea. The details fade with the band. */
+.livecup__foamband {
+  transition: opacity var(--motion-pour) var(--ease);
+}
+
+.livecup__foamband--empty {
+  opacity: 0;
+}
+
+.livecup__foamband rect {
+  transition:
+    y var(--motion-pour) var(--ease),
+    height var(--motion-pour) var(--ease);
+}
+
+.livecup__foam {
+  fill: var(--foam);
+}
+
+.livecup__foam-line {
+  fill: var(--cup-line);
+  fill-opacity: 0.18;
+}
+
+.livecup__foam-gloss {
+  fill: var(--ice);
+  fill-opacity: 0.6;
 }
 
 @keyframes livecup-fade {
@@ -39,30 +70,15 @@
   animation: livecup-fade var(--motion-slow) var(--ease);
 }
 
-/* The first foam lot pours in: it rises from the tea's surface to its resting top. */
-@keyframes livecup-pour {
-  from {
-    transform: scaleY(0);
-  }
-  to {
-    transform: scaleY(1);
-  }
-}
-
-.livecup__cap--new[href='#kt-foam-cap'] {
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
-  animation: livecup-pour var(--motion-pour) var(--ease);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .livecup__liquid,
-  .livecup [data-layer='caps'] use {
+  .livecup [data-layer='caps'] use,
+  .livecup__foamband,
+  .livecup__foamband rect {
     transition: none;
   }
 
-  .livecup__cap--new,
-  .livecup__cap--new[href='#kt-foam-cap'] {
+  .livecup__cap--new {
     animation: none;
   }
 }

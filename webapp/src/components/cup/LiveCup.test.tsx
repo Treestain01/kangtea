@@ -64,12 +64,15 @@ describe('LiveCup', () => {
     expect(firstPearl?.getAttribute('transform')).toMatch(/translate\(/);
   });
 
-  it('paints milk foam on the surface and lowers the tea', async () => {
+  it('paints milk foam as a band sitting exactly on the tea, never overlapping it', async () => {
     const { rerender } = render(
       <LiveCup colour="#9DBA78" sugar={level('100%')} ice={level('No ice')} toppings={[]} />,
     );
     const liquid = () => document.querySelector('svg.livecup .livecup__liquid');
+    const band = () => document.querySelector('svg.livecup .livecup__foam');
+    // The band is always there so the pour is a transition, not a popped-in element.
     expect(liquid()?.getAttribute('y')).toBe('44');
+    expect(band()?.getAttribute('height')).toBe('0');
     rerender(
       <LiveCup
         colour="#9DBA78"
@@ -78,25 +81,27 @@ describe('LiveCup', () => {
         toppings={[{ topping: topping('Milk Foam'), quantity: 1 }]}
       />,
     );
-    expect(uses('kt-foam-cap')).toHaveLength(1);
-    expect(uses('kt-foam-cap')[0]?.getAttribute('class')).toContain('livecup__cap--new');
-    expect(uses('kt-foam-cap')[0]?.getAttribute('height')).toBe('40');
+    // The live cup draws no foam symbol; the band's bottom edge is the tea's top edge.
+    expect(uses('kt-foam-cap')).toHaveLength(0);
+    expect(band()?.getAttribute('y')).toBe('42');
+    expect(band()?.getAttribute('height')).toBe('18');
     expect(liquid()?.getAttribute('y')).toBe('60');
     await waitFor(() => expect(uses('kt-pearl')).toHaveLength(0));
   });
 
-  it('grows the foam downward and pushes the tea further down on a second lot', () => {
+  it('expands the same band downward on a second lot, still flush with the tea', () => {
     const foamOf = (quantity: number) => [{ topping: topping('Milk Foam'), quantity }];
     const { rerender } = render(
       <LiveCup colour="#9DBA78" sugar={level('100%')} ice={level('No ice')} toppings={foamOf(1)} />,
     );
+    const band = document.querySelector('svg.livecup .livecup__foam');
     rerender(
       <LiveCup colour="#9DBA78" sugar={level('100%')} ice={level('No ice')} toppings={foamOf(2)} />,
     );
-    const cap = uses('kt-foam-cap')[0];
-    expect(cap?.getAttribute('height')).toBe('60');
-    // The second lot grows the existing cap rather than pouring a fresh one in.
-    expect(cap?.getAttribute('class') ?? '').not.toContain('livecup__cap--new');
+    // Same element, taller: top edge fixed, bottom edge on the lowered tea.
+    expect(document.querySelector('svg.livecup .livecup__foam')).toBe(band);
+    expect(band?.getAttribute('y')).toBe('42');
+    expect(band?.getAttribute('height')).toBe('32');
     expect(document.querySelector('svg.livecup .livecup__liquid')?.getAttribute('y')).toBe('74');
   });
 
