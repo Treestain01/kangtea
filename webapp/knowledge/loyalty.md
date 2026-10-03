@@ -11,12 +11,12 @@
 `src/loyalty/LoyaltyProvider.tsx` sits inside `AuthProvider` in `main.tsx`.
 It reads the session token from `useAuth()`; with no session the state is `signed-out`, otherwise it loads the card and exposes:
 
-| Member                 | Does                                                                                     |
-| ---------------------- | ---------------------------------------------------------------------------------------- |
-| `state`                | `signed-out`, `loading`, `error` with a message, or `ready` with the card.               |
-| `earnFromOrder(order)` | Posts the order's lines as stamps and stores the returned card. No op when signed out.   |
-| `redeem()`             | Uses one free drink. Called by the order panel at place; rejects when none is available. |
-| `refresh()`            | Loads the card again.                                                                    |
+| Member                            | Does                                                                                                                                        |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `state`                           | `signed-out`, `loading`, `error` with a message, or `ready` with the card.                                                                  |
+| `earnFromOrder(order, colourOf?)` | Stamps the card at once with provisional stamps in the colours given, then stores the server's card when it answers. No op when signed out. |
+| `redeem()`                        | Uses one free drink. Called by the order panel at place; rejects when none is available.                                                    |
+| `refresh()`                       | Loads the card again.                                                                                                                       |
 
 `OrderPanel` calls `earnFromOrder` when the customer taps that they have picked the drink up; a failed call is swallowed so stamps never block collecting. A free drink on the order (`order.freeDrink`) earns no stamp; the paid drinks do.
 
