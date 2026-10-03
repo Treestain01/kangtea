@@ -109,17 +109,20 @@ export interface WallSpec {
   size: number;
 }
 
-/** Slice centres, alternating walls down the cup, reused top to bottom as slices accumulate. */
+/**
+ * Slice centres, alternating walls down the cup, reused top to bottom as slices accumulate.
+ * Sized like the slices in the shop photography: around half the cup's width, clipped by the walls.
+ */
 const WALL_SLOTS = [
-  { x: 36, y: 92, size: 32 },
-  { x: 84, y: 120, size: 30 },
-  { x: 34, y: 148, size: 28 },
-  { x: 86, y: 74, size: 28 },
-  { x: 32, y: 118, size: 26 },
-  { x: 88, y: 162, size: 26 },
-  { x: 40, y: 68, size: 26 },
-  { x: 82, y: 148, size: 26 },
-  { x: 60, y: 98, size: 26 },
+  { x: 39, y: 92, size: 56 },
+  { x: 82, y: 124, size: 52 },
+  { x: 36, y: 150, size: 48 },
+  { x: 84, y: 76, size: 48 },
+  { x: 34, y: 118, size: 46 },
+  { x: 86, y: 160, size: 46 },
+  { x: 42, y: 68, size: 46 },
+  { x: 80, y: 148, size: 46 },
+  { x: 60, y: 98, size: 46 },
 ] as const;
 
 /** How many slices a drink's innate garnish leans on the walls. */

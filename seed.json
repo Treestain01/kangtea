@@ -96,7 +96,8 @@
         "currency": "AUD",
         "tags": [],
         "colour": "#C47A2C",
-        "pearls": false
+        "pearls": false,
+        "garnish": "lemon"
       },
       {
         "id": "lemon-green-tea",
@@ -107,7 +108,8 @@
         "currency": "AUD",
         "tags": [],
         "colour": "#C9D66B",
-        "pearls": false
+        "pearls": false,
+        "garnish": "lemon"
       },
       {
         "id": "lemon-peach-water-chestnuts-green-tea",
@@ -118,7 +120,8 @@
         "currency": "AUD",
         "tags": ["recommended"],
         "colour": "#F2B5A0",
-        "pearls": false
+        "pearls": false,
+        "garnish": "lemon"
       },
       {
         "id": "passionfruit-boba-jelly-green-tea",
@@ -140,7 +143,8 @@
         "currency": "AUD",
         "tags": ["best-seller"],
         "colour": "#D9CF3F",
-        "pearls": false
+        "pearls": false,
+        "garnish": "lemon"
       },
       {
         "id": "passionfruit-mango-green-tea",
@@ -173,7 +177,8 @@
         "currency": "AUD",
         "tags": [],
         "colour": "#F2C24A",
-        "pearls": false
+        "pearls": false,
+        "garnish": "lemon"
       },
       {
         "id": "plum-lemon-green-tea",
@@ -184,7 +189,8 @@
         "currency": "AUD",
         "tags": [],
         "colour": "#C08A8A",
-        "pearls": false
+        "pearls": false,
+        "garnish": "lemon"
       },
       {
         "id": "orange-grapefruit-green-tea",
@@ -195,7 +201,8 @@
         "currency": "AUD",
         "tags": [],
         "colour": "#F28C6A",
-        "pearls": false
+        "pearls": false,
+        "garnish": "orange"
       },
       {
         "id": "lychee-agar-green-tea",
@@ -217,7 +224,8 @@
         "currency": "AUD",
         "tags": ["recommended"],
         "colour": "#D89A4A",
-        "pearls": false
+        "pearls": false,
+        "garnish": "orange"
       },
       {
         "id": "yakult-green-tea",
@@ -239,7 +247,8 @@
         "currency": "AUD",
         "tags": [],
         "colour": "#EDE6A8",
-        "pearls": false
+        "pearls": false,
+        "garnish": "lemon"
       },
       {
         "id": "orange-grapefruit-yakult",
@@ -250,7 +259,8 @@
         "currency": "AUD",
         "tags": ["best-seller"],
         "colour": "#F4B08A",
-        "pearls": false
+        "pearls": false,
+        "garnish": "orange"
       },
       {
         "id": "orange-yakult",
@@ -261,7 +271,8 @@
         "currency": "AUD",
         "tags": [],
         "colour": "#F6C58A",
-        "pearls": false
+        "pearls": false,
+        "garnish": "orange"
       },
       {
         "id": "pineapple-yakult",

@@ -67,7 +67,9 @@ Colours that are product data (the tea, tapioca, foam, a topping's tint) are fix
   Pudding is one large block per lot, about twice a pearl, that sinks and piles with them.
   Each kind collides only with the cup and its own kind, so pearls sink straight through the ice.
   Citrus slices (the Orange Slices and Lemon Slices toppings, two per lot, and a drink's innate `MenuItem.garnish`, three slices) are not bodies at all: `wallPiecesFor` leans them translucent against the cup walls on fixed slots, behind the moving pieces, and each new one fades in over `--motion-slow`.
+  They are drawn large, around half the cup's width like the slices in the shop photography, and the walls clip them.
   The garnish comes with the drink and cannot be added or removed; the live cup, the menu card, the cup of the day and Your usual all draw it.
+  Every drink with orange or lemon in its name carries the matching garnish in `seed.json`; `api/test/seed.test.ts` enforces that rule.
   The static cup (menu cards, cart rows, the kitchen) keeps its fixed dozen piece slots, so a full serving fills them all.
 - **Ice** cubes are bodies too, held fully submerged with their top edge about 3 units under the surface, so they float without breaking it.
   When a cap moves the surface, the physics liquid line eases to the new level over the same `--motion-pour` as the painted tea, so a growing foam cap visibly pushes the ice down ahead of it instead of the ice dropping to the final line first.

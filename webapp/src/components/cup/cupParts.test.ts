@@ -203,11 +203,17 @@ describe('wallPiecesFor', () => {
     expect(new Set(specs.map((spec) => spec.key)).size).toBe(7);
     expect(new Set(specs.map((spec) => `${spec.x}:${spec.y}`)).size).toBe(7);
     for (const spec of specs) {
-      expect(spec.x).toBeGreaterThan(10);
-      expect(spec.x + spec.size).toBeLessThan(112);
+      expect(spec.x).toBeGreaterThan(4);
+      expect(spec.x + spec.size).toBeLessThan(116);
       expect(spec.y).toBeGreaterThan(CUP.liquidTop);
       expect(spec.y + spec.size).toBeLessThan(CUP.height);
     }
+  });
+
+  it('draws slices large, like the slices in the shop photography', () => {
+    const specs = wallPiecesFor([], 'orange');
+    expect(specs[0]?.size).toBe(56);
+    for (const spec of specs) expect(spec.size).toBeGreaterThanOrEqual(46);
   });
 });
 
