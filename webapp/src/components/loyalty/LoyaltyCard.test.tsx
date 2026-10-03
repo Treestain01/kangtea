@@ -32,7 +32,7 @@ function renderCard(props: Omit<Parameters<typeof TestProviders>[0], 'children'>
 describe('LoyaltyCard', () => {
   it('invites a signed out person to sign in', () => {
     renderCard({});
-    expect(screen.getByRole('heading', { name: 'Your pearls' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Your stamps' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Sign in to start collecting' })).toHaveAttribute(
       'href',
       '/account',

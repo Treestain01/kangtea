@@ -125,8 +125,6 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
 
   const collect = async (order: Order) => {
     tap();
-    // Stamps are a bonus: a failed call must never block collecting the drink.
-    void loyalty.earnFromOrder(order).catch(() => undefined);
     const target = nextStamp();
     const flight =
       kitchenCupRef.current && target
@@ -134,6 +132,9 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
         : null;
     if (flight) await flight;
     if (target) cue('pearl');
+    // The card stamps itself the moment the pearl lands; the server confirms behind it.
+    // Stamps are a bonus: a failed call must never block collecting the drink.
+    void loyalty.earnFromOrder(order, (itemId) => artFor(itemId)?.colour).catch(() => undefined);
     ordersStore.setStatus(order.id, 'collected');
   };
 

@@ -25,7 +25,7 @@ It reads the session token from `useAuth()`; with no session the state is `signe
 `components/loyalty/LoyaltyCard.tsx`, on Home between Your usual and Popular now, and on the Account page under the sign in or profile block.
 
 - Signed out: a bordered card inviting the person to sign in, linking to `/account`.
-- Signed in: an accent card, "Your pearls", "n of 10" for the card being filled now, ten stamps five across, and one line of copy about how many more to go.
+- Signed in: an accent card, "Your stamps", "n of 10" for the card being filled now, ten stamps five across, and one line of copy about how many more to go.
 - While a finished card waits (`card.complete`), a note above the stamps says there is a free drink to claim and that it comes off the next order with toppings still charged (ADR 0023). There is no redeem button; the order panel redeems when the order is placed.
 - Stamps use the `kt-stamp-empty`, `kt-stamp-full` and `kt-stamp-free` symbols from `src/assets/art/cup-parts.svg`, tinted with each stamp's drink colour. A new stamp scales in; the tenth wobbles when it unlocks. `CupSprite` is rendered once in `AppShell` so the symbols are available on every page.
 - The moment a card fills while the person is looking, pearls rain down the card once (`components/cup/celebrate.ts#rainPearls`) and the free cup glows and wobbles. Nothing happens for a card that was already full on load, or under reduced motion.

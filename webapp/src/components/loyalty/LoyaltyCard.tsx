@@ -18,7 +18,7 @@ type LoyaltyCardProps = {
  * shows the card being filled now in the colours of the drinks that earned its stamps, with a note
  * above it while a finished card waits to come off the next order (ADR 0023).
  */
-export function LoyaltyCard({ heading = 'Your pearls', compact = false }: LoyaltyCardProps) {
+export function LoyaltyCard({ heading = 'Your stamps', compact = false }: LoyaltyCardProps) {
   const loyalty = useLoyalty();
   const [flipped, setFlipped] = useState(false);
 
@@ -169,10 +169,13 @@ export function LoyaltyCard({ heading = 'Your pearls', compact = false }: Loyalt
 
 /** The row of ten stamps. New stamps scale in; the tenth wobbles when the card fills. */
 function Stamps({ card }: { card: LoyaltyCardData }) {
-  const seen = useRef<Set<string>>(new Set());
-  const fresh = card.stamps.filter((stamp) => !seen.current.has(stamp.id)).map((s) => s.id);
+  // New stamps are the ones past the count last rendered (all of them when the card rolled over),
+  // so a provisional stamp replaced by the server's does not pop twice.
+  const previousCount = useRef(card.stamps.length);
+  const from = card.stamps.length < previousCount.current ? 0 : previousCount.current;
+  const fresh = card.stamps.slice(from).map((stamp) => stamp.id);
   useEffect(() => {
-    card.stamps.forEach((stamp) => seen.current.add(stamp.id));
+    previousCount.current = card.stamps.length;
   });
   const style = { '--pearl': PRODUCT_COLOURS.pearl } as React.CSSProperties;
   return (

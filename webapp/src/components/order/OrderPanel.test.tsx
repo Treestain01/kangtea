@@ -259,7 +259,7 @@ describe('OrderPanel and the pearl card', () => {
         </MemoryRouter>
       </TestProviders>,
     );
-    const strip = await screen.findByRole('region', { name: 'Your pearls' });
+    const strip = await screen.findByRole('region', { name: 'Your stamps' });
     expect(strip).toHaveTextContent('0 of 10');
     expect(strip.querySelectorAll('li')).toHaveLength(10);
     await act(async () => {
@@ -319,7 +319,7 @@ describe('OrderPanel and the pearl card', () => {
     });
     // The free drink is used on the server; the card is a fresh one.
     expect(loyalty.card().redeemed).toBe(1);
-    expect(await screen.findByRole('region', { name: 'Your pearls' })).toHaveTextContent('0 of 10');
+    expect(await screen.findByRole('region', { name: 'Your stamps' })).toHaveTextContent('0 of 10');
   });
 
   it('places at full price and says so when the free drink cannot be used', async () => {
