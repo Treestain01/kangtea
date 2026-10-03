@@ -188,11 +188,15 @@ export function liquidTopFor(caps: readonly CapSpec[]): number {
   return CUP.liquidTop + Math.max(0, ...caps.map((cap) => cap.drop));
 }
 
-/** Cubes for an ice level, from its name: warm and no ice give none, less gives two, anything else four. */
+/**
+ * Cubes for an ice level, from its name: warm and no ice give none, little gives two, less gives
+ * three, anything else (standard) four.
+ */
 export function iceCubeCount(level: Pick<OptionLevel, 'name'>): number {
   const name = level.name.toLowerCase();
   if (name.includes('warm') || name.includes('hot') || name.includes('no ')) return 0;
-  if (name.includes('less') || name.includes('light')) return 2;
+  if (name.includes('little') || name.includes('light')) return 2;
+  if (name.includes('less')) return 3;
   return 4;
 }
 

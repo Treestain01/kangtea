@@ -108,9 +108,10 @@ describe('ice and sugar', () => {
     expect(iceCubeCount(level('Warm'))).toBe(0);
     expect(showsSteam(level('Warm'))).toBe(true);
     expect(iceCubeCount(level('No ice'))).toBe(0);
-    expect(iceCubeCount(level('Less ice'))).toBe(2);
-    expect(iceCubeCount(level('Normal ice'))).toBe(4);
-    expect(icePieces(level('Normal ice')).map((p) => p.key)).toEqual([
+    expect(iceCubeCount(level('Little ice'))).toBe(2);
+    expect(iceCubeCount(level('Less ice'))).toBe(3);
+    expect(iceCubeCount(level('Standard ice'))).toBe(4);
+    expect(icePieces(level('Standard ice')).map((p) => p.key)).toEqual([
       'ice:0',
       'ice:1',
       'ice:2',

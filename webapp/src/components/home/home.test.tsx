@@ -80,7 +80,7 @@ describe('UsualCard', () => {
     );
     const usual = screen.getByRole('region', { name: 'Your usual' });
     expect(usual.querySelectorAll('svg.staticcup use[href="#kt-pearl"]').length).toBeGreaterThan(0);
-    expect(usual.querySelectorAll('svg.staticcup use[href="#kt-ice-cube"]')).toHaveLength(2);
+    expect(usual.querySelectorAll('svg.staticcup use[href="#kt-ice-cube"]')).toHaveLength(3);
   });
 });
 

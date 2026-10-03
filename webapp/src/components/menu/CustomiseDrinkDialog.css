@@ -221,6 +221,9 @@
   position: relative;
   display: grid;
   grid-auto-rows: var(--tap-target);
+  /* The track is draggable, so a finger on it must not scroll the sheet. */
+  touch-action: none;
+  cursor: ns-resize;
 }
 
 .dial__line,

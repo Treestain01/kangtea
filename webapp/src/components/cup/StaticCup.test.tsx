@@ -32,7 +32,7 @@ describe('StaticCup', () => {
         colour="#B07A45"
         customisations={[
           { name: 'Sugar', value: '0%' },
-          { name: 'Ice', value: 'Less ice' },
+          { name: 'Ice', value: 'Little ice' },
           { name: 'Topping', value: 'Boba', quantity: 2 },
           { name: 'Topping', value: 'Milk Foam' },
         ]}
