@@ -103,7 +103,7 @@ export function StaticCup({
 
   const style = {
     '--tea': `color-mix(in srgb, ${colour} ${teaColourMix(sugar ?? { name: '100%' })}%, ${PRODUCT_COLOURS.coconutJelly})`,
-    ...productColourVars(colour),
+    ...productColourVars(),
   } as CSSProperties;
 
   return (

@@ -9,7 +9,7 @@
       --cup-surface  lid and cup wall fill, normally var(--color-surface)
       --straw        straw colour, normally var(--color-accent)
       --pearl        tapioca colour, a dark brown (#33261F) in both themes
-      --pearl-mini   mini pearl colour, a lighter tea shade
+      --pearl-mini   mini pearl colour, the same dark brown as --pearl
       --jelly        jelly cube colour, normally the drink colour lightened
       --foam         milk foam and ice cream colour, a cream (#F7F0E3) in both themes
       --ice          ice cube fill, normally white at high opacity
@@ -57,9 +57,9 @@
     <path d="M72 12 C68 6 76 2 72 -4" fill="none" stroke="var(--cup-line, currentColor)" stroke-opacity="0.5" stroke-width="3" stroke-linecap="round" />
   </symbol>
 
-  <!-- Ice -->
+  <!-- Ice: translucent, so the tea reads through the cubes -->
   <symbol id="kt-ice-cube" viewBox="0 0 24 24">
-    <rect x="2" y="2" width="20" height="20" rx="5" fill="var(--ice, #ffffff)" fill-opacity="0.82" stroke="var(--cup-line, #2b2826)" stroke-opacity="0.22" stroke-width="1.5" />
+    <rect x="2" y="2" width="20" height="20" rx="5" fill="var(--ice, #ffffff)" fill-opacity="0.5" stroke="var(--cup-line, #2b2826)" stroke-opacity="0.22" stroke-width="1.5" />
     <path d="M7 16.5 L16.5 7" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" />
   </symbol>
 
@@ -70,7 +70,7 @@
   </symbol>
 
   <symbol id="kt-pearl-mini" viewBox="0 0 24 24">
-    <circle cx="12" cy="12" r="6.5" fill="var(--pearl-mini, #8a5a3c)" />
+    <circle cx="12" cy="12" r="6.5" fill="var(--pearl-mini, #33261f)" />
     <circle cx="10" cy="10" r="2" fill="#ffffff" fill-opacity="0.4" />
   </symbol>
 

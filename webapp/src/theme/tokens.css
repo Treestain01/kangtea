@@ -66,10 +66,12 @@
   /* Minimum touch target on mobile */
   --tap-target: 44px;
 
-  /* Motion: every transition and animation eases in and out. Fast for state changes, slow for sheets. */
+  /* Motion: every transition and animation eases in and out. Fast for state changes, slow for sheets,
+     pour for things that physically fill (the foam pouring onto the live cup). */
   --ease: ease-in-out;
   --motion-fast: 160ms;
   --motion-slow: 320ms;
+  --motion-pour: 1100ms;
 
   /* Layout: the tab bar height on phones; the two side columns from 1024px.
      The sidebar is locked to the order panel so the page stays centred between them. */

@@ -6,6 +6,7 @@ import {
   icePieces,
   liquidTopFor,
   piecesFor,
+  productColourVars,
   showsSteam,
   teaColourMix,
 } from './cupParts';
@@ -21,16 +22,19 @@ describe('artForTopping', () => {
     expect(artForTopping(topping('Boba'))).toMatchObject({
       kind: 'sink',
       symbol: 'kt-pearl',
-      perLot: 5,
+      perLot: 10,
     });
-    expect(artForTopping(topping('Mini Pearls'))).toMatchObject({ symbol: 'kt-pearl-mini' });
+    expect(artForTopping(topping('Mini Pearls'))).toMatchObject({
+      symbol: 'kt-pearl-mini',
+      perLot: 12,
+    });
     expect(artForTopping(topping('Mixed Pearls'))).toMatchObject({
       symbol: 'kt-pearl',
       alt: 'kt-pearl-mini',
     });
     expect(artForTopping(topping('Grass Jelly'))).toMatchObject({
       symbol: 'kt-jelly-cube',
-      perLot: 4,
+      perLot: 8,
     });
     expect(artForTopping(topping('Milk Foam'))).toMatchObject({ kind: 'cap' });
     expect(artForTopping(topping('Brulee'))).toMatchObject({ kind: 'cap' });
@@ -65,22 +69,41 @@ describe('piecesFor', () => {
       { topping: topping('Milk Foam'), quantity: 1 },
       { topping: topping('Pudding'), quantity: 1 },
     ]);
-    expect(specs).toHaveLength(11);
-    expect(specs.filter((s) => s.symbol === 'kt-pearl')).toHaveLength(10);
+    expect(specs).toHaveLength(21);
+    expect(specs.filter((s) => s.symbol === 'kt-pearl')).toHaveLength(20);
     expect(specs.find((s) => s.symbol === 'kt-pudding')).toMatchObject({ shape: 'box', size: 30 });
-    expect(new Set(specs.map((s) => s.key)).size).toBe(11);
+    expect(new Set(specs.map((s) => s.key)).size).toBe(21);
     expect(specs[0]?.key).toBe('boba:0:0');
   });
 
   it('alternates pearls and mini pearls for mixed pearls', () => {
     const specs = piecesFor([{ topping: topping('Mixed Pearls'), quantity: 1 }]);
+    expect(specs).toHaveLength(10);
     expect(specs.map((s) => s.symbol)).toEqual([
       'kt-pearl',
       'kt-pearl-mini',
       'kt-pearl',
       'kt-pearl-mini',
       'kt-pearl',
+      'kt-pearl-mini',
+      'kt-pearl',
+      'kt-pearl-mini',
+      'kt-pearl',
+      'kt-pearl-mini',
     ]);
+  });
+
+  it('gives mini pearls a hitbox smaller than their art', () => {
+    for (const spec of piecesFor([{ topping: topping('Mini Pearls'), quantity: 1 }])) {
+      expect(spec).toMatchObject({ size: 12, bodySize: 8 });
+    }
+    const mixed = piecesFor([{ topping: topping('Mixed Pearls'), quantity: 1 }]);
+    for (const spec of mixed.filter((s) => s.symbol === 'kt-pearl-mini')) {
+      expect(spec).toMatchObject({ size: 12, bodySize: 8 });
+    }
+    for (const spec of mixed.filter((s) => s.symbol === 'kt-pearl')) {
+      expect(spec.bodySize).toBeUndefined();
+    }
   });
 });
 
@@ -94,6 +117,25 @@ describe('caps and the tea level', () => {
     expect(caps.map((c) => c.symbol)).toEqual(['kt-brulee', 'kt-foam-cap']);
     expect(liquidTopFor(caps)).toBe(60);
     expect(liquidTopFor(capsFor([{ topping: topping('Brulee'), quantity: 1 }]))).toBe(50);
+  });
+
+  it('grows the foam downward with every extra lot, pushing the tea down', () => {
+    const foam = (quantity: number) => capsFor([{ topping: topping('Milk Foam'), quantity }])[0];
+    expect(foam(1)).toMatchObject({ drop: 16, height: 40, surfaceLine: 30 });
+    expect(foam(2)).toMatchObject({ drop: 30, height: 60, surfaceLine: 50 });
+    expect(foam(3)).toMatchObject({ drop: 44, height: 80, surfaceLine: 70 });
+    expect(liquidTopFor(capsFor([{ topping: topping('Milk Foam'), quantity: 2 }]))).toBe(74);
+  });
+
+  it('keeps the brulee crust one lot thick no matter the quantity', () => {
+    expect(liquidTopFor(capsFor([{ topping: topping('Brulee'), quantity: 3 }]))).toBe(50);
+  });
+});
+
+describe('productColourVars', () => {
+  it('colours mini pearls the same dark brown as standard pearls', () => {
+    const vars = productColourVars();
+    expect(vars['--pearl-mini']).toBe(vars['--pearl']);
   });
 });
 

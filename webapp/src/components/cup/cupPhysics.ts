@@ -84,12 +84,15 @@ export function createCupWorld(random: () => number = Math.random): CupWorld {
       density: spec.kind === 'ice' ? 0.0009 : spec.size >= 30 ? 0.0025 : 0.002,
       collisionFilter: { category, mask: GROUP.cup | category },
     };
+    // The body takes the art's true extent when that is smaller than the symbol's box (mini pearls),
+    // so pieces pile as close as they look.
+    const bodySize = spec.bodySize ?? spec.size;
     const body =
       spec.shape === 'circle'
-        ? Matter.Bodies.circle(x, y, spec.size / 2, options)
-        : Matter.Bodies.rectangle(x, y, spec.size, spec.size, {
+        ? Matter.Bodies.circle(x, y, bodySize / 2, options)
+        : Matter.Bodies.rectangle(x, y, bodySize, bodySize, {
             ...options,
-            chamfer: { radius: spec.size * 0.22 },
+            chamfer: { radius: bodySize * 0.22 },
           });
     Matter.Body.setAngularVelocity(body, (random() - 0.5) * 0.2);
     Matter.Composite.add(world, body);

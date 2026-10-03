@@ -64,6 +64,24 @@ describe('createCupWorld', () => {
     world.destroy();
   });
 
+  it('sizes the body from the hitbox when a spec declares one', () => {
+    const world = createCupWorld(seeded());
+    const { added } = world.sync([
+      {
+        key: 'mini:0:0',
+        symbol: 'kt-pearl-mini',
+        size: 12,
+        bodySize: 8,
+        shape: 'circle',
+        kind: 'sink',
+      },
+      pearl(1),
+    ]);
+    expect(added[0]?.body.circleRadius).toBeCloseTo(4);
+    expect(added[1]?.body.circleRadius).toBeCloseTo(7);
+    world.destroy();
+  });
+
   it('adds and removes bodies by key without touching the rest', () => {
     const world = createCupWorld(seeded());
     const first = world.sync([pearl(0), pearl(1)]);

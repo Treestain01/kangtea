@@ -151,7 +151,7 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
 
   const style = {
     '--tea': `color-mix(in srgb, ${colour} ${teaColourMix(sugar)}%, ${PRODUCT_COLOURS.coconutJelly})`,
-    ...productColourVars(colour),
+    ...productColourVars(),
   } as CSSProperties;
 
   return (

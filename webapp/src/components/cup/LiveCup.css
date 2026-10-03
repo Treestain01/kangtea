@@ -17,6 +17,13 @@
     fill var(--motion-slow) var(--ease);
 }
 
+/* A cap that grows or moves (more foam, the tea dropping under it) glides with the liquid. */
+.livecup [data-layer='caps'] use {
+  transition:
+    y var(--motion-slow) var(--ease),
+    height var(--motion-slow) var(--ease);
+}
+
 @keyframes livecup-fade {
   from {
     opacity: 0;
@@ -30,12 +37,30 @@
   animation: livecup-fade var(--motion-slow) var(--ease);
 }
 
+/* The first foam lot pours in: it rises from the tea's surface to its resting top. */
+@keyframes livecup-pour {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.livecup__cap--new[href='#kt-foam-cap'] {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: livecup-pour var(--motion-pour) var(--ease);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .livecup__liquid {
+  .livecup__liquid,
+  .livecup [data-layer='caps'] use {
     transition: none;
   }
 
-  .livecup__cap--new {
+  .livecup__cap--new,
+  .livecup__cap--new[href='#kt-foam-cap'] {
     animation: none;
   }
 }

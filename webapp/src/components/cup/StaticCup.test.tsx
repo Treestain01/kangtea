@@ -41,7 +41,8 @@ describe('StaticCup', () => {
     const svg = document.querySelector('svg.staticcup') as SVGSVGElement;
     expect(svg.style.getPropertyValue('--tea')).toContain('55%');
     expect(uses('kt-ice-cube')).toHaveLength(2);
-    expect(uses('kt-pearl')).toHaveLength(10);
+    // A fuller serving than the dozen slots: the static cup fills them all.
+    expect(uses('kt-pearl')).toHaveLength(12);
     expect(uses('kt-foam-cap')).toHaveLength(1);
     // Foam lowers the tea by its own thickness.
     expect(liquid().getAttribute('y')).toBe('60');

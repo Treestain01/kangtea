@@ -57,7 +57,7 @@ describe('LiveCup', () => {
         ]}
       />,
     );
-    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(10));
+    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(20));
     expect(uses('kt-pudding')).toHaveLength(1);
     expect(uses('kt-ice-cube')).toHaveLength(2);
     const firstPearl = uses('kt-pearl')[0];
@@ -80,8 +80,24 @@ describe('LiveCup', () => {
     );
     expect(uses('kt-foam-cap')).toHaveLength(1);
     expect(uses('kt-foam-cap')[0]?.getAttribute('class')).toContain('livecup__cap--new');
+    expect(uses('kt-foam-cap')[0]?.getAttribute('height')).toBe('40');
     expect(liquid()?.getAttribute('y')).toBe('60');
     await waitFor(() => expect(uses('kt-pearl')).toHaveLength(0));
+  });
+
+  it('grows the foam downward and pushes the tea further down on a second lot', () => {
+    const foamOf = (quantity: number) => [{ topping: topping('Milk Foam'), quantity }];
+    const { rerender } = render(
+      <LiveCup colour="#9DBA78" sugar={level('100%')} ice={level('No ice')} toppings={foamOf(1)} />,
+    );
+    rerender(
+      <LiveCup colour="#9DBA78" sugar={level('100%')} ice={level('No ice')} toppings={foamOf(2)} />,
+    );
+    const cap = uses('kt-foam-cap')[0];
+    expect(cap?.getAttribute('height')).toBe('60');
+    // The second lot grows the existing cap rather than pouring a fresh one in.
+    expect(cap?.getAttribute('class') ?? '').not.toContain('livecup__cap--new');
+    expect(document.querySelector('svg.livecup .livecup__liquid')?.getAttribute('y')).toBe('74');
   });
 
   it('removes bodies when a lot is taken away', async () => {
@@ -90,11 +106,11 @@ describe('LiveCup', () => {
     const { rerender } = render(
       <LiveCup colour="#E0912D" sugar={level('100%')} ice={level('No ice')} toppings={two} />,
     );
-    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(10));
+    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(20));
     rerender(
       <LiveCup colour="#E0912D" sugar={level('100%')} ice={level('No ice')} toppings={one} />,
     );
-    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(5));
+    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(10));
   });
 });
 

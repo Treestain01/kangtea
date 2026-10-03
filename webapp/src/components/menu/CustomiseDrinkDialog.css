@@ -375,6 +375,28 @@
   min-width: 0;
 }
 
+/* A fade at an edge while tokens remain beyond it hints at the overflow. It spans the scroller only,
+   so it never bleeds over the tray's heading above or the readout below. */
+.tray__scroller--start::before,
+.tray__scroller--end::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 56px;
+  pointer-events: none;
+}
+
+.tray__scroller--start::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-surface), transparent);
+}
+
+.tray__scroller--end::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-surface), transparent);
+}
+
 /* An arrow floats at an edge while tokens remain beyond it; a fade behind it hints at the overflow. */
 .tray__arrow {
   position: absolute;
@@ -413,27 +435,6 @@
 
 .tray__arrow--left {
   left: var(--space-1);
-}
-
-.tray__arrow--right::before,
-.tray__arrow--left::before {
-  content: '';
-  position: absolute;
-  top: -36px;
-  bottom: -40px;
-  width: 56px;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.tray__arrow--right::before {
-  right: calc(-1 * var(--space-1));
-  background: linear-gradient(to left, var(--color-surface), transparent);
-}
-
-.tray__arrow--left::before {
-  left: calc(-1 * var(--space-1));
-  background: linear-gradient(to right, var(--color-surface), transparent);
 }
 
 .tray__list {
