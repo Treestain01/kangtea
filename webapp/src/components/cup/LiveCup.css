@@ -10,18 +10,20 @@
   --straw: var(--color-accent);
 }
 
+/* The level only ever moves because a cap takes or gives back room, so it moves at the pour's own
+   pace: the same duration and ease as the foam growing over it, and no gap opens between them. */
 .livecup__liquid {
   transition:
-    y var(--motion-slow) var(--ease),
-    height var(--motion-slow) var(--ease),
+    y var(--motion-pour) var(--ease),
+    height var(--motion-pour) var(--ease),
     fill var(--motion-slow) var(--ease);
 }
 
 /* A cap that grows or moves (more foam, the tea dropping under it) glides with the liquid. */
 .livecup [data-layer='caps'] use {
   transition:
-    y var(--motion-slow) var(--ease),
-    height var(--motion-slow) var(--ease);
+    y var(--motion-pour) var(--ease),
+    height var(--motion-pour) var(--ease);
 }
 
 @keyframes livecup-fade {

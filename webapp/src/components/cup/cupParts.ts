@@ -35,9 +35,8 @@ export const PRODUCT_COLOURS = {
   ice: '#ffffff',
   brulee: '#c9812c',
   pudding: '#f2b84b',
-  grassJelly: '#3d4a2c',
   coconutJelly: '#ffffff',
-  teaJelly: '#8a5a3c',
+  teaJelly: '#c99a4f',
   waterChestnut: '#f2e0c0',
   barley: '#c9a86a',
   taro: '#b48fd0',
@@ -124,6 +123,7 @@ const sink = (
  * Picks the art for a topping from its name, so a renamed or new topping still gets something sensible.
  * A lot's body count is sized so one serving piles two to three rows deep across the cup floor,
  * the 25 to 35 cup units that two to three real centimetres come to.
+ * Mini pearls are the exception: a serving is a deep heap of them, three times that count.
  */
 export function artForTopping(topping: Topping): ToppingArt {
   const name = topping.name.toLowerCase();
@@ -140,8 +140,9 @@ export function artForTopping(topping: Topping): ToppingArt {
     });
   }
   if (has('jelly')) {
+    // Grass jelly is as dark as the tapioca; tea jelly a light honey amber.
     const tint = has('grass')
-      ? PRODUCT_COLOURS.grassJelly
+      ? PRODUCT_COLOURS.pearl
       : has('coconut')
         ? PRODUCT_COLOURS.coconutJelly
         : PRODUCT_COLOURS.teaJelly;
@@ -151,7 +152,7 @@ export function artForTopping(topping: Topping): ToppingArt {
     return sink('kt-jelly-cube', 16, 'box', 8, { tint });
   }
   if (has('mixed')) return sink('kt-pearl', 14, 'circle', 10, { alt: 'kt-pearl-mini' });
-  if (has('mini')) return sink('kt-pearl-mini', 12, 'circle', 12);
+  if (has('mini')) return sink('kt-pearl-mini', 12, 'circle', 36);
   return sink('kt-pearl', 14, 'circle', 10);
 }
 

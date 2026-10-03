@@ -6,6 +6,7 @@ import {
   icePieces,
   liquidTopFor,
   piecesFor,
+  PRODUCT_COLOURS,
   productColourVars,
   showsSteam,
   teaColourMix,
@@ -26,7 +27,7 @@ describe('artForTopping', () => {
     });
     expect(artForTopping(topping('Mini Pearls'))).toMatchObject({
       symbol: 'kt-pearl-mini',
-      perLot: 12,
+      perLot: 36,
     });
     expect(artForTopping(topping('Mixed Pearls'))).toMatchObject({
       symbol: 'kt-pearl',
@@ -35,6 +36,11 @@ describe('artForTopping', () => {
     expect(artForTopping(topping('Grass Jelly'))).toMatchObject({
       symbol: 'kt-jelly-cube',
       perLot: 8,
+      tint: PRODUCT_COLOURS.pearl,
+    });
+    expect(artForTopping(topping('Tea Jelly'))).toMatchObject({
+      symbol: 'kt-jelly-cube',
+      tint: PRODUCT_COLOURS.teaJelly,
     });
     expect(artForTopping(topping('Milk Foam'))).toMatchObject({ kind: 'cap' });
     expect(artForTopping(topping('Brulee'))).toMatchObject({ kind: 'cap' });

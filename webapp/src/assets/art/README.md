@@ -52,7 +52,7 @@ Colours that are product data (the tea, tapioca, foam, a topping's tint) are fix
 - **Sugar** sets the tea's depth: 0% is the drink colour mixed 45% towards white, 100% is the colour as given, the steps in between are linear. Sweeter reads darker and richer.
 - **Ice** sets what floats at the top: Warm shows steam and no cubes, No ice shows nothing, Little ice two cubes, Less ice three, Standard ice four. Cubes sit just below the liquid line.
 - **Toppings** are rigid bodies in a small 2D physics world (Matter.js), rendered as these symbols.
-  Sinkers (boba, taro, agar) fall in from above the lid, bounce once and pile at the bottom, ten bodies per lot; mini pearls come twelve per lot.
+  Sinkers (boba, taro, agar) fall in from above the lid, bounce once and pile at the bottom, ten bodies per lot; mini pearls come thirty-six per lot, a deep heap of them.
   One lot piles two to three rows deep across the cup floor, the 25 to 35 cup units that two to three real centimetres of a serving come to.
   Gravity is tuned so a piece falls fast through the air (engine gravity scale 0.0011 in cup units, light air drag) and then, once under the surface, meets thicker drag, partial buoyancy and a lower speed cap, so it slows as it enters the tea and settles in about a second and a half.
   Jellies sink too, eight bodies per lot, popping balls ten; the vanilla ice cream scoop is one large sinking body per lot.
@@ -60,7 +60,8 @@ Colours that are product data (the tea, tapioca, foam, a topping's tint) are fix
   Caps (milk foam and brulee) are not physical and are drawn inside the cup clip so the slanted walls trim them to the inner width.
   Brulee fades in over `--motion-slow` and lowers the tea by its 6 unit thickness.
   The first milk foam lot pours in: it rises from the tea's surface to its resting top over `--motion-pour` (1100ms) and lowers the tea by 16 units.
-  Every foam lot after the first grows the cap downward instead, dropping the tea (and the ice floating in it) another 14 units; the symbol stretches (`preserveAspectRatio="none"`) so the band's top edge stays put, and the cap's `y`/`height` glide over `--motion-slow`.
+  Every foam lot after the first grows the cap downward instead, dropping the tea (and the ice floating in it) another 14 units; the symbol stretches (`preserveAspectRatio="none"`) so the band's top edge stays put.
+  The liquid's level and the caps' `y`/`height` all glide over `--motion-pour` with the same ease, so the foam grows exactly as fast as the tea falls and no gap opens between them.
   Pudding is one large block per lot, about twice a pearl, that sinks and piles with them.
   Each kind collides only with the cup and its own kind, so pearls sink straight through the ice.
   The static cup (menu cards, cart rows, the kitchen) keeps its fixed dozen piece slots, so a full serving fills them all.
