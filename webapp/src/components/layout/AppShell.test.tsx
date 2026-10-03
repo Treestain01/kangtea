@@ -37,7 +37,7 @@ describe('AppShell', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Kang Tea' })).toBeInTheDocument();
     expect(screen.getByText('Home content')).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: 'Main' })).toBeInTheDocument();
-    const panel = screen.getByRole('complementary', { name: 'Your order' });
+    const panel = screen.getByRole('complementary', { name: 'Your Order' });
     expect(panel).toHaveTextContent('Your order is empty.');
     expect(panel).toHaveTextContent('Add drinks from the menu and they will appear here.');
   });

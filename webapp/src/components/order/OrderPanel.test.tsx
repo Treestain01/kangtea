@@ -162,7 +162,7 @@ describe('OrderPanel active order', () => {
   it('hides cancel once the drinks are being made', () => {
     const { stores } = withOrder('making');
     renderPanel(stores);
-    expect(screen.getByText('Being made').closest('li')).toHaveAttribute('aria-current', 'step');
+    expect(screen.getByText('Being poured').closest('li')).toHaveAttribute('aria-current', 'step');
     expect(screen.queryByRole('button', { name: 'Cancel order' })).not.toBeInTheDocument();
   });
 

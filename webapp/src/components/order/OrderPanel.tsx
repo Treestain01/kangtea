@@ -58,7 +58,7 @@ type OrderPanelProps = {
 };
 
 /**
- * Your order: the cart until you place it, then the live status until you collect.
+ * Your Order: the cart until you place it, then the live status until you collect.
  * The Order page renders it full width on phones; the app shell renders it as the side panel on desktop.
  */
 export function OrderPanel({ compact = false }: OrderPanelProps) {
@@ -203,7 +203,7 @@ function CartView({
     return (
       <section className={className} aria-labelledby="order-heading">
         <h2 id="order-heading" className="order__heading">
-          Your order
+          Your Order
         </h2>
         <div className="order__empty">
           <span className="order__cup" aria-hidden="true">
@@ -225,7 +225,7 @@ function CartView({
   return (
     <section className={className} aria-labelledby="order-heading">
       <h2 id="order-heading" className="order__heading">
-        Your order
+        Your Order
       </h2>
       <ul className="order__lines" aria-label="Drinks in your order">
         {lines.map((line) => (
@@ -294,7 +294,7 @@ function ActiveOrderView({
   return (
     <section className={className} aria-labelledby="order-heading">
       <h2 id="order-heading" className="order__heading">
-        Your order
+        Your Order
       </h2>
       {first && firstArt && (
         <div className={`kitchen${compact ? ' kitchen--compact' : ''}`}>
