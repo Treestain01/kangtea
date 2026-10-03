@@ -1,4 +1,4 @@
-import type { OrderLine } from '@bbt/shared';
+import type { Garnish, OrderLine } from '@bbt/shared';
 import { useEffect, useId, useRef, type CSSProperties } from 'react';
 import type { ToppingChoice } from '../../store/lines';
 import {
@@ -11,6 +11,7 @@ import {
   productColourVars,
   showsSteam,
   teaColourMix,
+  wallPiecesFor,
   type PieceSpec,
 } from './cupParts';
 import './StaticCup.css';
@@ -24,6 +25,8 @@ type StaticCupProps = {
   customisations?: readonly Customisation[];
   /** Draw pearls even without a topping line, for drinks the menu says come with them. */
   pearls?: boolean;
+  /** Citrus slices the drink innately comes with (`MenuItem.garnish`), leaning on the walls. */
+  garnish?: Garnish;
   /** How full the cup is, 0 to 1. The kitchen pours from 0. */
   level?: number;
   /** Whether the lid is on. The kitchen puts it on when the drink is ready. */
@@ -75,6 +78,7 @@ export function StaticCup({
   colour,
   customisations = [],
   pearls = false,
+  garnish,
   level = 1,
   lid = true,
   drop = false,
@@ -89,6 +93,7 @@ export function StaticCup({
   const chosen = toppings.length === 0 && pearls ? [PEARLS_WITH_THE_DRINK] : toppings;
   const caps = capsFor(chosen);
   const pieces = piecesFor(chosen).slice(0, MAX_PIECES);
+  const wallSlices = wallPiecesFor(chosen, garnish);
   const cubes = ice ? iceCubeCount(ice) : 0;
   const restingTop = liquidTopFor(caps);
   const liquidTop = restingTop + (1 - Math.min(1, Math.max(0, level))) * (CUP.height - restingTop);
@@ -103,7 +108,7 @@ export function StaticCup({
 
   const style = {
     '--tea': `color-mix(in srgb, ${colour} ${teaColourMix(sugar ?? { name: '100%' })}%, ${PRODUCT_COLOURS.coconutJelly})`,
-    ...productColourVars(colour),
+    ...productColourVars(),
   } as CSSProperties;
 
   return (
@@ -130,6 +135,17 @@ export function StaticCup({
           fill="var(--tea)"
         />
         <use href="#kt-tea-sheen" width={CUP.width} height={CUP.height} />
+        {!empty &&
+          wallSlices.map((slice) => (
+            <use
+              key={slice.key}
+              href={`#${slice.symbol}`}
+              x={slice.x}
+              y={slice.y}
+              width={slice.size}
+              height={slice.size}
+            />
+          ))}
         {!empty &&
           pieces.map((piece, index) => (
             <Piece

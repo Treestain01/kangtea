@@ -17,6 +17,16 @@ describe('seed.json', () => {
     ]);
   });
 
+  it('garnishes every drink named after a citrus with that citrus', () => {
+    // The board rule: a drink with orange or lemon in its name comes with those slices.
+    const { menu } = loadSeed();
+    for (const item of menu.items) {
+      const name = item.name.toLowerCase();
+      if (name.includes('orange')) expect(item, item.name).toMatchObject({ garnish: 'orange' });
+      else if (name.includes('lemon')) expect(item, item.name).toMatchObject({ garnish: 'lemon' });
+    }
+  });
+
   it('uses unique ids within every list', () => {
     const { menu } = loadSeed();
     for (const list of [

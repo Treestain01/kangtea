@@ -54,6 +54,7 @@ export function createPostgresCatalogue(db: Db): Catalogue {
           tags: item.tags,
           colour: item.colour,
           pearls: item.pearls,
+          ...(item.garnish === null ? {} : { garnish: item.garnish }),
         })),
         customisations: {
           sugarLevels: sugarLevels.map(({ id, name, isDefault }) => ({ id, name, isDefault })),

@@ -54,7 +54,7 @@ Rules:
 - The drink card's "+" is an ink square (`--color-text` on `--color-bg`); the whole card is the button.
 - Type: the greeting is `--font-display` at optical size 144, weight 500, with the time of day in italic accent; Chinese names are `--font-zh` at reading size.
 - Hover on interactive surfaces changes the border to the accent, never adds a shadow.
-- Every transition and animation eases in and out via `--ease`, at `--motion-fast` (160ms) for state changes and `--motion-slow` (320ms) for sheets, and is disabled under `prefers-reduced-motion: reduce`. `tokens.test.ts` fails on a literal duration or easing outside `tokens.css`.
+- Every transition and animation eases in and out via `--ease`, at `--motion-fast` (160ms) for state changes, `--motion-slow` (320ms) for sheets and `--motion-pour` (1100ms) for things that physically fill (the foam pouring onto the live cup), and is disabled under `prefers-reduced-motion: reduce`. `tokens.test.ts` fails on a literal duration or easing outside `tokens.css`.
 
 ## Typography
 
@@ -74,7 +74,7 @@ Headings carry `letter-spacing: -0.01em` and `text-wrap: balance`.
 - `--radius-sm`, `--radius-md`, `--radius-lg`, `--radius-xl`: 4, 8, 16, 22px. Cards take xl, inner panels lg, wells and small controls md, fields sm.
 - `--shadow-object`: the cup's drop shadow, used only as a `filter`. `--font-zh`: the serif for Chinese names.
 - `--tap-target`: 44px minimum height for tappable elements on phones.
-- `--ease` (`ease-in-out`), `--motion-fast` (160ms), `--motion-slow` (320ms): the only timing values used by transitions and animations.
+- `--ease` (`ease-in-out`), `--motion-fast` (160ms), `--motion-slow` (320ms), `--motion-pour` (1100ms): the only timing values used by transitions and animations.
 - `--tab-bar-height` (64px), `--cart-panel-width` (300px), `--sidebar-width` (locked to `--cart-panel-width`): the fixed layout pieces `.app` leaves room for. Change the panel width and the sidebar follows. See `navigation.md`.
 
 ## Breakpoints

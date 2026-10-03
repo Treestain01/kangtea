@@ -215,6 +215,7 @@ export function CustomiseDrinkDialog({
                 sugar={sugar}
                 ice={ice}
                 toppings={toppings}
+                garnish={item.garnish}
                 label={`${item.name} as you have built it`}
               />
             </div>
@@ -244,7 +245,6 @@ export function CustomiseDrinkDialog({
                   <ToppingToken
                     key={topping.id}
                     topping={topping}
-                    colour={item.colour}
                     count={toppingCounts[topping.id] ?? 0}
                     onAdd={() => changeTopping(topping.id, 1)}
                     onRemove={() => changeTopping(topping.id, -1)}
@@ -337,8 +337,16 @@ function TrayScroller({ children }: { children: React.ReactNode }) {
     list.scrollBy({ left: direction * list.clientWidth * TRAY_PAGE, behavior: 'smooth' });
   };
 
+  const scrollerClass = [
+    'tray__scroller',
+    edges.left && 'tray__scroller--start',
+    edges.right && 'tray__scroller--end',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <div className="tray__scroller">
+    <div className={scrollerClass}>
       <ul className="tray__list" ref={listRef}>
         {children}
       </ul>
@@ -372,7 +380,6 @@ function TrayScroller({ children }: { children: React.ReactNode }) {
 
 type ToppingTokenProps = {
   topping: Topping;
-  colour: string;
   count: number;
   onAdd: () => void;
   onRemove: () => void;
@@ -382,7 +389,7 @@ type ToppingTokenProps = {
  * One topping in the tray. The face is a button that drops a lot into the cup each tap; a badge
  * shows how many lots are on the drink and a small "−" appears once there is one to take away.
  */
-function ToppingToken({ topping, colour, count, onAdd, onRemove }: ToppingTokenProps) {
+function ToppingToken({ topping, count, onAdd, onRemove }: ToppingTokenProps) {
   const atMax = count >= MAX_TOPPING_QUANTITY;
   return (
     <li className="token">
@@ -399,7 +406,7 @@ function ToppingToken({ topping, colour, count, onAdd, onRemove }: ToppingTokenP
         }}
       >
         <span className="token__art">
-          <ToppingArt topping={topping} colour={colour} />
+          <ToppingArt topping={topping} />
         </span>
         {count > 0 && (
           <span className="token__badge" aria-hidden="true">

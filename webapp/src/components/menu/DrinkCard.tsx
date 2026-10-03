@@ -69,7 +69,7 @@ export function DrinkCard({
       <div className="drink__art" style={artStyle} ref={artRef}>
         {tag && <span className="drink__tag">{TAG_LABELS[tag]}</span>}
         <div className="drink__cup">
-          <StaticCup colour={item.colour} pearls={item.pearls} />
+          <StaticCup colour={item.colour} pearls={item.pearls} garnish={item.garnish} />
         </div>
       </div>
       <h3 className="drink__name" id={`drink-${item.id}-name`}>

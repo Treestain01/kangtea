@@ -41,7 +41,8 @@ describe('StaticCup', () => {
     const svg = document.querySelector('svg.staticcup') as SVGSVGElement;
     expect(svg.style.getPropertyValue('--tea')).toContain('55%');
     expect(uses('kt-ice-cube')).toHaveLength(2);
-    expect(uses('kt-pearl')).toHaveLength(10);
+    // A fuller serving than the dozen slots: the static cup fills them all.
+    expect(uses('kt-pearl')).toHaveLength(12);
     expect(uses('kt-foam-cap')).toHaveLength(1);
     // Foam lowers the tea by its own thickness.
     expect(liquid().getAttribute('y')).toBe('60');
@@ -60,6 +61,18 @@ describe('StaticCup', () => {
     rerender(<StaticCup colour="#B07A45" pearls level={1} lid drop />);
     expect(liquid().getAttribute('y')).toBe('44');
     expect(uses('kt-pearl')[0]).toHaveClass('staticcup__piece--drop');
+  });
+
+  it('leans garnish and slice toppings on the walls', () => {
+    render(
+      <StaticCup
+        colour="#F0A640"
+        garnish="orange"
+        customisations={[{ name: 'Topping', value: 'Lemon Slices' }]}
+      />,
+    );
+    expect(uses('kt-orange-slice')).toHaveLength(3);
+    expect(uses('kt-lemon-slice')).toHaveLength(2);
   });
 
   it('never draws more than a dozen pieces', () => {

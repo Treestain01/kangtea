@@ -10,11 +10,51 @@
   --straw: var(--color-accent);
 }
 
+/* The level only ever moves because a cap takes or gives back room, so it moves at the pour's own
+   pace: the same duration and ease as the foam growing over it, and no gap opens between them. */
 .livecup__liquid {
   transition:
-    y var(--motion-slow) var(--ease),
-    height var(--motion-slow) var(--ease),
+    y var(--motion-pour) var(--ease),
+    height var(--motion-pour) var(--ease),
     fill var(--motion-slow) var(--ease);
+}
+
+/* A cap that moves (the tea dropping under the brulee) glides with the liquid. */
+.livecup [data-layer='caps'] use {
+  transition:
+    y var(--motion-pour) var(--ease),
+    height var(--motion-pour) var(--ease);
+}
+
+/* The foam band: plain rects whose y and height run on the same clock as the liquid, so the first
+   lot pours in (height 0 upward), later lots expand the same band, and no gap or overlap ever opens
+   between the foam's bottom edge and the tea. The details fade with the band. */
+.livecup__foamband {
+  transition: opacity var(--motion-pour) var(--ease);
+}
+
+.livecup__foamband--empty {
+  opacity: 0;
+}
+
+.livecup__foamband rect {
+  transition:
+    y var(--motion-pour) var(--ease),
+    height var(--motion-pour) var(--ease);
+}
+
+.livecup__foam {
+  fill: var(--foam);
+}
+
+.livecup__foam-line {
+  fill: var(--cup-line);
+  fill-opacity: 0.18;
+}
+
+.livecup__foam-gloss {
+  fill: var(--ice);
+  fill-opacity: 0.6;
 }
 
 @keyframes livecup-fade {
@@ -30,12 +70,21 @@
   animation: livecup-fade var(--motion-slow) var(--ease);
 }
 
+/* A slice fades in as it is added; ones already leaning on the wall never replay the entrance. */
+.livecup__slice {
+  animation: livecup-fade var(--motion-slow) var(--ease);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .livecup__liquid {
+  .livecup__liquid,
+  .livecup [data-layer='caps'] use,
+  .livecup__foamband,
+  .livecup__foamband rect {
     transition: none;
   }
 
-  .livecup__cap--new {
+  .livecup__cap--new,
+  .livecup__slice {
     animation: none;
   }
 }

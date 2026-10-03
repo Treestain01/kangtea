@@ -29,7 +29,12 @@ export function CupOfTheDay({ item, onOpen }: CupOfTheDayProps) {
     <section className="cotd" aria-labelledby="cotd-heading">
       <div className="cotd__art" style={{ '--tea': item.colour } as CSSProperties}>
         <span className="cotd__cup">
-          <StaticCup colour={item.colour} pearls={item.pearls} {...cupPropsFor(phase)} />
+          <StaticCup
+            colour={item.colour}
+            pearls={item.pearls}
+            garnish={item.garnish}
+            {...cupPropsFor(phase)}
+          />
         </span>
       </div>
       <div className="cotd__text">

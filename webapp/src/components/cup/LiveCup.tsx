@@ -1,4 +1,4 @@
-import type { OptionLevel } from '@bbt/shared';
+import type { Garnish, OptionLevel } from '@bbt/shared';
 import { useEffect, useId, useMemo, useRef, type CSSProperties } from 'react';
 import type { ToppingChoice } from '../../store/lines';
 import {
@@ -6,12 +6,14 @@ import {
   FRAME_MS,
   PRODUCT_COLOURS,
   capsFor,
+  foamBandFor,
   icePieces,
   liquidTopFor,
   piecesFor,
   productColourVars,
   showsSteam,
   teaColourMix,
+  wallPiecesFor,
   type PieceSpec,
 } from './cupParts';
 import type { CupWorld, LivePiece } from './cupPhysics';
@@ -23,6 +25,8 @@ type LiveCupProps = {
   sugar: OptionLevel;
   ice: OptionLevel;
   toppings: readonly ToppingChoice[];
+  /** Slices the drink innately comes with (`MenuItem.garnish`); not a topping, never removable. */
+  garnish?: Garnish;
   /** Accessible description of the cup; the visible readout lives elsewhere in the sheet. */
   label?: string;
 };
@@ -36,11 +40,30 @@ function prefersReducedMotion(): boolean {
 }
 
 /**
+ * The pour duration from the theme (`--motion-pour`), read off a live element so the physics
+ * surface falls exactly as fast as the painted tea. Zero wherever styles do not resolve (tests).
+ */
+function pourDurationMs(from: Element | null): number {
+  if (!from || typeof getComputedStyle !== 'function') return 0;
+  const raw = getComputedStyle(from).getPropertyValue('--motion-pour').trim();
+  const value = Number.parseFloat(raw);
+  if (!Number.isFinite(value)) return 0;
+  return raw.endsWith('ms') ? value : value * 1000;
+}
+
+/**
  * The cup that builds itself while a drink is customised. Sugar deepens the tea, ice floats under the
  * surface, foam and brulee fade in on top, and every other topping drops in and piles at the bottom.
  * Toppings and ice are bodies in `cupPhysics`, loaded on demand so Matter.js only ships with the sheet.
  */
-export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: LiveCupProps) {
+export function LiveCup({
+  colour,
+  sugar,
+  ice,
+  toppings,
+  garnish,
+  label = 'Your drink',
+}: LiveCupProps) {
   const pieceLayer = useRef<SVGGElement>(null);
   const worldRef = useRef<CupWorld | null>(null);
   const nodes = useRef(new Map<string, SVGUseElement>());
@@ -50,8 +73,12 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
   // The cup owns its clip so the tea is trimmed to the walls even if the sprite is elsewhere.
   const clipId = useId();
 
-  const caps = capsFor(toppings);
-  const liquidTop = liquidTopFor(caps);
+  const allCaps = capsFor(toppings);
+  const liquidTop = liquidTopFor(allCaps);
+  // Foam is drawn as a band of rects flush with the tea, not as a symbol; see foamBandFor.
+  const foamThickness = foamBandFor(allCaps);
+  const caps = allCaps.filter((cap) => cap.symbol !== 'kt-foam-cap');
+  const wallSlices = wallPiecesFor(toppings, garnish);
   const specs = useMemo(() => [...piecesFor(toppings), ...icePieces(ice)], [toppings, ice]);
   specsRef.current = specs;
 
@@ -137,7 +164,9 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
   useEffect(() => {
     const world = worldRef.current;
     if (!world) return;
-    world.setLiquidTop(liquidTop);
+    // The surface eases down over the same duration as the tea's transition, so the foam pushes
+    // the floating ice ahead of it instead of the ice dropping to the final line at once.
+    world.setLiquidTop(liquidTop, reduced ? 0 : pourDurationMs(pieceLayer.current));
     applySpecs(world);
     // applySpecs reads specsRef, which is refreshed every render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,7 +180,7 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
 
   const style = {
     '--tea': `color-mix(in srgb, ${colour} ${teaColourMix(sugar)}%, ${PRODUCT_COLOURS.coconutJelly})`,
-    ...productColourVars(colour),
+    ...productColourVars(),
   } as CSSProperties;
 
   return (
@@ -171,6 +200,20 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
           fill="var(--tea)"
         />
         <use href="#kt-tea-sheen" width={CUP.width} height={CUP.height} />
+        {/* Slices lean on the walls behind the moving pieces; they are never physics bodies. */}
+        <g data-layer="slices">
+          {wallSlices.map((slice) => (
+            <use
+              key={slice.key}
+              href={`#${slice.symbol}`}
+              x={slice.x}
+              y={slice.y}
+              width={slice.size}
+              height={slice.size}
+              className="livecup__slice"
+            />
+          ))}
+        </g>
         <g ref={pieceLayer} data-layer="pieces" />
         <g data-layer="caps">
           {caps.map((cap) => (
@@ -184,6 +227,35 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
               className={newCaps.includes(cap) ? 'livecup__cap--new' : undefined}
             />
           ))}
+        </g>
+        {/* The foam band is always in the tree so pouring, growing and draining are one y/height
+            transition in lockstep with the liquid: its bottom edge is always the tea's top edge. */}
+        <g
+          data-layer="foam"
+          className={`livecup__foamband${foamThickness === 0 ? ' livecup__foamband--empty' : ''}`}
+        >
+          <rect
+            className="livecup__foam"
+            x="18"
+            y={liquidTop - foamThickness}
+            width="84"
+            height={foamThickness}
+          />
+          <rect
+            className="livecup__foam-line"
+            x="18"
+            y={liquidTop - foamThickness}
+            width="84"
+            height="1.5"
+          />
+          <rect
+            className="livecup__foam-gloss"
+            x="26"
+            y={liquidTop - foamThickness + 4}
+            width="30"
+            height="4"
+            rx="2"
+          />
         </g>
       </g>
       <use href="#kt-cup-body" width={CUP.width} height={CUP.height} />

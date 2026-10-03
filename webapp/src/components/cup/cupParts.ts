@@ -1,4 +1,4 @@
-import type { OptionLevel, Topping } from '@bbt/shared';
+import type { Garnish, OptionLevel, Topping } from '@bbt/shared';
 import type { ToppingChoice } from '../../store/lines';
 
 /**
@@ -35,27 +35,30 @@ export const PRODUCT_COLOURS = {
   ice: '#ffffff',
   brulee: '#c9812c',
   pudding: '#f2b84b',
-  grassJelly: '#3d4a2c',
   coconutJelly: '#ffffff',
-  teaJelly: '#8a5a3c',
+  teaJelly: '#c99a4f',
   waterChestnut: '#f2e0c0',
   barley: '#c9a86a',
   taro: '#b48fd0',
+  orangeSlice: '#f08c28',
+  lemonSlice: '#e8d44d',
 } as const;
 
 /**
- * The product colour variables the cup parts read, for a drink of the given colour.
+ * The product colour variables the cup parts read.
  * Shared by the live cup and the topping icons so a pearl looks the same in both.
  */
-export function productColourVars(colour: string): Record<string, string> {
+export function productColourVars(): Record<string, string> {
   return {
     '--pearl': PRODUCT_COLOURS.pearl,
-    '--pearl-mini': `color-mix(in srgb, ${colour} 60%, ${PRODUCT_COLOURS.pearl})`,
+    '--pearl-mini': PRODUCT_COLOURS.pearl,
     '--foam': PRODUCT_COLOURS.cream,
     '--ice': PRODUCT_COLOURS.ice,
     '--brulee': PRODUCT_COLOURS.brulee,
     '--pudding': PRODUCT_COLOURS.pudding,
     '--taro': PRODUCT_COLOURS.taro,
+    '--orange-slice': PRODUCT_COLOURS.orangeSlice,
+    '--lemon-slice': PRODUCT_COLOURS.lemonSlice,
   };
 }
 
@@ -64,6 +67,8 @@ export interface PieceSpec {
   key: string;
   symbol: string;
   size: number;
+  /** The physics body's diameter when the art fills less of its box than usual (mini pearls). */
+  bodySize?: number;
   shape: 'circle' | 'box';
   kind: 'sink' | 'ice';
   tint?: string;
@@ -85,13 +90,43 @@ type ToppingArt =
   | {
       kind: 'sink';
       symbol: string;
-      alt?: string;
+      /** Symbols cycled piece by piece, for combos that pour several things in together. */
+      mix?: readonly string[];
       size: number;
       shape: 'circle' | 'box';
       perLot: number;
       tint?: string;
     }
-  | { kind: 'cap'; cap: CapSpec };
+  | { kind: 'cap'; cap: CapSpec }
+  | { kind: 'wall'; symbol: string; perLot: number };
+
+/** A citrus slice leaning on the cup wall: drawn in place, translucent, never a physics body. */
+export interface WallSpec {
+  key: string;
+  symbol: string;
+  x: number;
+  y: number;
+  size: number;
+}
+
+/**
+ * Slice centres, alternating walls down the cup, reused top to bottom as slices accumulate.
+ * Sized like the slices in the shop photography: around half the cup's width, clipped by the walls.
+ */
+const WALL_SLOTS = [
+  { x: 39, y: 92, size: 56 },
+  { x: 82, y: 124, size: 52 },
+  { x: 36, y: 150, size: 48 },
+  { x: 84, y: 76, size: 48 },
+  { x: 34, y: 118, size: 46 },
+  { x: 86, y: 160, size: 46 },
+  { x: 42, y: 68, size: 46 },
+  { x: 80, y: 148, size: 46 },
+  { x: 60, y: 98, size: 46 },
+] as const;
+
+/** How many slices a drink's innate garnish leans on the walls. */
+const GARNISH_SLICES = 3;
 
 const FOAM: CapSpec = {
   symbol: 'kt-foam-cap',
@@ -115,38 +150,54 @@ const sink = (
   size: number,
   shape: 'circle' | 'box',
   perLot: number,
-  extra: { alt?: string; tint?: string } = {},
+  extra: { mix?: readonly string[]; tint?: string } = {},
 ): ToppingArt => ({ kind: 'sink', symbol, size, shape, perLot, ...extra });
 
-/** Picks the art for a topping from its name, so a renamed or new topping still gets something sensible. */
+/**
+ * Picks the art for a topping from its name, so a renamed or new topping still gets something sensible.
+ * A lot's body count is sized so one serving piles two to three rows deep across the cup floor,
+ * the 25 to 35 cup units that two to three real centimetres come to.
+ * Mini pearls are the exception: a serving is a deep heap of them, three times that count.
+ */
 export function artForTopping(topping: Topping): ToppingArt {
   const name = topping.name.toLowerCase();
   const has = (word: string) => name.includes(word);
+  if (has('slice'))
+    return {
+      kind: 'wall',
+      symbol: has('lemon') ? 'kt-lemon-slice' : 'kt-orange-slice',
+      perLot: 2,
+    };
   if (has('foam')) return { kind: 'cap', cap: FOAM };
   if (has('brulee') || has('brûlée')) return { kind: 'cap', cap: BRULEE };
   if (has('ice cream')) return sink('kt-ice-cream-scoop', 40, 'circle', 1);
   if (has('pudding')) return sink('kt-pudding', 30, 'box', 1);
-  if (has('taro')) return sink('kt-taro-ball', 14, 'circle', 5);
-  if (has('agar')) return sink('kt-agar-ball', 13, 'circle', 5);
+  if (has('taro')) return sink('kt-taro-ball', 14, 'circle', 10);
+  if (has('agar')) return sink('kt-agar-ball', 13, 'circle', 10);
   if (has('popping')) {
-    return sink('kt-popping-ball', 14, 'circle', 4, {
+    return sink('kt-popping-ball', 14, 'circle', 10, {
       tint: has('barley') ? PRODUCT_COLOURS.barley : PRODUCT_COLOURS.waterChestnut,
     });
   }
   if (has('jelly')) {
+    // Grass jelly is as dark as the tapioca; tea jelly a light honey amber.
     const tint = has('grass')
-      ? PRODUCT_COLOURS.grassJelly
+      ? PRODUCT_COLOURS.pearl
       : has('coconut')
         ? PRODUCT_COLOURS.coconutJelly
         : PRODUCT_COLOURS.teaJelly;
-    // "Boba, Mini Pearls & Grass Jelly": pearls with jelly cubes in between.
+    // "Boba, Mini Pearls & Grass Jelly": pearls, mini pearls and jelly cubes in turn.
     if (has('boba') || has('pearl'))
-      return sink('kt-pearl', 14, 'circle', 5, { alt: 'kt-jelly-cube', tint });
-    return sink('kt-jelly-cube', 16, 'box', 4, { tint });
+      return sink('kt-pearl', 14, 'circle', 12, {
+        mix: ['kt-pearl', 'kt-pearl-mini', 'kt-jelly-cube'],
+        tint,
+      });
+    return sink('kt-jelly-cube', 16, 'box', 8, { tint });
   }
-  if (has('mixed')) return sink('kt-pearl', 14, 'circle', 5, { alt: 'kt-pearl-mini' });
-  if (has('mini')) return sink('kt-pearl-mini', 12, 'circle', 5);
-  return sink('kt-pearl', 14, 'circle', 5);
+  if (has('mixed'))
+    return sink('kt-pearl', 14, 'circle', 10, { mix: ['kt-pearl', 'kt-pearl-mini'] });
+  if (has('mini')) return sink('kt-pearl-mini', 12, 'circle', 36);
+  return sink('kt-pearl', 14, 'circle', 10);
 }
 
 /** Bodies for every lot of every chosen topping, in menu order. */
@@ -157,13 +208,15 @@ export function piecesFor(toppings: readonly ToppingChoice[]): PieceSpec[] {
     if (art.kind !== 'sink') continue;
     for (let lot = 0; lot < quantity; lot += 1) {
       for (let n = 0; n < art.perLot; n += 1) {
-        const symbol = art.alt && n % 2 ? art.alt : art.symbol;
+        const symbol = art.mix ? (art.mix[n % art.mix.length] ?? art.symbol) : art.symbol;
         const size =
-          symbol === 'kt-pearl-mini' ? 12 : symbol === 'kt-jelly-cube' && art.alt ? 14 : art.size;
+          symbol === 'kt-pearl-mini' ? 12 : symbol === 'kt-jelly-cube' && art.mix ? 14 : art.size;
         specs.push({
           key: `${topping.id}:${lot}:${n}`,
           symbol,
           size,
+          // The mini pearl's circle fills just over half its box, so its body is sized to the art.
+          ...(symbol === 'kt-pearl-mini' ? { bodySize: 8 } : {}),
           shape: symbol === 'kt-jelly-cube' || symbol === 'kt-pudding' ? 'box' : 'circle',
           kind: 'sink',
           ...(art.tint ? { tint: art.tint } : {}),
@@ -174,12 +227,72 @@ export function piecesFor(toppings: readonly ToppingChoice[]): PieceSpec[] {
   return specs;
 }
 
-/** Surface layers for the chosen toppings, brulee under foam. */
+/** How much further the tea drops for each foam lot past the first. */
+const FOAM_LOT_DROP = 14;
+
+/**
+ * The foam cap for a number of lots: every lot past the first drops the tea another `FOAM_LOT_DROP`.
+ * The live cup draws the foam itself from the drop (see `foamBandFor`); the symbol's height and
+ * surface line only place the static cup's cap and size the tray token.
+ */
+function foamFor(quantity: number): CapSpec {
+  return { ...FOAM, drop: FOAM.drop + FOAM_LOT_DROP * Math.max(0, quantity - 1) };
+}
+
+/** How far the foam band rises above where the tea would rest without it. */
+const FOAM_LIP = 2;
+
+/**
+ * The thickness of the live cup's foam band, zero without foam. The band's bottom edge sits exactly
+ * on the lowered tea (`liquidTopFor`) and its top edge stays at `CUP.liquidTop - FOAM_LIP` whatever
+ * the quantity, so more foam expands the same band downward and it never overlaps the tea.
+ */
+export function foamBandFor(caps: readonly CapSpec[]): number {
+  const foam = caps.find((cap) => cap.symbol === 'kt-foam-cap');
+  return foam ? foam.drop + FOAM_LIP : 0;
+}
+
+/**
+ * Slices leaning on the cup walls: the drink's innate garnish first, then every lot of a slice
+ * topping, each taking the next wall slot so they spread down the cup in a stable order.
+ */
+export function wallPiecesFor(toppings: readonly ToppingChoice[], garnish?: Garnish): WallSpec[] {
+  const slices: { key: string; symbol: string }[] = [];
+  if (garnish) {
+    const symbol = garnish === 'lemon' ? 'kt-lemon-slice' : 'kt-orange-slice';
+    for (let n = 0; n < GARNISH_SLICES; n += 1) slices.push({ key: `garnish:${n}`, symbol });
+  }
+  for (const { topping, quantity } of toppings) {
+    const art = artForTopping(topping);
+    if (art.kind !== 'wall') continue;
+    for (let lot = 0; lot < quantity; lot += 1) {
+      for (let n = 0; n < art.perLot; n += 1) {
+        slices.push({ key: `${topping.id}:${lot}:${n}`, symbol: art.symbol });
+      }
+    }
+  }
+  return slices.map((slice, index) => {
+    const slot = WALL_SLOTS[index % WALL_SLOTS.length] as (typeof WALL_SLOTS)[number];
+    // A second pass over the slots nudges down a little so stacked slices stay distinguishable.
+    const nudge = Math.floor(index / WALL_SLOTS.length) * 6;
+    return {
+      ...slice,
+      x: slot.x - slot.size / 2,
+      y: slot.y - slot.size / 2 + nudge,
+      size: slot.size,
+    };
+  });
+}
+
+/** Surface layers for the chosen toppings, brulee under foam. Foam thickens with its quantity. */
 export function capsFor(toppings: readonly ToppingChoice[]): CapSpec[] {
   const caps = toppings
-    .map(({ topping }) => artForTopping(topping))
-    .filter((art): art is { kind: 'cap'; cap: CapSpec } => art.kind === 'cap')
-    .map((art) => art.cap);
+    .map(({ topping, quantity }) => ({ art: artForTopping(topping), quantity }))
+    .filter(
+      (entry): entry is { art: { kind: 'cap'; cap: CapSpec }; quantity: number } =>
+        entry.art.kind === 'cap',
+    )
+    .map(({ art, quantity }) => (art.cap.symbol === 'kt-foam-cap' ? foamFor(quantity) : art.cap));
   return [...caps].sort((a, b) => a.drop - b.drop);
 }
 

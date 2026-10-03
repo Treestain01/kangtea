@@ -12,6 +12,10 @@ export type MenuCategory = z.infer<typeof MenuCategorySchema>;
 export const MenuItemTagSchema = z.enum(['best-seller', 'recommended', 'new']);
 export type MenuItemTag = z.infer<typeof MenuItemTagSchema>;
 
+/** Citrus slices the drink comes with, leaning on the cup walls. Not a topping; never removable. */
+export const GarnishSchema = z.enum(['orange', 'lemon']);
+export type Garnish = z.infer<typeof GarnishSchema>;
+
 export const MenuItemSchema = z.object({
   id: z.string().min(1),
   categoryId: z.string().min(1),
@@ -25,6 +29,8 @@ export const MenuItemSchema = z.object({
   colour: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'expected a 6 digit hex colour'),
   /** Whether the illustration shows pearls at the bottom of the cup. */
   pearls: z.boolean(),
+  /** Slices the illustration leans on the cup walls, for drinks that come with them. */
+  garnish: GarnishSchema.optional(),
 });
 export type MenuItem = z.infer<typeof MenuItemSchema>;
 

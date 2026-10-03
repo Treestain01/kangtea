@@ -57,19 +57,22 @@ describe('LiveCup', () => {
         ]}
       />,
     );
-    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(10));
+    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(20));
     expect(uses('kt-pudding')).toHaveLength(1);
     expect(uses('kt-ice-cube')).toHaveLength(2);
     const firstPearl = uses('kt-pearl')[0];
     expect(firstPearl?.getAttribute('transform')).toMatch(/translate\(/);
   });
 
-  it('paints milk foam on the surface and lowers the tea', async () => {
+  it('paints milk foam as a band sitting exactly on the tea, never overlapping it', async () => {
     const { rerender } = render(
       <LiveCup colour="#9DBA78" sugar={level('100%')} ice={level('No ice')} toppings={[]} />,
     );
     const liquid = () => document.querySelector('svg.livecup .livecup__liquid');
+    const band = () => document.querySelector('svg.livecup .livecup__foam');
+    // The band is always there so the pour is a transition, not a popped-in element.
     expect(liquid()?.getAttribute('y')).toBe('44');
+    expect(band()?.getAttribute('height')).toBe('0');
     rerender(
       <LiveCup
         colour="#9DBA78"
@@ -78,10 +81,56 @@ describe('LiveCup', () => {
         toppings={[{ topping: topping('Milk Foam'), quantity: 1 }]}
       />,
     );
-    expect(uses('kt-foam-cap')).toHaveLength(1);
-    expect(uses('kt-foam-cap')[0]?.getAttribute('class')).toContain('livecup__cap--new');
+    // The live cup draws no foam symbol; the band's bottom edge is the tea's top edge.
+    expect(uses('kt-foam-cap')).toHaveLength(0);
+    expect(band()?.getAttribute('y')).toBe('42');
+    expect(band()?.getAttribute('height')).toBe('18');
     expect(liquid()?.getAttribute('y')).toBe('60');
     await waitFor(() => expect(uses('kt-pearl')).toHaveLength(0));
+  });
+
+  it('expands the same band downward on a second lot, still flush with the tea', () => {
+    const foamOf = (quantity: number) => [{ topping: topping('Milk Foam'), quantity }];
+    const { rerender } = render(
+      <LiveCup colour="#9DBA78" sugar={level('100%')} ice={level('No ice')} toppings={foamOf(1)} />,
+    );
+    const band = document.querySelector('svg.livecup .livecup__foam');
+    rerender(
+      <LiveCup colour="#9DBA78" sugar={level('100%')} ice={level('No ice')} toppings={foamOf(2)} />,
+    );
+    // Same element, taller: top edge fixed, bottom edge on the lowered tea.
+    expect(document.querySelector('svg.livecup .livecup__foam')).toBe(band);
+    expect(band?.getAttribute('y')).toBe('42');
+    expect(band?.getAttribute('height')).toBe('32');
+    expect(document.querySelector('svg.livecup .livecup__liquid')?.getAttribute('y')).toBe('74');
+  });
+
+  it('leans innate garnish slices on the walls without physics', async () => {
+    render(
+      <LiveCup
+        colour="#F0A640"
+        sugar={level('100%')}
+        ice={level('No ice')}
+        toppings={[]}
+        garnish="orange"
+      />,
+    );
+    expect(uses('kt-orange-slice')).toHaveLength(3);
+    // Placed by attribute, not driven by the physics world.
+    expect(uses('kt-orange-slice')[0]?.getAttribute('transform')).toBeNull();
+    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(0));
+  });
+
+  it('adds wall slices when a slice topping is dropped in', () => {
+    render(
+      <LiveCup
+        colour="#F0A640"
+        sugar={level('100%')}
+        ice={level('No ice')}
+        toppings={[{ topping: topping('Lemon Slices'), quantity: 1 }]}
+      />,
+    );
+    expect(uses('kt-lemon-slice')).toHaveLength(2);
   });
 
   it('removes bodies when a lot is taken away', async () => {
@@ -90,18 +139,26 @@ describe('LiveCup', () => {
     const { rerender } = render(
       <LiveCup colour="#E0912D" sugar={level('100%')} ice={level('No ice')} toppings={two} />,
     );
-    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(10));
+    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(20));
     rerender(
       <LiveCup colour="#E0912D" sugar={level('100%')} ice={level('No ice')} toppings={one} />,
     );
-    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(5));
+    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(10));
   });
 });
 
 describe('CupSprite', () => {
   it('provides the symbols the cup uses', () => {
     render(<CupSprite />);
-    for (const id of ['kt-cup-inner', 'kt-cup-body', 'kt-pearl', 'kt-foam-cap', 'kt-stamp-full']) {
+    for (const id of [
+      'kt-cup-inner',
+      'kt-cup-body',
+      'kt-pearl',
+      'kt-foam-cap',
+      'kt-stamp-full',
+      'kt-orange-slice',
+      'kt-lemon-slice',
+    ]) {
       expect(document.getElementById(id)).not.toBeNull();
     }
   });

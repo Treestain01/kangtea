@@ -5,17 +5,15 @@ import './ToppingArt.css';
 
 type ToppingArtProps = {
   topping: Topping;
-  /** The drink colour, which tints the mini pearls. */
-  colour: string;
 };
 
 /**
  * A topping drawn with the same symbol the live cup drops into the drink, so the token in the tray
  * and the piece in the cup are visibly the same thing. Decorative; the token's label carries meaning.
  */
-export function ToppingArt({ topping, colour }: ToppingArtProps) {
+export function ToppingArt({ topping }: ToppingArtProps) {
   const art = artForTopping(topping);
-  const style = productColourVars(colour) as CSSProperties;
+  const style = productColourVars() as CSSProperties;
   if (art.kind === 'cap') {
     const { symbol, width, height } = art.cap;
     return (
@@ -29,7 +27,8 @@ export function ToppingArt({ topping, colour }: ToppingArtProps) {
       </svg>
     );
   }
-  if (art.tint) Object.assign(style, { '--jelly': art.tint, '--popping': art.tint });
+  const tint = art.kind === 'sink' ? art.tint : undefined;
+  if (tint) Object.assign(style, { '--jelly': tint, '--popping': tint });
   return (
     <svg className="toppingart" viewBox="0 0 24 24" style={style} aria-hidden="true">
       <use href={`#${art.symbol}`} width="24" height="24" />

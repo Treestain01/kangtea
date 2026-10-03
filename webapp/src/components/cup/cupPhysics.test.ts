@@ -64,6 +64,43 @@ describe('createCupWorld', () => {
     world.destroy();
   });
 
+  it('eases a lowering surface so the ice rides it down instead of dropping ahead', () => {
+    const world = createCupWorld(seeded(9));
+    world.setLiquidTop(CUP.liquidTop);
+    world.sync([0, 1].map(cube));
+    world.settle();
+    // A slow ease: one second in, the surface has barely moved, so the ice must still hug it.
+    world.setLiquidTop(74, 10000);
+    for (let i = 0; i < 60; i += 1) world.step();
+    for (const { body, spec } of world.pieces()) {
+      expect(body.position.y - spec.size / 2).toBeLessThan(56);
+    }
+    // Settling finishes the ease; the ice ends under the final line as if it was set at once.
+    world.settle();
+    for (const { body, spec } of world.pieces()) {
+      expect(body.position.y - spec.size / 2).toBeGreaterThanOrEqual(73);
+    }
+    world.destroy();
+  });
+
+  it('sizes the body from the hitbox when a spec declares one', () => {
+    const world = createCupWorld(seeded());
+    const { added } = world.sync([
+      {
+        key: 'mini:0:0',
+        symbol: 'kt-pearl-mini',
+        size: 12,
+        bodySize: 8,
+        shape: 'circle',
+        kind: 'sink',
+      },
+      pearl(1),
+    ]);
+    expect(added[0]?.body.circleRadius).toBeCloseTo(4);
+    expect(added[1]?.body.circleRadius).toBeCloseTo(7);
+    world.destroy();
+  });
+
   it('adds and removes bodies by key without touching the rest', () => {
     const world = createCupWorld(seeded());
     const first = world.sync([pearl(0), pearl(1)]);
