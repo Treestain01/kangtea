@@ -66,6 +66,7 @@ Colours that are product data (the tea, tapioca, foam, a topping's tint) are fix
   Each kind collides only with the cup and its own kind, so pearls sink straight through the ice.
   The static cup (menu cards, cart rows, the kitchen) keeps its fixed dozen piece slots, so a full serving fills them all.
 - **Ice** cubes are bodies too, held fully submerged with their top edge about 3 units under the surface, so they float without breaking it.
+  When a cap moves the surface, the physics liquid line eases to the new level over the same `--motion-pour` as the painted tea, so a growing foam cap visibly pushes the ice down ahead of it instead of the ice dropping to the final line first.
 - Under `prefers-reduced-motion` the world is stepped to rest instantly after each change and drawn once, so nothing moves.
 - **Quantity** of the drink does not change the cup; it is shown as a count beside it.
 

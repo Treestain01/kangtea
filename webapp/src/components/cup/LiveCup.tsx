@@ -37,6 +37,18 @@ function prefersReducedMotion(): boolean {
 }
 
 /**
+ * The pour duration from the theme (`--motion-pour`), read off a live element so the physics
+ * surface falls exactly as fast as the painted tea. Zero wherever styles do not resolve (tests).
+ */
+function pourDurationMs(from: Element | null): number {
+  if (!from || typeof getComputedStyle !== 'function') return 0;
+  const raw = getComputedStyle(from).getPropertyValue('--motion-pour').trim();
+  const value = Number.parseFloat(raw);
+  if (!Number.isFinite(value)) return 0;
+  return raw.endsWith('ms') ? value : value * 1000;
+}
+
+/**
  * The cup that builds itself while a drink is customised. Sugar deepens the tea, ice floats under the
  * surface, foam and brulee fade in on top, and every other topping drops in and piles at the bottom.
  * Toppings and ice are bodies in `cupPhysics`, loaded on demand so Matter.js only ships with the sheet.
@@ -141,7 +153,9 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
   useEffect(() => {
     const world = worldRef.current;
     if (!world) return;
-    world.setLiquidTop(liquidTop);
+    // The surface eases down over the same duration as the tea's transition, so the foam pushes
+    // the floating ice ahead of it instead of the ice dropping to the final line at once.
+    world.setLiquidTop(liquidTop, reduced ? 0 : pourDurationMs(pieceLayer.current));
     applySpecs(world);
     // applySpecs reads specsRef, which is refreshed every render.
     // eslint-disable-next-line react-hooks/exhaustive-deps

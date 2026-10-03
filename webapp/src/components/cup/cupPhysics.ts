@@ -19,7 +19,12 @@ export interface LivePiece {
 export interface CupWorld {
   /** Adds bodies for new specs, removes bodies whose specs are gone. Returns what changed. */
   sync(specs: readonly PieceSpec[]): { added: LivePiece[]; removed: LivePiece[] };
-  setLiquidTop(y: number): void;
+  /**
+   * Moves the liquid's top edge. With `overMs` the surface eases there across that many
+   * milliseconds of simulated time, matching the painted tea's transition, so floating ice is
+   * pushed down by a growing foam cap rather than dropping to the final line at once.
+   */
+  setLiquidTop(y: number, overMs?: number): void;
   /** Advances the world by one fixed frame (`FRAME_MS`). */
   step(): void;
   /** Steps until the pieces have come to rest, for reduced motion and tests. */
@@ -46,6 +51,8 @@ export function createCupWorld(random: () => number = Math.random): CupWorld {
   engine.gravity.scale = GRAVITY_SCALE;
   const world = engine.world;
   let liquidTop: number = CUP.liquidTop;
+  /** An in-flight surface move: eased in step() so the ice follows the painted tea. */
+  let surfaceMove: { from: number; to: number; elapsed: number; duration: number } | null = null;
   let live: LivePiece[] = [];
   /** Keeps marching across batches, so a lot added right after another does not land on top of it. */
   let nextSlot = 0;
@@ -139,13 +146,30 @@ export function createCupWorld(random: () => number = Math.random): CupWorld {
       live = [...live, ...added];
       return { added, removed };
     },
-    setLiquidTop(y) {
-      liquidTop = y;
+    setLiquidTop(y, overMs = 0) {
+      if (overMs > 0 && y !== liquidTop) {
+        surfaceMove = { from: liquidTop, to: y, elapsed: 0, duration: overMs };
+      } else {
+        liquidTop = y;
+        surfaceMove = null;
+      }
     },
     step() {
+      if (surfaceMove) {
+        surfaceMove.elapsed += FRAME_MS;
+        const t = Math.min(1, surfaceMove.elapsed / surfaceMove.duration);
+        // Quadratic ease-in-out, close enough to the stylesheet's ease for a force-driven cube.
+        const eased = t < 0.5 ? 2 * t * t : 1 - (2 - 2 * t) ** 2 / 2;
+        liquidTop = surfaceMove.from + (surfaceMove.to - surfaceMove.from) * eased;
+        if (t >= 1) surfaceMove = null;
+      }
       Matter.Engine.update(engine, FRAME_MS);
     },
     settle() {
+      if (surfaceMove) {
+        liquidTop = surfaceMove.to;
+        surfaceMove = null;
+      }
       for (let i = 0; i < 400; i += 1) Matter.Engine.update(engine, FRAME_MS);
     },
     pieces() {
