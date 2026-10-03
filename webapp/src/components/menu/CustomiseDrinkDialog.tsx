@@ -225,6 +225,7 @@ export function CustomiseDrinkDialog({
               levels={customisations.iceLevels}
               selectedId={iceId}
               onSelect={setIceId}
+              shortLabels
             />
           </div>
 
@@ -431,13 +432,27 @@ type LevelDialProps = {
   levels: OptionLevel[];
   selectedId: string;
   onSelect: (id: string) => void;
+  /** Show only the first word of each level, so "Standard ice" reads "Standard" beside the cup. */
+  shortLabels?: boolean;
 };
+
+/** "Standard ice" to "Standard": the first word carries the meaning next to the dial's legend. */
+const firstWord = (name: string) => name.split(' ')[0] ?? name;
 
 /**
  * A vertical stepped track of radio buttons beside the cup: the highest level at the top, labels on
  * the outer side, the chosen dot ringed and every dot below it filled so the track reads as a level.
+ * A finger or pointer can also be dragged along the track; the stop under it is chosen as it moves.
  */
-function LevelDial({ legend, name, side, levels, selectedId, onSelect }: LevelDialProps) {
+function LevelDial({
+  legend,
+  name,
+  side,
+  levels,
+  selectedId,
+  onSelect,
+  shortLabels = false,
+}: LevelDialProps) {
   const selectedIndex = Math.max(
     0,
     levels.findIndex((level) => level.id === selectedId),
@@ -447,10 +462,48 @@ function LevelDial({ legend, name, side, levels, selectedId, onSelect }: LevelDi
   const selected = levels[selectedIndex] ?? levels[0];
   // Top of the dial is the most of it, so the menu's lowest-first order is reversed for display.
   const topDown = levels.map((level, index) => ({ level, index })).reverse();
+  const label = (level: OptionLevel) => (shortLabels ? firstWord(level.name) : level.name);
+  const stopsRef = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
+
+  // The stop under the pointer, from the track's height split evenly between the stops.
+  const chooseAt = (clientY: number) => {
+    const stops = stopsRef.current;
+    if (!stops) return;
+    const rect = stops.getBoundingClientRect();
+    if (rect.height <= 0) return;
+    const row = Math.min(
+      topDown.length - 1,
+      Math.max(0, Math.floor(((clientY - rect.top) / rect.height) * topDown.length)),
+    );
+    const next = topDown[row]?.level.id;
+    if (next && next !== selectedId) onSelect(next);
+  };
+  const startDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    dragging.current = true;
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    chooseAt(event.clientY);
+  };
+  const drag = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (dragging.current) chooseAt(event.clientY);
+  };
+  const endDrag = () => {
+    dragging.current = false;
+  };
+
   return (
     <fieldset className={`dial dial--${side}`}>
       <legend className="dial__legend">{legend}</legend>
-      <div className="dial__stops" style={style}>
+      <div
+        className="dial__stops"
+        style={style}
+        ref={stopsRef}
+        onPointerDown={startDrag}
+        onPointerMove={drag}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+      >
         <span className="dial__line" aria-hidden="true" />
         <span className="dial__fill" aria-hidden="true" />
         {topDown.map(({ level, index }) => (
@@ -462,16 +515,17 @@ function LevelDial({ legend, name, side, levels, selectedId, onSelect }: LevelDi
               type="radio"
               name={name}
               value={level.id}
+              aria-label={level.name}
               checked={selectedId === level.id}
               onChange={() => onSelect(level.id)}
             />
             <span className="dial__dot" aria-hidden="true" />
-            <span className="dial__label">{level.name}</span>
+            <span className="dial__label">{label(level)}</span>
           </label>
         ))}
       </div>
       <p className="dial__value" aria-hidden="true">
-        {selected?.name}
+        {selected ? label(selected) : ''}
       </p>
     </fieldset>
   );

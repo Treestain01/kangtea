@@ -50,7 +50,7 @@ describe('LiveCup', () => {
       <LiveCup
         colour="#E0912D"
         sugar={level('100%')}
-        ice={level('Less ice')}
+        ice={level('Little ice')}
         toppings={[
           { topping: topping('Boba'), quantity: 2 },
           { topping: topping('Pudding'), quantity: 1 },

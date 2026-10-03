@@ -402,13 +402,18 @@
           "isDefault": false
         },
         {
+          "id": "ice-little",
+          "name": "Little ice",
+          "isDefault": false
+        },
+        {
           "id": "ice-less",
           "name": "Less ice",
           "isDefault": false
         },
         {
-          "id": "ice-normal",
-          "name": "Normal ice",
+          "id": "ice-standard",
+          "name": "Standard ice",
           "isDefault": true
         }
       ],

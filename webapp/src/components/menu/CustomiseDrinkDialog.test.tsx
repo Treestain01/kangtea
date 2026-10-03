@@ -50,6 +50,39 @@ describe('CustomiseDrinkDialog', () => {
     ).toBeVisible();
   });
 
+  it('shows only the first word of each ice level beside the cup, but names the whole level', () => {
+    renderDialog();
+    const ice = screen.getByRole('group', { name: 'Ice' });
+    expect(within(ice).getByText('Regular', { selector: '.dial__label' })).toBeInTheDocument();
+    expect(within(ice).queryByText('Regular ice')).not.toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: 'Regular ice' })).toBeChecked();
+  });
+
+  it('chooses the stop under a finger dragged along the dial', () => {
+    renderDialog();
+    const sugar = screen.getByRole('group', { name: 'Sugar' });
+    const track = sugar.querySelector('.dial__stops') as HTMLElement;
+    // Two stops over 88px: the top half is 100%, the bottom half 50%.
+    track.getBoundingClientRect = () =>
+      ({
+        top: 100,
+        height: 88,
+        bottom: 188,
+        left: 0,
+        right: 84,
+        width: 84,
+        x: 0,
+        y: 100,
+      }) as DOMRect;
+    fireEvent.pointerDown(track, { clientY: 110, pointerId: 1, pointerType: 'touch' });
+    expect(screen.getByRole('radio', { name: '100%' })).toBeChecked();
+    fireEvent.pointerMove(track, { clientY: 170, pointerId: 1, pointerType: 'touch' });
+    expect(screen.getByRole('radio', { name: '50%' })).toBeChecked();
+    fireEvent.pointerUp(track, { pointerId: 1 });
+    fireEvent.pointerMove(track, { clientY: 110, pointerId: 1, pointerType: 'touch' });
+    expect(screen.getByRole('radio', { name: '50%' })).toBeChecked();
+  });
+
   it('reads the drink, choices and toppings back in one line', () => {
     renderDialog();
     addTopping('Pearls');

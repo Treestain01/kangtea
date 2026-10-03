@@ -144,7 +144,7 @@ export function StaticCup({
             <use
               key={`ice-${n}`}
               href="#kt-ice-cube"
-              x={[36, 72, 50, 62][n] ?? 60}
+              x={[36, 72, 54, 44, 64][n] ?? 60}
               y={restingTop + 6 + (n > 1 ? 14 : 0)}
               width="18"
               height="18"
