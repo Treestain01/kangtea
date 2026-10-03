@@ -5,6 +5,7 @@ export { LocalTimeSchema, OpeningHoursSchema, StoreSchema, WeekdaySchema } from 
 export type { OpeningHours, Store, Weekday } from './store.js';
 
 export {
+  GarnishSchema,
   MenuCategorySchema,
   MenuCustomisationsSchema,
   MenuItemSchema,
@@ -14,6 +15,7 @@ export {
   ToppingSchema,
 } from './menu.js';
 export type {
+  Garnish,
   Menu,
   MenuCategory,
   MenuCustomisations,

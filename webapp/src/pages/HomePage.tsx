@@ -97,7 +97,11 @@ export function HomePage() {
       {usual && (
         <UsualCard
           order={usual}
-          art={usualItem ? { colour: usualItem.colour, pearls: usualItem.pearls } : undefined}
+          art={
+            usualItem
+              ? { colour: usualItem.colour, pearls: usualItem.pearls, garnish: usualItem.garnish }
+              : undefined
+          }
           onReorder={reorder}
         />
       )}

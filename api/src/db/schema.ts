@@ -47,6 +47,8 @@ export const menuItems = pgTable('menu_items', {
   tags: text('tags').array().notNull(),
   colour: text('colour').notNull(),
   pearls: boolean('pearls').notNull(),
+  /** Citrus slices the drink comes with; null for none. The shared schema narrows the values. */
+  garnish: text('garnish', { enum: ['orange', 'lemon'] }),
   sortOrder: integer('sort_order').notNull(),
 });
 

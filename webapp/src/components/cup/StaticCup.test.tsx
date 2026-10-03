@@ -63,6 +63,18 @@ describe('StaticCup', () => {
     expect(uses('kt-pearl')[0]).toHaveClass('staticcup__piece--drop');
   });
 
+  it('leans garnish and slice toppings on the walls', () => {
+    render(
+      <StaticCup
+        colour="#F0A640"
+        garnish="orange"
+        customisations={[{ name: 'Topping', value: 'Lemon Slices' }]}
+      />,
+    );
+    expect(uses('kt-orange-slice')).toHaveLength(3);
+    expect(uses('kt-lemon-slice')).toHaveLength(2);
+  });
+
   it('never draws more than a dozen pieces', () => {
     render(
       <StaticCup

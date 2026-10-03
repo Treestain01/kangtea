@@ -60,6 +60,16 @@ describe('MenuItemSchema', () => {
   it('rejects a non hex colour', () => {
     expect(MenuItemSchema.safeParse({ ...signature, colour: 'brown' }).success).toBe(false);
   });
+
+  it('accepts an orange or lemon garnish, or none at all', () => {
+    expect(MenuItemSchema.safeParse({ ...signature, garnish: 'orange' }).success).toBe(true);
+    expect(MenuItemSchema.safeParse({ ...signature, garnish: 'lemon' }).success).toBe(true);
+    expect(MenuItemSchema.safeParse(signature).success).toBe(true);
+  });
+
+  it('rejects an unknown garnish', () => {
+    expect(MenuItemSchema.safeParse({ ...signature, garnish: 'apple' }).success).toBe(false);
+  });
 });
 
 describe('MenuCustomisationsSchema', () => {

@@ -1,4 +1,4 @@
-import type { Order } from '@bbt/shared';
+import type { Garnish, Order } from '@bbt/shared';
 import { useRef } from 'react';
 import { formatPrice } from '../../lib/money';
 import { cue } from '../../lib/sounds';
@@ -10,8 +10,8 @@ import './home.css';
 
 type UsualCardProps = {
   order: Order;
-  /** Colour and pearls of the first drink, when the menu still has it, for the cup. */
-  art?: { colour: string; pearls: boolean };
+  /** Colour, pearls and garnish of the first drink, when the menu still has it, for the cup. */
+  art?: { colour: string; pearls: boolean; garnish?: Garnish };
   onReorder: (order: Order) => void;
 };
 
@@ -57,6 +57,7 @@ export function UsualCard({ order, art, onReorder }: UsualCardProps) {
           <StaticCup
             colour={art.colour}
             pearls={art.pearls}
+            garnish={art.garnish}
             customisations={first.customisations}
             {...cupPropsFor(phase)}
           />

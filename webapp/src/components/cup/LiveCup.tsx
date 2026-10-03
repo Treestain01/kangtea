@@ -1,4 +1,4 @@
-import type { OptionLevel } from '@bbt/shared';
+import type { Garnish, OptionLevel } from '@bbt/shared';
 import { useEffect, useId, useMemo, useRef, type CSSProperties } from 'react';
 import type { ToppingChoice } from '../../store/lines';
 import {
@@ -13,6 +13,7 @@ import {
   productColourVars,
   showsSteam,
   teaColourMix,
+  wallPiecesFor,
   type PieceSpec,
 } from './cupParts';
 import type { CupWorld, LivePiece } from './cupPhysics';
@@ -24,6 +25,8 @@ type LiveCupProps = {
   sugar: OptionLevel;
   ice: OptionLevel;
   toppings: readonly ToppingChoice[];
+  /** Slices the drink innately comes with (`MenuItem.garnish`); not a topping, never removable. */
+  garnish?: Garnish;
   /** Accessible description of the cup; the visible readout lives elsewhere in the sheet. */
   label?: string;
 };
@@ -53,7 +56,14 @@ function pourDurationMs(from: Element | null): number {
  * surface, foam and brulee fade in on top, and every other topping drops in and piles at the bottom.
  * Toppings and ice are bodies in `cupPhysics`, loaded on demand so Matter.js only ships with the sheet.
  */
-export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: LiveCupProps) {
+export function LiveCup({
+  colour,
+  sugar,
+  ice,
+  toppings,
+  garnish,
+  label = 'Your drink',
+}: LiveCupProps) {
   const pieceLayer = useRef<SVGGElement>(null);
   const worldRef = useRef<CupWorld | null>(null);
   const nodes = useRef(new Map<string, SVGUseElement>());
@@ -68,6 +78,7 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
   // Foam is drawn as a band of rects flush with the tea, not as a symbol; see foamBandFor.
   const foamThickness = foamBandFor(allCaps);
   const caps = allCaps.filter((cap) => cap.symbol !== 'kt-foam-cap');
+  const wallSlices = wallPiecesFor(toppings, garnish);
   const specs = useMemo(() => [...piecesFor(toppings), ...icePieces(ice)], [toppings, ice]);
   specsRef.current = specs;
 
@@ -189,6 +200,20 @@ export function LiveCup({ colour, sugar, ice, toppings, label = 'Your drink' }: 
           fill="var(--tea)"
         />
         <use href="#kt-tea-sheen" width={CUP.width} height={CUP.height} />
+        {/* Slices lean on the walls behind the moving pieces; they are never physics bodies. */}
+        <g data-layer="slices">
+          {wallSlices.map((slice) => (
+            <use
+              key={slice.key}
+              href={`#${slice.symbol}`}
+              x={slice.x}
+              y={slice.y}
+              width={slice.size}
+              height={slice.size}
+              className="livecup__slice"
+            />
+          ))}
+        </g>
         <g ref={pieceLayer} data-layer="pieces" />
         <g data-layer="caps">
           {caps.map((cap) => (

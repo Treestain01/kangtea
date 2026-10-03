@@ -215,6 +215,7 @@ export function CustomiseDrinkDialog({
                 sugar={sugar}
                 ice={ice}
                 toppings={toppings}
+                garnish={item.garnish}
                 label={`${item.name} as you have built it`}
               />
             </div>

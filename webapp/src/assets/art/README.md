@@ -20,6 +20,8 @@ Compose parts with `<use href="#kt-...">`; nothing here is a finished picture.
 | `kt-agar-ball`       | 24 x 24   | Agar ball. Sinks, translucent.                                                                                                                                               |
 | `kt-jelly-cube`      | 24 x 24   | Grass, coconut or tea jelly. Sinks, tinted by `--jelly`.                                                                                                                     |
 | `kt-popping-ball`    | 24 x 24   | Water chestnut or barley popping ball. Sinks.                                                                                                                                |
+| `kt-orange-slice`    | 24 x 24   | Translucent orange slice leaning on the cup wall. Never a body; placed by `wallPiecesFor`.                                                                                   |
+| `kt-lemon-slice`     | 24 x 24   | Translucent lemon slice, as the orange.                                                                                                                                      |
 | `kt-foam-cap`        | 120 x 40  | Milk foam, a flat topped band across the full cup width, surface line at y=30. Draw inside the clip.                                                                         |
 | `kt-ice-cream-scoop` | 24 x 24   | Vanilla ice cream, one big round scoop. One sinking body per lot, about three pearls wide.                                                                                   |
 | `kt-brulee`          | 120 x 16  | Caramel crust, full cup width, surface line at y=6. Draw inside the clip.                                                                                                    |
@@ -64,6 +66,8 @@ Colours that are product data (the tea, tapioca, foam, a topping's tint) are fix
   The liquid's level and the band's `y`/`height` are rect geometry gliding over `--motion-pour` with the same ease, so at every frame the foam's bottom and the tea's top interpolate to the same value and no gap or overlap ever shows.
   Pudding is one large block per lot, about twice a pearl, that sinks and piles with them.
   Each kind collides only with the cup and its own kind, so pearls sink straight through the ice.
+  Citrus slices (the Orange Slices and Lemon Slices toppings, two per lot, and a drink's innate `MenuItem.garnish`, three slices) are not bodies at all: `wallPiecesFor` leans them translucent against the cup walls on fixed slots, behind the moving pieces, and each new one fades in over `--motion-slow`.
+  The garnish comes with the drink and cannot be added or removed; the live cup, the menu card, the cup of the day and Your usual all draw it.
   The static cup (menu cards, cart rows, the kitchen) keeps its fixed dozen piece slots, so a full serving fills them all.
 - **Ice** cubes are bodies too, held fully submerged with their top edge about 3 units under the surface, so they float without breaking it.
   When a cap moves the surface, the physics liquid line eases to the new level over the same `--motion-pour` as the painted tea, so a growing foam cap visibly pushes the ice down ahead of it instead of the ice dropping to the final line first.

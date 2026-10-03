@@ -84,7 +84,8 @@
         "currency": "AUD",
         "tags": [],
         "colour": "#F0A640",
-        "pearls": false
+        "pearls": false,
+        "garnish": "orange"
       },
       {
         "id": "lemon-black-tea",
@@ -492,6 +493,16 @@
           "id": "boba-mini-pearls-grass-jelly",
           "name": "Boba, Mini Pearls & Grass Jelly",
           "priceCents": 150
+        },
+        {
+          "id": "orange-slices",
+          "name": "Orange Slices",
+          "priceCents": 100
+        },
+        {
+          "id": "lemon-slices",
+          "name": "Lemon Slices",
+          "priceCents": 100
         }
       ]
     }

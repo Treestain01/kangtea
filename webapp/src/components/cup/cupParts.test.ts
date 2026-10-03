@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   artForTopping,
   capsFor,
+  CUP,
   foamBandFor,
   iceCubeCount,
   icePieces,
@@ -11,6 +12,7 @@ import {
   productColourVars,
   showsSteam,
   teaColourMix,
+  wallPiecesFor,
 } from './cupParts';
 
 const topping = (name: string, priceCents = 100) => ({
@@ -65,6 +67,21 @@ describe('artForTopping', () => {
       mix: ['kt-pearl', 'kt-pearl-mini', 'kt-jelly-cube'],
       tint: PRODUCT_COLOURS.coconutJelly,
     });
+  });
+
+  it('leans citrus slices on the wall with no body and no cap', () => {
+    expect(artForTopping(topping('Orange Slices'))).toMatchObject({
+      kind: 'wall',
+      symbol: 'kt-orange-slice',
+      perLot: 2,
+    });
+    expect(artForTopping(topping('Lemon Slices'))).toMatchObject({
+      kind: 'wall',
+      symbol: 'kt-lemon-slice',
+      perLot: 2,
+    });
+    expect(piecesFor([{ topping: topping('Orange Slices'), quantity: 2 }])).toEqual([]);
+    expect(capsFor([{ topping: topping('Lemon Slices'), quantity: 1 }])).toEqual([]);
   });
 
   it('falls back to pearls for a topping it has never heard of', () => {
@@ -169,6 +186,28 @@ describe('caps and the tea level', () => {
 
   it('keeps the brulee crust one lot thick no matter the quantity', () => {
     expect(liquidTopFor(capsFor([{ topping: topping('Brulee'), quantity: 3 }]))).toBe(50);
+  });
+});
+
+describe('wallPiecesFor', () => {
+  it('is empty without slices or a garnish', () => {
+    expect(wallPiecesFor([])).toEqual([]);
+    expect(wallPiecesFor([{ topping: topping('Boba'), quantity: 1 }])).toEqual([]);
+  });
+
+  it('leans the innate garnish first, then two slices per lot of a slice topping', () => {
+    const specs = wallPiecesFor([{ topping: topping('Lemon Slices'), quantity: 2 }], 'orange');
+    expect(specs).toHaveLength(7);
+    expect(specs.slice(0, 3).every((spec) => spec.symbol === 'kt-orange-slice')).toBe(true);
+    expect(specs.slice(3).every((spec) => spec.symbol === 'kt-lemon-slice')).toBe(true);
+    expect(new Set(specs.map((spec) => spec.key)).size).toBe(7);
+    expect(new Set(specs.map((spec) => `${spec.x}:${spec.y}`)).size).toBe(7);
+    for (const spec of specs) {
+      expect(spec.x).toBeGreaterThan(10);
+      expect(spec.x + spec.size).toBeLessThan(112);
+      expect(spec.y).toBeGreaterThan(CUP.liquidTop);
+      expect(spec.y + spec.size).toBeLessThan(CUP.height);
+    }
   });
 });
 

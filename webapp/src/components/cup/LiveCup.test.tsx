@@ -105,6 +105,34 @@ describe('LiveCup', () => {
     expect(document.querySelector('svg.livecup .livecup__liquid')?.getAttribute('y')).toBe('74');
   });
 
+  it('leans innate garnish slices on the walls without physics', async () => {
+    render(
+      <LiveCup
+        colour="#F0A640"
+        sugar={level('100%')}
+        ice={level('No ice')}
+        toppings={[]}
+        garnish="orange"
+      />,
+    );
+    expect(uses('kt-orange-slice')).toHaveLength(3);
+    // Placed by attribute, not driven by the physics world.
+    expect(uses('kt-orange-slice')[0]?.getAttribute('transform')).toBeNull();
+    await waitFor(() => expect(uses('kt-pearl')).toHaveLength(0));
+  });
+
+  it('adds wall slices when a slice topping is dropped in', () => {
+    render(
+      <LiveCup
+        colour="#F0A640"
+        sugar={level('100%')}
+        ice={level('No ice')}
+        toppings={[{ topping: topping('Lemon Slices'), quantity: 1 }]}
+      />,
+    );
+    expect(uses('kt-lemon-slice')).toHaveLength(2);
+  });
+
   it('removes bodies when a lot is taken away', async () => {
     const two = [{ topping: topping('Boba'), quantity: 2 }];
     const one = [{ topping: topping('Boba'), quantity: 1 }];
@@ -122,7 +150,15 @@ describe('LiveCup', () => {
 describe('CupSprite', () => {
   it('provides the symbols the cup uses', () => {
     render(<CupSprite />);
-    for (const id of ['kt-cup-inner', 'kt-cup-body', 'kt-pearl', 'kt-foam-cap', 'kt-stamp-full']) {
+    for (const id of [
+      'kt-cup-inner',
+      'kt-cup-body',
+      'kt-pearl',
+      'kt-foam-cap',
+      'kt-stamp-full',
+      'kt-orange-slice',
+      'kt-lemon-slice',
+    ]) {
       expect(document.getElementById(id)).not.toBeNull();
     }
   });

@@ -39,6 +39,7 @@ export async function seedDatabase(db: Db, seed: Seed): Promise<void> {
         tags: item.tags,
         colour: item.colour,
         pearls: item.pearls,
+        garnish: item.garnish ?? null,
         sortOrder,
       })),
     );

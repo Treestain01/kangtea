@@ -27,7 +27,8 @@ export function ToppingArt({ topping }: ToppingArtProps) {
       </svg>
     );
   }
-  if (art.tint) Object.assign(style, { '--jelly': art.tint, '--popping': art.tint });
+  const tint = art.kind === 'sink' ? art.tint : undefined;
+  if (tint) Object.assign(style, { '--jelly': tint, '--popping': tint });
   return (
     <svg className="toppingart" viewBox="0 0 24 24" style={style} aria-hidden="true">
       <use href={`#${art.symbol}`} width="24" height="24" />

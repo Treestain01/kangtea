@@ -1,4 +1,4 @@
-import type { OptionLevel, Topping } from '@bbt/shared';
+import type { Garnish, OptionLevel, Topping } from '@bbt/shared';
 import type { ToppingChoice } from '../../store/lines';
 
 /**
@@ -40,6 +40,8 @@ export const PRODUCT_COLOURS = {
   waterChestnut: '#f2e0c0',
   barley: '#c9a86a',
   taro: '#b48fd0',
+  orangeSlice: '#f08c28',
+  lemonSlice: '#e8d44d',
 } as const;
 
 /**
@@ -55,6 +57,8 @@ export function productColourVars(): Record<string, string> {
     '--brulee': PRODUCT_COLOURS.brulee,
     '--pudding': PRODUCT_COLOURS.pudding,
     '--taro': PRODUCT_COLOURS.taro,
+    '--orange-slice': PRODUCT_COLOURS.orangeSlice,
+    '--lemon-slice': PRODUCT_COLOURS.lemonSlice,
   };
 }
 
@@ -93,7 +97,33 @@ type ToppingArt =
       perLot: number;
       tint?: string;
     }
-  | { kind: 'cap'; cap: CapSpec };
+  | { kind: 'cap'; cap: CapSpec }
+  | { kind: 'wall'; symbol: string; perLot: number };
+
+/** A citrus slice leaning on the cup wall: drawn in place, translucent, never a physics body. */
+export interface WallSpec {
+  key: string;
+  symbol: string;
+  x: number;
+  y: number;
+  size: number;
+}
+
+/** Slice centres, alternating walls down the cup, reused top to bottom as slices accumulate. */
+const WALL_SLOTS = [
+  { x: 36, y: 92, size: 32 },
+  { x: 84, y: 120, size: 30 },
+  { x: 34, y: 148, size: 28 },
+  { x: 86, y: 74, size: 28 },
+  { x: 32, y: 118, size: 26 },
+  { x: 88, y: 162, size: 26 },
+  { x: 40, y: 68, size: 26 },
+  { x: 82, y: 148, size: 26 },
+  { x: 60, y: 98, size: 26 },
+] as const;
+
+/** How many slices a drink's innate garnish leans on the walls. */
+const GARNISH_SLICES = 3;
 
 const FOAM: CapSpec = {
   symbol: 'kt-foam-cap',
@@ -129,6 +159,12 @@ const sink = (
 export function artForTopping(topping: Topping): ToppingArt {
   const name = topping.name.toLowerCase();
   const has = (word: string) => name.includes(word);
+  if (has('slice'))
+    return {
+      kind: 'wall',
+      symbol: has('lemon') ? 'kt-lemon-slice' : 'kt-orange-slice',
+      perLot: 2,
+    };
   if (has('foam')) return { kind: 'cap', cap: FOAM };
   if (has('brulee') || has('brûlée')) return { kind: 'cap', cap: BRULEE };
   if (has('ice cream')) return sink('kt-ice-cream-scoop', 40, 'circle', 1);
@@ -211,6 +247,38 @@ const FOAM_LIP = 2;
 export function foamBandFor(caps: readonly CapSpec[]): number {
   const foam = caps.find((cap) => cap.symbol === 'kt-foam-cap');
   return foam ? foam.drop + FOAM_LIP : 0;
+}
+
+/**
+ * Slices leaning on the cup walls: the drink's innate garnish first, then every lot of a slice
+ * topping, each taking the next wall slot so they spread down the cup in a stable order.
+ */
+export function wallPiecesFor(toppings: readonly ToppingChoice[], garnish?: Garnish): WallSpec[] {
+  const slices: { key: string; symbol: string }[] = [];
+  if (garnish) {
+    const symbol = garnish === 'lemon' ? 'kt-lemon-slice' : 'kt-orange-slice';
+    for (let n = 0; n < GARNISH_SLICES; n += 1) slices.push({ key: `garnish:${n}`, symbol });
+  }
+  for (const { topping, quantity } of toppings) {
+    const art = artForTopping(topping);
+    if (art.kind !== 'wall') continue;
+    for (let lot = 0; lot < quantity; lot += 1) {
+      for (let n = 0; n < art.perLot; n += 1) {
+        slices.push({ key: `${topping.id}:${lot}:${n}`, symbol: art.symbol });
+      }
+    }
+  }
+  return slices.map((slice, index) => {
+    const slot = WALL_SLOTS[index % WALL_SLOTS.length] as (typeof WALL_SLOTS)[number];
+    // A second pass over the slots nudges down a little so stacked slices stay distinguishable.
+    const nudge = Math.floor(index / WALL_SLOTS.length) * 6;
+    return {
+      ...slice,
+      x: slot.x - slot.size / 2,
+      y: slot.y - slot.size / 2 + nudge,
+      size: slot.size,
+    };
+  });
 }
 
 /** Surface layers for the chosen toppings, brulee under foam. Foam thickens with its quantity. */
