@@ -3,7 +3,7 @@ import './order.css';
 
 const STEPS: { status: OrderStatus; label: string }[] = [
   { status: 'received', label: 'Received' },
-  { status: 'making', label: 'Being made' },
+  { status: 'making', label: 'Being poured' },
   { status: 'ready', label: 'Ready for pickup' },
 ];
 

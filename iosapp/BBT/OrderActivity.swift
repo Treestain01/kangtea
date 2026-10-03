@@ -25,9 +25,9 @@ extension OrderActivityAttributes.ContentState {
     var title: String {
         switch status {
         case "received": return "Order received"
-        case "making": return "Making your drink"
+        case "making": return "Pouring your drink"
         case "ready": return "Ready to collect"
-        default: return "Your order"
+        default: return "Your Order"
         }
     }
 }

@@ -75,7 +75,7 @@ export function AppShell() {
         <Outlet />
         {isInIosShell() && <p className="shell-note">Running inside the Kang Tea iOS app.</p>}
       </main>
-      <aside className="orderpanel" aria-label="Your order" {...{ [FLY_TARGET_ATTRIBUTE]: '' }}>
+      <aside className="orderpanel" aria-label="Your Order" {...{ [FLY_TARGET_ATTRIBUTE]: '' }}>
         <OrderPanel compact />
       </aside>
       <TabBar store={store} />

@@ -38,13 +38,13 @@ describe('OrderPage', () => {
   it('renders the order panel on phones', () => {
     mockedUseMediaQuery.mockReturnValue(false);
     renderOrderRoute();
-    expect(screen.getByRole('heading', { name: 'Your order' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Your Order' })).toBeInTheDocument();
   });
 
   it('sends desktop visitors home, where the panel is always visible', () => {
     mockedUseMediaQuery.mockReturnValue(true);
     renderOrderRoute();
     expect(screen.getByText('Home page')).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: 'Your order' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Your Order' })).not.toBeInTheDocument();
   });
 });
