@@ -13,6 +13,8 @@ const EnvSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
   /** Postgres connection string. Absent means "serve the catalogue from seed.json". */
   DATABASE_URL: z.string().min(1).optional(),
+  /** Stripe secret key. Absent means the payment routes answer 503. */
+  STRIPE_SECRET_KEY: z.string().min(1).optional(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
@@ -26,6 +28,7 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
     ALLOWED_ORIGINS: source.ALLOWED_ORIGINS,
     PORT: source.PORT,
     DATABASE_URL: databaseUrl,
+    STRIPE_SECRET_KEY: source.STRIPE_SECRET_KEY || undefined,
   });
 }
 
