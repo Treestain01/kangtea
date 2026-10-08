@@ -22,18 +22,29 @@ function getStripe(): Promise<Stripe | null> {
   return stripePromise;
 }
 
-/** The Payment Element dressed in the app's own tokens, read from the live theme. */
-function appearanceFromTheme() {
-  const style = getComputedStyle(document.documentElement);
-  const token = (name: string) => style.getPropertyValue(name).trim() || undefined;
+/** Reads a custom property off the live document; the default source for appearanceFromTheme. */
+function readThemeProperty(name: string): string {
+  return getComputedStyle(document.documentElement).getPropertyValue(name);
+}
+
+/**
+ * The Payment Element dressed in the app's own tokens: colours, border, radius and the body font,
+ * read from the live theme so light and dark both look native. Exported for its unit test;
+ * `read` is injectable because jsdom does not resolve custom properties.
+ */
+export function appearanceFromTheme(read: (name: string) => string = readThemeProperty) {
+  const token = (name: string) => read(name).trim() || undefined;
+  const border = token('--color-border');
   return {
     variables: {
       colorPrimary: token('--color-accent'),
       colorBackground: token('--color-surface'),
       colorText: token('--color-text'),
-      borderRadius: '8px',
+      fontFamily: token('--font-body'),
+      borderRadius: token('--radius-md') ?? '8px',
       fontSizeBase: '16px',
     },
+    ...(border ? { rules: { '.Input': { borderColor: border } } } : {}),
   };
 }
 
