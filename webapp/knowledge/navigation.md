@@ -17,6 +17,7 @@ One layout route renders `AppShell`; its children are the pages.
 | `/`        | `HomePage`     | Greeting and search, Your usual, Popular now. The only page with `AppHeader`. |
 | `/menu`    | `MenuPage`     | The full catalogue with search (`?q=`) and category chips.                    |
 | `/order`   | `OrderPage`    | Cart, then live status.                                                       |
+| `/pay`     | `PayPage`      | Stripe payment for the cart; redirects to `/order` when there is nothing to pay. |
 | `/history` | `HistoryPage`  | Past orders and reorder.                                                      |
 | `/account` | `AccountPage`  | Profile, store card, clear data.                                              |
 | `*`        | `NotFoundPage` | A link home.                                                                  |
