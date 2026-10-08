@@ -11,7 +11,7 @@ Routes never import the Stripe SDK; they see `createIntent(amountCents, metadata
 | `createUnavailablePayments` | `src/payments/unavailable.ts` | The key is unset. Every call throws `PaymentsError('unavailable')`. |
 
 `createDeps` picks one; tests build the app with a fake provider defined in `test/payments.test.ts`.
-Intents are created with `automatic_payment_methods` enabled, so the Payment Element decides what to offer.
+Intents are pinned to `payment_method_types: ['card']`, so the Payment Element shows the card form whatever the Stripe dashboard enables; widen the list in `stripe.ts` when wallets or redirect methods should appear.
 
 ## Server-side pricing
 

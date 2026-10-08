@@ -3,8 +3,9 @@ import Stripe from 'stripe';
 import { PaymentsError, type PaymentsProvider } from './types.js';
 
 /**
- * The real provider over the official SDK. Automatic payment methods let the Payment Element
- * decide what to offer; in test mode that is cards.
+ * The real provider over the official SDK. Payment methods are pinned to card for now, so the
+ * Payment Element shows the card form whatever the Stripe dashboard enables; widen the allowed
+ * list here (or switch to automatic_payment_methods) when wallets or redirects should appear.
  */
 export function createStripePayments(secretKey: string): PaymentsProvider {
   const stripe = new Stripe(secretKey);
@@ -13,7 +14,7 @@ export function createStripePayments(secretKey: string): PaymentsProvider {
       const intent = await stripe.paymentIntents.create({
         amount: amountCents,
         currency: PAYMENT_CURRENCY,
-        automatic_payment_methods: { enabled: true },
+        allowed_payment_method_types: ['card'],
         metadata,
       });
       if (!intent.client_secret) {
