@@ -1,4 +1,4 @@
-﻿import { HealthResponseSchema } from '@bbt/shared';
+import { HealthResponseSchema } from '@bbt/shared';
 import { describe, expect, it } from 'vitest';
 import { createApp } from '../src/create-app.js';
 import { createUnavailableAccounts } from '../src/accounts/unavailable.js';

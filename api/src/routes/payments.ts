@@ -6,9 +6,9 @@ import {
   PaymentStatusSchema,
 } from '@bbt/shared';
 import { Hono, type Context } from 'hono';
-import type { AccountsProvider } from '../accounts/types.js';
+import { AccountsError, type AccountsProvider } from '../accounts/types.js';
 import type { Catalogue } from '../catalogue/types.js';
-import type { LoyaltyProvider } from '../loyalty/types.js';
+import { LoyaltyError, type LoyaltyProvider } from '../loyalty/types.js';
 import { priceLines, PricingError } from '../payments/pricing.js';
 import { PaymentsError, type PaymentsProvider } from '../payments/types.js';
 
@@ -34,6 +34,13 @@ function handleError(c: Context, error: unknown): Response {
   }
   if (error instanceof PricingError) {
     return c.json({ error: error.message }, 422);
+  }
+  // The free drink check leans on accounts and loyalty; their outages are 503s, as in their own routes.
+  if (error instanceof AccountsError && error.code === 'unavailable') {
+    return c.json({ error: error.message }, 503);
+  }
+  if (error instanceof LoyaltyError && error.code === 'unavailable') {
+    return c.json({ error: error.message }, 503);
   }
   throw error;
 }

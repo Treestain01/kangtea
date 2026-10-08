@@ -169,6 +169,27 @@ describe('POST /payments/intent', () => {
     expect(res.status).toBe(422);
   });
 
+  it('answers 503 when the free drink claim meets an unavailable accounts provider', async () => {
+    const { provider } = createFakePayments();
+    const res = await postIntent(
+      buildApp(provider),
+      { lines: [cartLine], expectedTotalCents: 100, freeDrink: { lineIndex: 0, cents: 800 } },
+      'good',
+    );
+    expect(res.status).toBe(503);
+  });
+
+  it('answers 503 when the loyalty card cannot be read for a free drink claim', async () => {
+    const { provider } = createFakePayments();
+    const app = buildApp(provider, { accounts: accountsWithToken });
+    const res = await postIntent(
+      app,
+      { lines: [cartLine], expectedTotalCents: 100, freeDrink: { lineIndex: 0, cents: 800 } },
+      'good',
+    );
+    expect(res.status).toBe(503);
+  });
+
   it('answers 503 when payments are not configured', async () => {
     const res = await postIntent(buildApp(createUnavailablePayments()), {
       lines: [cartLine],

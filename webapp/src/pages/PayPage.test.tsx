@@ -1,4 +1,4 @@
-﻿import { STAMPS_PER_CARD, type LoyaltyCard, type Store } from '@bbt/shared';
+import { STAMPS_PER_CARD, type LoyaltyCard, type Store } from '@bbt/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
@@ -14,7 +14,7 @@ import {
   menuItemFixture,
 } from '../store/testing';
 import type { CartLine, Stores } from '../store/types';
-import { PayPage } from './PayPage';
+import { appearanceFromTheme, PayPage } from './PayPage';
 import { fetchMenu, fetchStore, createPaymentIntent, fetchPaymentStatus } from '../api/client';
 
 const confirmPayment = vi.fn();
@@ -141,6 +141,34 @@ beforeEach(() => {
   mockedFetchStatus.mockResolvedValue(verified);
 });
 afterEach(() => vi.unstubAllEnvs());
+
+describe('appearanceFromTheme', () => {
+  it('dresses the Payment Element from the theme tokens, border and font included', () => {
+    const tokens: Record<string, string> = {
+      '--color-accent': '#084986',
+      '--color-surface': '#fffdf9',
+      '--color-text': '#2b2826',
+      '--color-border': '#d8d2c7',
+      '--font-body': 'Inter, sans-serif',
+      '--radius-md': '8px',
+    };
+    const appearance = appearanceFromTheme((name) => tokens[name] ?? '');
+    expect(appearance.variables).toMatchObject({
+      colorPrimary: '#084986',
+      colorBackground: '#fffdf9',
+      colorText: '#2b2826',
+      fontFamily: 'Inter, sans-serif',
+      borderRadius: '8px',
+    });
+    expect(appearance.rules?.['.Input']).toEqual({ borderColor: '#d8d2c7' });
+  });
+
+  it('omits what the theme does not define rather than inventing values', () => {
+    const appearance = appearanceFromTheme(() => '');
+    expect(appearance.variables.colorPrimary).toBeUndefined();
+    expect(appearance.rules).toBeUndefined();
+  });
+});
 
 describe('PayPage', () => {
   it('redirects an empty cart to the order page', async () => {
