@@ -1,4 +1,4 @@
-import { PGlite } from '@electric-sql/pglite';
+﻿import { PGlite } from '@electric-sql/pglite';
 import { AuthSessionSchema, LoyaltyCardSchema } from '@bbt/shared';
 import { drizzle } from 'drizzle-orm/pglite';
 import { migrate } from 'drizzle-orm/pglite/migrator';
@@ -9,6 +9,7 @@ import { createApp } from '../src/create-app.js';
 import { migrationsFolder } from '../src/db/client.js';
 import * as schema from '../src/db/schema.js';
 import { createPostgresLoyalty } from '../src/loyalty/postgres.js';
+import { createUnavailablePayments } from '../src/payments/unavailable.js';
 
 /** The loyalty routes over the real Postgres providers on PGlite, with a controllable clock. */
 
@@ -19,7 +20,12 @@ const clock = () => new Date(Date.UTC(2026, 8, 27, 1, 0, tick++));
 const accounts = createPostgresAccounts(db, clock);
 const loyalty = createPostgresLoyalty(db, clock);
 const env = { ALLOWED_ORIGINS: 'http://localhost:5173', PORT: 3000, DATABASE_URL: undefined };
-const app = createApp(env, { catalogue: createSeedCatalogue(loadSeed()), accounts, loyalty });
+const app = createApp(env, {
+  catalogue: createSeedCatalogue(loadSeed()),
+  accounts,
+  loyalty,
+  payments: createUnavailablePayments(),
+});
 
 let token = '';
 
