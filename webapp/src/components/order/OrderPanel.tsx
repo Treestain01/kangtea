@@ -1,9 +1,9 @@
 import type { FreeDrink, Order } from '@bbt/shared';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useCatalogue } from '../../api/useCatalogue';
 import { useStoreInfo } from '../../api/useStoreInfo';
-import { KITCHEN_SCHEDULE } from '../../config';
+import { KITCHEN_SCHEDULE, stripePublishableKey } from '../../config';
 import { freeDrinkFor } from '../../lib/checkout';
 import { formatPrice } from '../../lib/money';
 import { useLoyalty } from '../../loyalty/LoyaltyProvider';
@@ -73,6 +73,7 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
   const kitchenCupRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
   const [notice, setNotice] = useState('');
+  const navigate = useNavigate();
 
   const className = `order${compact ? ' order--compact' : ''}`;
   // The menu still knowing the drink gives the line its cup; a retired drink shows without one.
@@ -94,6 +95,11 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
   const place = () => {
     if (!store) return;
     setNotice('');
+    // Something to pay and a configured Stripe key: payment happens on /pay before placing.
+    if (stripePublishableKey() && orderTotalCents(cart, freeDrink) > 0) {
+      navigate('/pay');
+      return;
+    }
     if (!freeDrink) {
       placeNow(store.id);
       return;

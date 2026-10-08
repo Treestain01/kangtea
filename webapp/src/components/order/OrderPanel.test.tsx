@@ -3,8 +3,8 @@ import { TestProviders } from '../../test/providers';
 import { createFakeAuthClient } from '../../auth/testing';
 import { createFakeLoyaltyClient } from '../../loyalty/testing';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { MemoryRouter, Route, Routes } from 'react-router';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fetchMenu, fetchStore } from '../../api/client';
 import {
   cartLineFixture,
@@ -129,6 +129,38 @@ describe('OrderPanel cart', () => {
       totalCents: 750,
     });
     expect(screen.getByRole('status')).toHaveTextContent("We've got your order");
+  });
+});
+
+describe('Place order with payments configured', () => {
+  beforeEach(() => {
+    vi.stubEnv('VITE_STRIPE_PUBLISHABLE_KEY', 'pk_test_x');
+    mockedFetchStore.mockReset();
+    mockedFetchStore.mockResolvedValue(store);
+    mockedFetchMenu.mockReset();
+    mockedFetchMenu.mockResolvedValue(menuFixture);
+  });
+  afterEach(() => vi.unstubAllEnvs());
+
+  it('navigates to /pay and keeps the cart', async () => {
+    const stores = createTestStores();
+    stores.cart.add(signature);
+    render(
+      <TestProviders stores={stores}>
+        <MemoryRouter initialEntries={['/order']}>
+          <Routes>
+            <Route path="/order" element={<OrderPanel />} />
+            <Route path="/pay" element={<h1>Pay for your order</h1>} />
+          </Routes>
+        </MemoryRouter>
+      </TestProviders>,
+    );
+    const place = screen.getByRole('button', { name: 'Place order' });
+    await vi.waitFor(() => expect(place).toBeEnabled());
+    fireEvent.click(place);
+    expect(await screen.findByRole('heading', { name: 'Pay for your order' })).toBeInTheDocument();
+    expect(stores.cart.read()).toHaveLength(1);
+    expect(stores.orders.read()).toHaveLength(0);
   });
 });
 
