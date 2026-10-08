@@ -1,6 +1,6 @@
 import { orderTotalCents, PAYMENT_CURRENCY, type FreeDrink } from '@bbt/shared';
 import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { loadStripe, type Stripe } from '@stripe/stripe-js';
+import { loadStripe, type PaymentIntentResult, type Stripe } from '@stripe/stripe-js';
 import { useEffect, useRef, useState } from 'react';
 import { Navigate, useNavigate, useSearchParams } from 'react-router';
 import { createPaymentIntent, fetchPaymentStatus } from '../api/client';
@@ -227,7 +227,7 @@ function CheckoutForm({ amountCents, freeDrink, storeId, leaving }: CheckoutForm
         await verify(confirmedIntentId);
         return;
       }
-      let result: Awaited<ReturnType<typeof stripe.confirmPayment>>;
+      let result: PaymentIntentResult;
       try {
         result = await stripe.confirmPayment({ elements, redirect: 'if_required' });
       } catch {
