@@ -6,6 +6,8 @@ import {
   LoyaltyCardSchema,
   MeResponseSchema,
   MenuSchema,
+  PaymentIntentResponseSchema,
+  PaymentStatusResponseSchema,
   StoreSchema,
   type Account,
   type AccountUpdate,
@@ -15,6 +17,9 @@ import {
   type LoyaltyCard,
   type MeResponse,
   type Menu,
+  type PaymentIntentRequest,
+  type PaymentIntentResponse,
+  type PaymentStatusResponse,
   type SignInRequest,
   type SignUpRequest,
   type Store,
@@ -158,4 +163,24 @@ export function redeemFreeDrink(
   fetchImpl: typeof fetch = fetch,
 ): Promise<LoyaltyCard> {
   return requestJson('/loyalty/redeem', LoyaltyCardSchema, { method: 'POST', token, fetchImpl });
+}
+
+export function createPaymentIntent(
+  request: PaymentIntentRequest,
+  token?: string,
+  fetchImpl: typeof fetch = fetch,
+): Promise<PaymentIntentResponse> {
+  return requestJson('/payments/intent', PaymentIntentResponseSchema, {
+    method: 'POST',
+    body: request,
+    ...(token ? { token } : {}),
+    fetchImpl,
+  });
+}
+
+export function fetchPaymentStatus(
+  paymentIntentId: string,
+  fetchImpl: typeof fetch = fetch,
+): Promise<PaymentStatusResponse> {
+  return requestJson(`/payments/${paymentIntentId}`, PaymentStatusResponseSchema, { fetchImpl });
 }
