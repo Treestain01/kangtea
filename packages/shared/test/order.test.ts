@@ -97,6 +97,12 @@ describe('OrderSchema', () => {
       expect(OrderSchema.safeParse({ ...order, status }).success).toBe(true);
     }
   });
+
+  it('carries an optional payment intent id', () => {
+    expect(OrderSchema.safeParse({ ...order, paymentIntentId: 'pi_1' }).success).toBe(true);
+    expect(OrderSchema.safeParse(order).success).toBe(true);
+    expect(OrderSchema.safeParse({ ...order, paymentIntentId: '' }).success).toBe(false);
+  });
 });
 
 describe('free drink on an order', () => {

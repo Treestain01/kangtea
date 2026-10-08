@@ -6,6 +6,14 @@ type Env = Record<string, string | undefined>;
 /** Base URL of the api project. */
 export const API_URL: string = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 
+/**
+ * Stripe publishable key. Read at call time so tests can stub the env.
+ * Empty means payments are off and placing an order behaves as before payments existed.
+ */
+export function stripePublishableKey(): string {
+  return (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string | undefined) ?? '';
+}
+
 function seconds(value: string | undefined, fallback: number): number {
   const parsed = Number(value);
   return value !== undefined && Number.isFinite(parsed) && parsed >= 0 ? parsed : fallback;

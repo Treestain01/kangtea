@@ -60,6 +60,8 @@ export const OrderSchema = z
     updatedAt: z.iso.datetime(),
     pickupCode: PickupCodeSchema,
     freeDrink: FreeDrinkSchema.optional(),
+    /** The Stripe PaymentIntent that paid for this order; absent when nothing was payable. */
+    paymentIntentId: z.string().min(1).optional(),
   })
   .refine((order) => order.totalCents === orderTotalCents(order.lines, order.freeDrink), {
     message: 'totalCents must equal the sum of line prices less the free drink',

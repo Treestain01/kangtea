@@ -1,9 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
   ApiError,
+  createPaymentIntent,
   fetchHealth,
   fetchMe,
   fetchMenu,
+  fetchPaymentStatus,
   fetchStore,
   earnStamps,
   fetchLoyaltyCard,
@@ -226,5 +228,54 @@ describe('loyalty calls', () => {
     await expect(
       fetchLoyaltyCard('opaque', fakeFetch(200, { ...card, complete: true })),
     ).rejects.toThrow();
+  });
+});
+
+const paymentLine = {
+  itemId: 'signature-milk-tea',
+  name: 'Signature Milk Tea',
+  unitPriceCents: 900,
+  quantity: 1,
+  customisations: [],
+};
+
+const intentResponse = {
+  paymentIntentId: 'pi_1',
+  clientSecret: 'pi_1_secret',
+  amountCents: 900,
+  currency: 'aud',
+};
+
+describe('createPaymentIntent', () => {
+  it('posts the cart with the bearer token and parses the response', async () => {
+    const impl = fakeFetch(200, intentResponse);
+    const request = { lines: [paymentLine], expectedTotalCents: 900 };
+    await expect(createPaymentIntent(request, 'tok', impl)).resolves.toEqual(intentResponse);
+    const { url, init } = lastCall(impl);
+    expect(url).toBe('http://localhost:3000/payments/intent');
+    expect(init.method).toBe('POST');
+    expect((init.headers as Record<string, string>).authorization).toBe('Bearer tok');
+  });
+
+  it('throws the api error on a 409', async () => {
+    const failing = createPaymentIntent(
+      { lines: [paymentLine], expectedTotalCents: 1 },
+      undefined,
+      fakeFetch(409, { error: 'The menu has changed; refresh and try again' }),
+    );
+    await expect(failing).rejects.toThrow('The menu has changed');
+  });
+});
+
+describe('fetchPaymentStatus', () => {
+  it('reads a verified status back', async () => {
+    const status = {
+      paymentIntentId: 'pi_1',
+      status: 'succeeded',
+      amountCents: 900,
+      currency: 'aud',
+      fromKangTea: true,
+    };
+    await expect(fetchPaymentStatus('pi_1', fakeFetch(200, status))).resolves.toEqual(status);
   });
 });

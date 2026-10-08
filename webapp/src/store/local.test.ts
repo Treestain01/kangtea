@@ -123,6 +123,13 @@ describe('orders store', () => {
     expect(order.storeId).toBe('calamvale-central');
   });
 
+  it('records the payment intent on a paid order', () => {
+    const { orders } = createLocalStores(createMemoryStorage());
+    const order = orders.place(lines, 'calamvale-central', now, undefined, 'pi_1');
+    expect(order.paymentIntentId).toBe('pi_1');
+    expect(orders.read()[0]?.paymentIntentId).toBe('pi_1');
+  });
+
   it('lists newest first', () => {
     const { orders } = createLocalStores(createMemoryStorage());
     const first = orders.place(lines, 's', new Date('2026-09-24T01:00:00.000Z'));

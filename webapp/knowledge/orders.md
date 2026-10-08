@@ -35,6 +35,18 @@ Placing the order redeems on the server first, then calls `orders.place(lines, s
 If redeeming fails the order is placed at full price and a notice says the free drink stays on the card.
 The active order and History show the free drink line; stamping on collect skips it.
 
+## Paying
+
+Payments are on when `VITE_STRIPE_PUBLISHABLE_KEY` is set (read by `stripePublishableKey()` in `src/config.ts`); without it, Place order behaves exactly as it always did.
+With payments on and something payable, Place order navigates to `/pay` (`pages/PayPage.tsx`) instead of placing.
+The cart is the source of truth: the page rebuilds the PaymentIntent from it on mount (`createPaymentIntent`, priced and compared server-side), so a refresh or back-navigation costs nothing.
+Stripe's Payment Element collects the payment, themed from the colour tokens; confirmation uses `redirect: 'if_required'`, and a redirect-based method returning with `?payment_intent=` is verified the same way without a second confirm.
+The order is placed only after `fetchPaymentStatus` reports, from Stripe itself, `succeeded` with the amount equal to the cart's total as it stands, the currency `aud`, and our metadata tag; anything else shows an error and leaves the cart untouched.
+The free drink is checked at pricing time and redeemed only after a verified payment; a failed redeem shows the usual notice and never blocks the paid order.
+A paid order records `paymentIntentId`.
+A zero total (the free drink covering everything) places directly without Stripe, as does payments-off.
+See `api/knowledge/payments.md` for the routes and the three amount checks.
+
 ## The order panel in motion
 
 - Adding from the customise sheet flies a clone of the built cup into the Order tab (`components/cup/fly.ts#flyCup`); the tab badge is keyed on the count so it bumps on every change.
@@ -54,6 +66,7 @@ The active order and History show the free drink line; stamping on collect skips
 
 ```
 cart.add(item)  ->  lines in the cart
+(payments on and total > 0: /pay collects and verifies the Stripe payment first)
 orders.place(lines, storeId)  ->  Order { status: received }  and the cart is cleared
 received -> making -> ready         (simulated kitchen, see below)
 ready -> collected                  (customer taps "I've picked it up")

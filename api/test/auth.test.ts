@@ -1,4 +1,4 @@
-import { PGlite } from '@electric-sql/pglite';
+﻿import { PGlite } from '@electric-sql/pglite';
 import { AccountSchema, AuthSessionSchema, MeResponseSchema } from '@bbt/shared';
 import { sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/pglite';
@@ -7,6 +7,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { createPostgresAccounts, SESSION_TTL_MS } from '../src/accounts/postgres.js';
 import { createUnavailableAccounts } from '../src/accounts/unavailable.js';
 import { createUnavailableLoyalty } from '../src/loyalty/unavailable.js';
+import { createUnavailablePayments } from '../src/payments/unavailable.js';
 import { createSeedCatalogue, loadSeed } from '../src/catalogue/seed.js';
 import { createApp } from '../src/create-app.js';
 import { migrationsFolder } from '../src/db/client.js';
@@ -23,6 +24,7 @@ const app = createApp(env, {
   catalogue: createSeedCatalogue(loadSeed()),
   accounts,
   loyalty: createUnavailableLoyalty(),
+  payments: createUnavailablePayments(),
 });
 
 const credentials = { email: 'tristan@example.com', password: 'correct horse battery' };
@@ -195,6 +197,7 @@ describe('without a database', () => {
       catalogue: createSeedCatalogue(loadSeed()),
       accounts: createUnavailableAccounts(),
       loyalty: createUnavailableLoyalty(),
+      payments: createUnavailablePayments(),
     });
     const res = await offline.request('/auth/sign-in', {
       method: 'POST',

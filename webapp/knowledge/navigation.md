@@ -12,14 +12,15 @@ Browsers without view transitions cut as before, and reduced motion turns the an
 `src/router.tsx` exports `routes` (for tests) and `createAppRouter()` (for `main.tsx`).
 One layout route renders `AppShell`; its children are the pages.
 
-| Path       | Page           | Purpose                                                                       |
-| ---------- | -------------- | ----------------------------------------------------------------------------- |
-| `/`        | `HomePage`     | Greeting and search, Your usual, Popular now. The only page with `AppHeader`. |
-| `/menu`    | `MenuPage`     | The full catalogue with search (`?q=`) and category chips.                    |
-| `/order`   | `OrderPage`    | Cart, then live status.                                                       |
-| `/history` | `HistoryPage`  | Past orders and reorder.                                                      |
-| `/account` | `AccountPage`  | Profile, store card, clear data.                                              |
-| `*`        | `NotFoundPage` | A link home.                                                                  |
+| Path       | Page           | Purpose                                                                          |
+| ---------- | -------------- | -------------------------------------------------------------------------------- |
+| `/`        | `HomePage`     | Greeting and search, Your usual, Popular now. The only page with `AppHeader`.    |
+| `/menu`    | `MenuPage`     | The full catalogue with search (`?q=`) and category chips.                       |
+| `/order`   | `OrderPage`    | Cart, then live status.                                                          |
+| `/pay`     | `PayPage`      | Stripe payment for the cart; redirects to `/order` when there is nothing to pay. |
+| `/history` | `HistoryPage`  | Past orders and reorder.                                                         |
+| `/account` | `AccountPage`  | Profile, store card, clear data.                                                 |
+| `*`        | `NotFoundPage` | A link home.                                                                     |
 
 React Router runs in declarative mode.
 Vercel's SPA rewrite in `vercel.json` serves `index.html` for every path, so deep links work.

@@ -26,6 +26,12 @@ describe('loadEnv', () => {
     });
   });
 
+  it('reads STRIPE_SECRET_KEY and treats an empty value as unset', () => {
+    expect(loadEnv({ STRIPE_SECRET_KEY: 'sk_test_x' }).STRIPE_SECRET_KEY).toBe('sk_test_x');
+    expect(loadEnv({}).STRIPE_SECRET_KEY).toBeUndefined();
+    expect(loadEnv({ STRIPE_SECRET_KEY: '' }).STRIPE_SECRET_KEY).toBeUndefined();
+  });
+
   it('coerces PORT to a number', () => {
     expect(loadEnv({ PORT: '4000' }).PORT).toBe(4000);
   });

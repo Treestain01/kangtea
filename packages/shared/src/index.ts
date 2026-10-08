@@ -37,6 +37,20 @@ export {
 } from './order.js';
 export type { Customisation, FreeDrink, Order, OrderLine, OrderStatus } from './order.js';
 
+export {
+  PAYMENT_CURRENCY,
+  PaymentIntentRequestSchema,
+  PaymentIntentResponseSchema,
+  PaymentStatusResponseSchema,
+  PaymentStatusSchema,
+} from './payment.js';
+export type {
+  PaymentIntentRequest,
+  PaymentIntentResponse,
+  PaymentStatus,
+  PaymentStatusResponse,
+} from './payment.js';
+
 export { AccountSchema } from './account.js';
 export type { Account } from './account.js';
 

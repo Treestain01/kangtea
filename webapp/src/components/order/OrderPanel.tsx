@@ -1,9 +1,10 @@
 import type { FreeDrink, Order } from '@bbt/shared';
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { useCatalogue } from '../../api/useCatalogue';
 import { useStoreInfo } from '../../api/useStoreInfo';
-import { KITCHEN_SCHEDULE } from '../../config';
+import { KITCHEN_SCHEDULE, stripePublishableKey } from '../../config';
+import { freeDrinkFor } from '../../lib/checkout';
 import { formatPrice } from '../../lib/money';
 import { useLoyalty } from '../../loyalty/LoyaltyProvider';
 import { useStores } from '../../store/StoresProvider';
@@ -72,6 +73,14 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
   const kitchenCupRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
   const [notice, setNotice] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // The pay page hands its free drink notice over in navigation state, since it places and leaves.
+  useEffect(() => {
+    const carried = (location.state as { notice?: string } | null)?.notice;
+    if (carried) setNotice(carried);
+  }, [location.state]);
 
   const className = `order${compact ? ' order--compact' : ''}`;
   // The menu still knowing the drink gives the line its cup; a retired drink shows without one.
@@ -83,17 +92,8 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
 
   // A finished card is a free drink: the first drink in the cart, at its menu price without
   // toppings, comes off this order (ADR 0023).
-  const freeDrink = ((): FreeDrink | undefined => {
-    if (loyalty.state.kind !== 'ready' || loyalty.state.card.available < 1) return undefined;
-    const first = cart[0];
-    if (!first) return undefined;
-    const base = artFor(first.itemId) ? basePriceFor(first.itemId) : undefined;
-    return { lineIndex: 0, cents: Math.min(first.unitPriceCents, base ?? first.unitPriceCents) };
-  })();
-  function basePriceFor(itemId: string): number | undefined {
-    if (catalogue.kind !== 'ready') return undefined;
-    return catalogue.menu.items.find((candidate) => candidate.id === itemId)?.priceCents;
-  }
+  const menu = catalogue.kind === 'ready' ? catalogue.menu : undefined;
+  const freeDrink = freeDrinkFor(cart, menu, loyalty.state);
 
   const placeNow = (storeId: string, taken?: FreeDrink) => {
     ordersStore.place(cart, storeId, new Date(), taken);
@@ -102,6 +102,11 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
   const place = () => {
     if (!store) return;
     setNotice('');
+    // Something to pay and a configured Stripe key: payment happens on /pay before placing.
+    if (stripePublishableKey() && orderTotalCents(cart, freeDrink) > 0) {
+      navigate('/pay');
+      return;
+    }
     if (!freeDrink) {
       placeNow(store.id);
       return;
