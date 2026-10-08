@@ -139,7 +139,7 @@ function createOrdersStore(storage: Storage): OrdersStore {
   return {
     read: store.read,
     subscribe: store.subscribe,
-    place(lines, storeId, now = new Date(), freeDrink) {
+    place(lines, storeId, now = new Date(), freeDrink, paymentIntentId) {
       const timestamp = now.toISOString();
       const order = OrderSchema.parse({
         id: randomId(),
@@ -151,6 +151,7 @@ function createOrdersStore(storage: Storage): OrdersStore {
         updatedAt: timestamp,
         pickupCode: randomPickupCode(),
         ...(freeDrink ? { freeDrink } : {}),
+        ...(paymentIntentId ? { paymentIntentId } : {}),
       });
       store.write([order, ...store.read()]);
       return order;

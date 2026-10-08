@@ -19,8 +19,14 @@ export interface CartStore {
 export interface OrdersStore {
   /** Every order, newest first. */
   read(): Order[];
-  /** Creates a received order from the lines and returns it. A free drink comes off the total. */
-  place(lines: CartLine[], storeId: string, now?: Date, freeDrink?: FreeDrink): Order;
+  /** Creates a received order. A free drink comes off the total; a paid order records its intent. */
+  place(
+    lines: CartLine[],
+    storeId: string,
+    now?: Date,
+    freeDrink?: FreeDrink,
+    paymentIntentId?: string,
+  ): Order;
   setStatus(orderId: string, status: OrderStatus, now?: Date): void;
   clear(): void;
   subscribe(listener: () => void): () => void;

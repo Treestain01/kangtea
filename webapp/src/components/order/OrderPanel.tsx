@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { useCatalogue } from '../../api/useCatalogue';
 import { useStoreInfo } from '../../api/useStoreInfo';
 import { KITCHEN_SCHEDULE } from '../../config';
+import { freeDrinkFor } from '../../lib/checkout';
 import { formatPrice } from '../../lib/money';
 import { useLoyalty } from '../../loyalty/LoyaltyProvider';
 import { useStores } from '../../store/StoresProvider';
@@ -83,17 +84,8 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
 
   // A finished card is a free drink: the first drink in the cart, at its menu price without
   // toppings, comes off this order (ADR 0023).
-  const freeDrink = ((): FreeDrink | undefined => {
-    if (loyalty.state.kind !== 'ready' || loyalty.state.card.available < 1) return undefined;
-    const first = cart[0];
-    if (!first) return undefined;
-    const base = artFor(first.itemId) ? basePriceFor(first.itemId) : undefined;
-    return { lineIndex: 0, cents: Math.min(first.unitPriceCents, base ?? first.unitPriceCents) };
-  })();
-  function basePriceFor(itemId: string): number | undefined {
-    if (catalogue.kind !== 'ready') return undefined;
-    return catalogue.menu.items.find((candidate) => candidate.id === itemId)?.priceCents;
-  }
+  const menu = catalogue.kind === 'ready' ? catalogue.menu : undefined;
+  const freeDrink = freeDrinkFor(cart, menu, loyalty.state);
 
   const placeNow = (storeId: string, taken?: FreeDrink) => {
     ordersStore.place(cart, storeId, new Date(), taken);
