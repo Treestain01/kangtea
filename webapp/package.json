@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@bbt/shared": "workspace:*",
+    "@stripe/react-stripe-js": "^7.0.0",
+    "@stripe/stripe-js": "^10.0.0",
     "matter-js": "^0.20.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
