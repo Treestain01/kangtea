@@ -102,7 +102,10 @@ const postIntent = (app: ReturnType<typeof createApp>, body: unknown, token?: st
 describe('POST /payments/intent', () => {
   it('prices the cart from the catalogue and creates a tagged intent', async () => {
     const { provider, intents } = createFakePayments();
-    const res = await postIntent(buildApp(provider), { lines: [cartLine], expectedTotalCents: 900 });
+    const res = await postIntent(buildApp(provider), {
+      lines: [cartLine],
+      expectedTotalCents: 900,
+    });
     expect(res.status).toBe(200);
     const body = PaymentIntentResponseSchema.parse(await res.json());
     expect(body.amountCents).toBe(900);
@@ -112,7 +115,10 @@ describe('POST /payments/intent', () => {
 
   it('refuses a total that disagrees with the server price', async () => {
     const { provider, intents } = createFakePayments();
-    const res = await postIntent(buildApp(provider), { lines: [cartLine], expectedTotalCents: 100 });
+    const res = await postIntent(buildApp(provider), {
+      lines: [cartLine],
+      expectedTotalCents: 100,
+    });
     expect(res.status).toBe(409);
     expect(intents.size).toBe(0);
   });

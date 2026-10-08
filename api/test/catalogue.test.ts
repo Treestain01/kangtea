@@ -71,7 +71,7 @@ describe('when the catalogue fails', () => {
         },
         accounts: createUnavailableAccounts(),
         loyalty: createUnavailableLoyalty(),
-    payments: createUnavailablePayments(),
+        payments: createUnavailablePayments(),
       },
     );
     const res = await failing.request('/menu');

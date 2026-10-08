@@ -67,8 +67,17 @@ The same provider pattern as accounts and loyalty; routes never import the Strip
 
 ```ts
 interface PaymentsProvider {
-  createIntent(amountCents: number, metadata: Record<string, string>): Promise<{ id: string; clientSecret: string }>;
-  getIntent(id: string): Promise<{ id: string; status: string; amountCents: number; currency: string; metadata: Record<string, string> }>;
+  createIntent(
+    amountCents: number,
+    metadata: Record<string, string>,
+  ): Promise<{ id: string; clientSecret: string }>;
+  getIntent(id: string): Promise<{
+    id: string;
+    status: string;
+    amountCents: number;
+    currency: string;
+    metadata: Record<string, string>;
+  }>;
 }
 ```
 

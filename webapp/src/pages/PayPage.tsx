@@ -153,7 +153,11 @@ export function PayPage() {
           stripe={getStripe()}
           options={{ clientSecret: checkout.clientSecret, appearance: appearanceFromTheme() }}
         >
-          <CheckoutForm amountCents={checkout.amountCents} freeDrink={freeDrink} storeId={store.id} />
+          <CheckoutForm
+            amountCents={checkout.amountCents}
+            freeDrink={freeDrink}
+            storeId={store.id}
+          />
         </Elements>
       )}
     </section>

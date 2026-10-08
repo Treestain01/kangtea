@@ -15,11 +15,7 @@ const TOPPING = 'Topping';
  * Prices the cart from the catalogue, ignoring every client-sent price.
  * A claimed free drink takes the drink's menu price off its line, toppings still charged (ADR 0023).
  */
-export function priceLines(
-  menu: Menu,
-  lines: readonly OrderLine[],
-  freeDrink?: FreeDrink,
-): number {
+export function priceLines(menu: Menu, lines: readonly OrderLine[], freeDrink?: FreeDrink): number {
   const unitPrice = (line: OrderLine): number => {
     const item = menu.items.find((candidate) => candidate.id === line.itemId);
     if (!item) throw new PricingError(`The menu no longer has ${line.itemId}`);

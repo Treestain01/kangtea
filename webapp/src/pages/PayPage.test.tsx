@@ -53,7 +53,12 @@ const menuFixture = {
 };
 
 const line: CartLine = cartLineFixture({ unitPriceCents: 900 });
-const intent = { paymentIntentId: 'pi_1', clientSecret: 'cs_1', amountCents: 900, currency: 'aud' as const };
+const intent = {
+  paymentIntentId: 'pi_1',
+  clientSecret: 'cs_1',
+  amountCents: 900,
+  currency: 'aud' as const,
+};
 const verified = {
   paymentIntentId: 'pi_1',
   status: 'succeeded' as const,

@@ -31,7 +31,10 @@ export function createApp(env: Env, deps: AppDeps): Hono {
   app.route('/menu', menuRoutes(deps.catalogue));
   app.route('/auth', authRoutes(deps.accounts));
   app.route('/loyalty', loyaltyRoutes(deps.accounts, deps.loyalty, deps.catalogue));
-  app.route('/payments', paymentsRoutes(deps.payments, deps.catalogue, deps.accounts, deps.loyalty));
+  app.route(
+    '/payments',
+    paymentsRoutes(deps.payments, deps.catalogue, deps.accounts, deps.loyalty),
+  );
 
   app.notFound((c) => c.json({ error: 'Not found' }, 404));
   app.onError((error, c) => {

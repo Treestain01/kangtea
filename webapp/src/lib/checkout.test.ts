@@ -40,6 +40,8 @@ describe('freeDrinkFor', () => {
   });
 
   it('is nothing for a drink the menu no longer has', () => {
-    expect(freeDrinkFor([cartLineFixture({ itemId: 'retired' })], menu, readyCard(1))).toBeUndefined();
+    expect(
+      freeDrinkFor([cartLineFixture({ itemId: 'retired' })], menu, readyCard(1)),
+    ).toBeUndefined();
   });
 });

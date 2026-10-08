@@ -29,12 +29,12 @@ describe('PaymentIntentRequestSchema', () => {
   });
 
   it('rejects an empty cart and a non positive total', () => {
-    expect(PaymentIntentRequestSchema.safeParse({ lines: [], expectedTotalCents: 800 }).success).toBe(
-      false,
-    );
-    expect(PaymentIntentRequestSchema.safeParse({ lines: [line], expectedTotalCents: 0 }).success).toBe(
-      false,
-    );
+    expect(
+      PaymentIntentRequestSchema.safeParse({ lines: [], expectedTotalCents: 800 }).success,
+    ).toBe(false);
+    expect(
+      PaymentIntentRequestSchema.safeParse({ lines: [line], expectedTotalCents: 0 }).success,
+    ).toBe(false);
   });
 });
 

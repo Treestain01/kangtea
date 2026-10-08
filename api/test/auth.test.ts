@@ -24,7 +24,7 @@ const app = createApp(env, {
   catalogue: createSeedCatalogue(loadSeed()),
   accounts,
   loyalty: createUnavailableLoyalty(),
-    payments: createUnavailablePayments(),
+  payments: createUnavailablePayments(),
 });
 
 const credentials = { email: 'tristan@example.com', password: 'correct horse battery' };
@@ -197,7 +197,7 @@ describe('without a database', () => {
       catalogue: createSeedCatalogue(loadSeed()),
       accounts: createUnavailableAccounts(),
       loyalty: createUnavailableLoyalty(),
-    payments: createUnavailablePayments(),
+      payments: createUnavailablePayments(),
     });
     const res = await offline.request('/auth/sign-in', {
       method: 'POST',

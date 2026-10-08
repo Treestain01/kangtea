@@ -37,6 +37,7 @@ Spec-implied failure modes most likely to bite, each pinned to a test in the own
 ### Task 1: Payment contract in packages/shared
 
 **Files:**
+
 - Create: `packages/shared/src/payment.ts`
 - Modify: `packages/shared/src/order.ts` (add `paymentIntentId` to `OrderSchema`)
 - Modify: `packages/shared/src/index.ts`
@@ -44,6 +45,7 @@ Spec-implied failure modes most likely to bite, each pinned to a test in the own
 - Modify: `packages/shared/test/order.test.ts`
 
 **Interfaces:**
+
 - Consumes: `OrderLineSchema`, `FreeDrinkSchema` from `order.ts`.
 - Produces: `PAYMENT_CURRENCY = 'aud'`, `PaymentIntentRequestSchema`/`PaymentIntentRequest`, `PaymentIntentResponseSchema`/`PaymentIntentResponse`, `PaymentStatusSchema`/`PaymentStatus`, `PaymentStatusResponseSchema`/`PaymentStatusResponse`, and `Order.paymentIntentId?: string`.
 
@@ -83,8 +85,12 @@ describe('PaymentIntentRequestSchema', () => {
   });
 
   it('rejects an empty cart and a non positive total', () => {
-    expect(PaymentIntentRequestSchema.safeParse({ lines: [], expectedTotalCents: 800 }).success).toBe(false);
-    expect(PaymentIntentRequestSchema.safeParse({ lines: [line], expectedTotalCents: 0 }).success).toBe(false);
+    expect(
+      PaymentIntentRequestSchema.safeParse({ lines: [], expectedTotalCents: 800 }).success,
+    ).toBe(false);
+    expect(
+      PaymentIntentRequestSchema.safeParse({ lines: [line], expectedTotalCents: 0 }).success,
+    ).toBe(false);
   });
 });
 
@@ -97,7 +103,9 @@ describe('PaymentIntentResponseSchema', () => {
       currency: PAYMENT_CURRENCY,
     };
     expect(PaymentIntentResponseSchema.safeParse(response).success).toBe(true);
-    expect(PaymentIntentResponseSchema.safeParse({ ...response, currency: 'usd' }).success).toBe(false);
+    expect(PaymentIntentResponseSchema.safeParse({ ...response, currency: 'usd' }).success).toBe(
+      false,
+    );
   });
 });
 
@@ -111,7 +119,9 @@ describe('PaymentStatusResponseSchema', () => {
       fromKangTea: true,
     };
     expect(PaymentStatusResponseSchema.safeParse(response).success).toBe(true);
-    expect(PaymentStatusResponseSchema.safeParse({ ...response, status: 'paid' }).success).toBe(false);
+    expect(PaymentStatusResponseSchema.safeParse({ ...response, status: 'paid' }).success).toBe(
+      false,
+    );
   });
 });
 ```
@@ -230,11 +240,13 @@ git commit -m "Add the payment contract to the shared package"
 ### Task 2: STRIPE_SECRET_KEY in the api environment
 
 **Files:**
+
 - Modify: `api/src/env.ts`
 - Modify: `api/.env.example`
 - Modify: `api/test/env.test.ts`
 
 **Interfaces:**
+
 - Produces: `Env.STRIPE_SECRET_KEY?: string` (undefined when unset or empty).
 
 - [ ] **Step 1: Write the failing test**
@@ -293,11 +305,13 @@ git commit -m "Read the Stripe secret key from the api environment"
 ### Task 3: PaymentsProvider seam
 
 **Files:**
+
 - Create: `api/src/payments/types.ts`
 - Create: `api/src/payments/unavailable.ts`
 - Create: `api/src/payments/stripe.ts`
 
 **Interfaces:**
+
 - Produces:
   - `interface PaymentsProvider { createIntent(amountCents: number, metadata: Record<string, string>): Promise<CreatedIntent>; getIntent(id: string): Promise<IntentDetails>; }`
   - `interface CreatedIntent { id: string; clientSecret: string }`
@@ -432,10 +446,12 @@ git commit -m "Add the payments provider seam with Stripe and unavailable implem
 ### Task 4: Server-side cart pricing
 
 **Files:**
+
 - Create: `api/src/payments/pricing.ts`
 - Create: `api/test/pricing.test.ts`
 
 **Interfaces:**
+
 - Consumes: `Menu`, `OrderLine`, `FreeDrink` from `@bbt/shared`.
 - Produces: `priceLines(menu: Menu, lines: readonly OrderLine[], freeDrink?: FreeDrink): number` (payable cents) and `class PricingError extends Error`.
 
@@ -549,11 +565,7 @@ const TOPPING = 'Topping';
  * Prices the cart from the catalogue, ignoring every client-sent price.
  * A claimed free drink takes the drink's menu price off its line, toppings still charged (ADR 0023).
  */
-export function priceLines(
-  menu: Menu,
-  lines: readonly OrderLine[],
-  freeDrink?: FreeDrink,
-): number {
+export function priceLines(menu: Menu, lines: readonly OrderLine[], freeDrink?: FreeDrink): number {
   const unitPrice = (line: OrderLine): number => {
     const item = menu.items.find((candidate) => candidate.id === line.itemId);
     if (!item) throw new PricingError(`The menu no longer has ${line.itemId}`);
@@ -594,6 +606,7 @@ git commit -m "Price carts on the server from the catalogue"
 ### Task 5: Payment routes and wiring
 
 **Files:**
+
 - Create: `api/src/routes/payments.ts`
 - Modify: `api/src/create-app.ts` (add `payments` to `AppDeps`, mount the routes)
 - Modify: `api/src/deps.ts` (build the provider from the env)
@@ -601,6 +614,7 @@ git commit -m "Price carts on the server from the catalogue"
 - Create: `api/test/payments.test.ts`
 
 **Interfaces:**
+
 - Consumes: `PaymentsProvider`, `PaymentsError`, `createUnavailablePayments`, `createStripePayments` (Task 3); `priceLines`, `PricingError` (Task 4); the shared payment schemas (Task 1); `AccountsProvider.resolve`, `LoyaltyProvider.card`, `Catalogue.getMenu`/`getStore`.
 - Produces: `POST /payments/intent` answering `PaymentIntentResponse`; `GET /payments/:id` answering `PaymentStatusResponse`; metadata tag `{ source: 'bbt', storeId }`.
 
@@ -633,7 +647,13 @@ function createFakePayments() {
   const provider: PaymentsProvider = {
     async createIntent(amountCents, metadata) {
       const id = `pi_${(counter += 1)}`;
-      intents.set(id, { id, status: 'requires_payment_method', amountCents, currency: 'aud', metadata });
+      intents.set(id, {
+        id,
+        status: 'requires_payment_method',
+        amountCents,
+        currency: 'aud',
+        metadata,
+      });
       return { id, clientSecret: `${id}_secret` };
     },
     async getIntent(id) {
@@ -647,7 +667,12 @@ function createFakePayments() {
 
 const me = MeResponseSchema.parse({
   user: { id: 'u1', email: 't@example.com', displayName: 'T' },
-  account: { displayName: 'T', email: 't@example.com', marketingOptIn: false, createdAt: '2026-01-01T00:00:00.000Z' },
+  account: {
+    displayName: 'T',
+    email: 't@example.com',
+    marketingOptIn: false,
+    createdAt: '2026-01-01T00:00:00.000Z',
+  },
 });
 const accountsWithToken = {
   ...createUnavailableAccounts(),
@@ -666,7 +691,10 @@ const loyaltyWithFreeDrink = {
     }),
 };
 
-function buildApp(payments: PaymentsProvider, overrides: Partial<Parameters<typeof createApp>[1]> = {}) {
+function buildApp(
+  payments: PaymentsProvider,
+  overrides: Partial<Parameters<typeof createApp>[1]> = {},
+) {
   return createApp(env, {
     catalogue,
     accounts: createUnavailableAccounts(),
@@ -689,13 +717,19 @@ const postIntent = (app: ReturnType<typeof createApp>, body: unknown, token?: st
   app.request('/payments/intent', {
     method: 'POST',
     body: JSON.stringify(body),
-    headers: { 'content-type': 'application/json', ...(token ? { authorization: `Bearer ${token}` } : {}) },
+    headers: {
+      'content-type': 'application/json',
+      ...(token ? { authorization: `Bearer ${token}` } : {}),
+    },
   });
 
 describe('POST /payments/intent', () => {
   it('prices the cart from the catalogue and creates a tagged intent', async () => {
     const { provider, intents } = createFakePayments();
-    const res = await postIntent(buildApp(provider), { lines: [cartLine], expectedTotalCents: 900 });
+    const res = await postIntent(buildApp(provider), {
+      lines: [cartLine],
+      expectedTotalCents: 900,
+    });
     expect(res.status).toBe(200);
     const body = PaymentIntentResponseSchema.parse(await res.json());
     expect(body.amountCents).toBe(900);
@@ -705,7 +739,10 @@ describe('POST /payments/intent', () => {
 
   it('refuses a total that disagrees with the server price', async () => {
     const { provider, intents } = createFakePayments();
-    const res = await postIntent(buildApp(provider), { lines: [cartLine], expectedTotalCents: 100 });
+    const res = await postIntent(buildApp(provider), {
+      lines: [cartLine],
+      expectedTotalCents: 100,
+    });
     expect(res.status).toBe(409);
     expect(intents.size).toBe(0);
   });
@@ -776,7 +813,12 @@ describe('GET /payments/:id', () => {
     const res = await app.request(`/payments/${created.paymentIntentId}`);
     expect(res.status).toBe(200);
     const body = PaymentStatusResponseSchema.parse(await res.json());
-    expect(body).toMatchObject({ status: 'succeeded', amountCents: 900, currency: 'aud', fromKangTea: true });
+    expect(body).toMatchObject({
+      status: 'succeeded',
+      amountCents: 900,
+      currency: 'aud',
+      fromKangTea: true,
+    });
   });
 
   it('marks a foreign intent and maps an unknown status onto other', async () => {
@@ -945,7 +987,7 @@ export interface AppDeps {
 And mount after the loyalty route:
 
 ```ts
-  app.route('/payments', paymentsRoutes(deps.payments, deps.catalogue, deps.accounts, deps.loyalty));
+app.route('/payments', paymentsRoutes(deps.payments, deps.catalogue, deps.accounts, deps.loyalty));
 ```
 
 In `api/src/deps.ts`, both branches gain a payments entry built once at the top:
@@ -954,12 +996,12 @@ In `api/src/deps.ts`, both branches gain a payments entry built once at the top:
 import { createStripePayments } from './payments/stripe.js';
 import { createUnavailablePayments } from './payments/unavailable.js';
 
-  const payments = env.STRIPE_SECRET_KEY
-    ? createStripePayments(env.STRIPE_SECRET_KEY)
-    : createUnavailablePayments();
-  if (!env.STRIPE_SECRET_KEY) {
-    console.warn('STRIPE_SECRET_KEY is not set. Payments are off; /payments answers 503.');
-  }
+const payments = env.STRIPE_SECRET_KEY
+  ? createStripePayments(env.STRIPE_SECRET_KEY)
+  : createUnavailablePayments();
+if (!env.STRIPE_SECRET_KEY) {
+  console.warn('STRIPE_SECRET_KEY is not set. Payments are off; /payments answers 503.');
+}
 ```
 
 Add `payments` to both returned objects.
@@ -982,11 +1024,13 @@ git commit -m "Serve payment intents priced from the catalogue and verified agai
 ### Task 6: Webapp config and api client
 
 **Files:**
+
 - Modify: `webapp/src/config.ts`
 - Modify: `webapp/src/api/client.ts`
 - Modify: `webapp/src/api/client.test.ts`
 
 **Interfaces:**
+
 - Produces: `stripePublishableKey(): string` (empty string means payments are off); `createPaymentIntent(request: PaymentIntentRequest, token?: string): Promise<PaymentIntentResponse>`; `fetchPaymentStatus(paymentIntentId: string): Promise<PaymentStatusResponse>`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -1026,7 +1070,13 @@ describe('createPaymentIntent', () => {
 
 describe('fetchPaymentStatus', () => {
   it('reads a verified status back', async () => {
-    const status = { paymentIntentId: 'pi_1', status: 'succeeded', amountCents: 900, currency: 'aud', fromKangTea: true };
+    const status = {
+      paymentIntentId: 'pi_1',
+      status: 'succeeded',
+      amountCents: 900,
+      currency: 'aud',
+      fromKangTea: true,
+    };
     await expect(fetchPaymentStatus('pi_1', fakeFetch(200, status))).resolves.toEqual(status);
   });
 });
@@ -1094,6 +1144,7 @@ git commit -m "Reach the payment routes from the webapp client"
 ### Task 7: Checkout helpers and the paid order record
 
 **Files:**
+
 - Create: `webapp/src/lib/checkout.ts`
 - Create: `webapp/src/lib/checkout.test.ts`
 - Modify: `webapp/src/store/types.ts` (`OrdersStore.place` gains `paymentIntentId`)
@@ -1102,6 +1153,7 @@ git commit -m "Reach the payment routes from the webapp client"
 - Modify: `webapp/src/components/order/OrderPanel.tsx` (use the helper instead of its inline free drink logic)
 
 **Interfaces:**
+
 - Consumes: `LoyaltyState` from `loyalty/LoyaltyProvider`, `CatalogueState` as `useCatalogue` exposes it, `orderTotalCents` from `@bbt/shared`.
 - Produces: `freeDrinkFor(cart: readonly OrderLine[], menu: Menu | undefined, loyalty: LoyaltyState): FreeDrink | undefined`; `OrdersStore.place(lines, storeId, now?, freeDrink?, paymentIntentId?)`.
 
@@ -1120,9 +1172,25 @@ const menu = {
   items: [item],
   customisations: { sugarLevels: [], iceLevels: [], toppings: [] },
 };
-const line = { itemId: 'milk-tea', name: 'Milk Tea', unitPriceCents: 800, quantity: 1, customisations: [] };
+const line = {
+  itemId: 'milk-tea',
+  name: 'Milk Tea',
+  unitPriceCents: 800,
+  quantity: 1,
+  customisations: [],
+};
 const readyCard = (available: number) =>
-  ({ kind: 'ready', card: { stampsPerCard: 10, stamps: [], earned: 10, redeemed: 0, available, complete: available > 0 } }) as const;
+  ({
+    kind: 'ready',
+    card: {
+      stampsPerCard: 10,
+      stamps: [],
+      earned: 10,
+      redeemed: 0,
+      available,
+      complete: available > 0,
+    },
+  }) as const;
 
 describe('freeDrinkFor', () => {
   it('is the first line at its base menu price when a redemption is available', () => {
@@ -1208,8 +1276,8 @@ In `webapp/src/store/local.ts`, the `place` implementation takes the new paramet
 In `webapp/src/components/order/OrderPanel.tsx`, delete the inline `freeDrink` IIFE and `basePriceFor`, and replace with:
 
 ```ts
-  const menu = catalogue.kind === 'ready' ? catalogue.menu : undefined;
-  const freeDrink = freeDrinkFor(cart, menu, loyalty.state);
+const menu = catalogue.kind === 'ready' ? catalogue.menu : undefined;
+const freeDrink = freeDrinkFor(cart, menu, loyalty.state);
 ```
 
 importing `freeDrinkFor` from `../../lib/checkout`.
@@ -1231,10 +1299,12 @@ git commit -m "Share the free drink rule and record the payment intent on orders
 ### Task 8: Place order branches to /pay
 
 **Files:**
+
 - Modify: `webapp/src/components/order/OrderPanel.tsx`
 - Modify: `webapp/src/components/order/OrderPanel.test.tsx`
 
 **Interfaces:**
+
 - Consumes: `stripePublishableKey()` (Task 6), `orderTotalCents` from `@bbt/shared`, `useNavigate` from `react-router`.
 - Produces: navigation to `/pay` with the cart intact whenever payments are on and something is payable.
 
@@ -1282,27 +1352,27 @@ import { useNavigate } from 'react-router';
 import { orderTotalCents } from '@bbt/shared';
 import { stripePublishableKey } from '../../config';
 
-  const navigate = useNavigate();
-  const place = () => {
-    if (!store) return;
-    setNotice('');
-    // Something to pay and a configured Stripe key: payment happens on /pay before placing.
-    if (stripePublishableKey() && orderTotalCents(cart, freeDrink) > 0) {
-      navigate('/pay');
-      return;
-    }
-    if (!freeDrink) {
+const navigate = useNavigate();
+const place = () => {
+  if (!store) return;
+  setNotice('');
+  // Something to pay and a configured Stripe key: payment happens on /pay before placing.
+  if (stripePublishableKey() && orderTotalCents(cart, freeDrink) > 0) {
+    navigate('/pay');
+    return;
+  }
+  if (!freeDrink) {
+    placeNow(store.id);
+    return;
+  }
+  void loyalty.redeem().then(
+    () => placeNow(store.id, freeDrink),
+    () => {
+      setNotice('We could not use your free drink just now, so it stays on your card.');
       placeNow(store.id);
-      return;
-    }
-    void loyalty.redeem().then(
-      () => placeNow(store.id, freeDrink),
-      () => {
-        setNotice('We could not use your free drink just now, so it stays on your card.');
-        placeNow(store.id);
-      },
-    );
-  };
+    },
+  );
+};
 ```
 
 - [ ] **Step 4: Run the tests to verify they pass**
@@ -1322,12 +1392,14 @@ git commit -m "Send a payable order to the pay page"
 ### Task 9: The /pay page
 
 **Files:**
+
 - Create: `webapp/src/pages/PayPage.tsx`
 - Create: `webapp/src/pages/PayPage.css`
 - Create: `webapp/src/pages/PayPage.test.tsx`
 - Modify: `webapp/src/router.tsx` (add the `pay` route)
 
 **Interfaces:**
+
 - Consumes: `createPaymentIntent`, `fetchPaymentStatus`, `ApiError` (Task 6); `freeDrinkFor` (Task 7); `stripePublishableKey()`; `useStores`, `useCart`, `useStoreInfo`, `useCatalogue`, `useLoyalty`, `useAuth`; `orderTotalCents`, `PAYMENT_CURRENCY` from `@bbt/shared`; `@stripe/stripe-js`, `@stripe/react-stripe-js`.
 - Produces: the `/pay` route.
 
@@ -1365,9 +1437,21 @@ vi.mock('../api/client', async (importOriginal) => ({
 Then, using the project's provider test helpers (`src/test/providers.tsx`) and a memory router whose routes include `{ path: 'pay', element: <PayPage /> }` and `{ path: 'order', element: <h1>Order route</h1> }`:
 
 ```tsx
-const line = { itemId: 'milk-tea', name: 'Milk Tea', unitPriceCents: 900, quantity: 1, customisations: [] };
+const line = {
+  itemId: 'milk-tea',
+  name: 'Milk Tea',
+  unitPriceCents: 900,
+  quantity: 1,
+  customisations: [],
+};
 const intent = { paymentIntentId: 'pi_1', clientSecret: 'cs_1', amountCents: 900, currency: 'aud' };
-const verified = { paymentIntentId: 'pi_1', status: 'succeeded', amountCents: 900, currency: 'aud', fromKangTea: true };
+const verified = {
+  paymentIntentId: 'pi_1',
+  status: 'succeeded',
+  amountCents: 900,
+  currency: 'aud',
+  fromKangTea: true,
+};
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -1522,7 +1606,11 @@ function useVerifiedPlacement(freeDrink: FreeDrink | undefined, storeId: string 
       return 'The payment has not gone through yet, so nothing was placed.';
     }
     const expected = orderTotalCents(cart, freeDrink);
-    if (!status.fromKangTea || status.currency !== PAYMENT_CURRENCY || status.amountCents !== expected) {
+    if (
+      !status.fromKangTea ||
+      status.currency !== PAYMENT_CURRENCY ||
+      status.amountCents !== expected
+    ) {
       return 'The payment did not match this order, so nothing was placed.';
     }
     if (freeDrink) {
@@ -1575,7 +1663,11 @@ export function PayPage() {
       auth.session?.token,
     ).then(
       (intent) =>
-        setCheckout({ kind: 'ready', clientSecret: intent.clientSecret, amountCents: intent.amountCents }),
+        setCheckout({
+          kind: 'ready',
+          clientSecret: intent.clientSecret,
+          amountCents: intent.amountCents,
+        }),
       (error: unknown) =>
         setCheckout({
           kind: 'failed',
@@ -1644,7 +1736,9 @@ function CheckoutForm({ amountCents, freeDrink, storeId }: CheckoutFormProps) {
       }
       setMessage(await placeIfVerified(result.paymentIntent.id));
     } catch {
-      setMessage('We could not confirm the payment. Your card may not have been charged; please try again.');
+      setMessage(
+        'We could not confirm the payment. Your card may not have been charged; please try again.',
+      );
     } finally {
       setBusy(false);
     }
@@ -1769,6 +1863,7 @@ git commit -m "Pay for the order on a Stripe Payment Element page before placing
 ### Task 10: Documentation and the ADR
 
 **Files:**
+
 - Create: `api/knowledge/payments.md`
 - Modify: `api/knowledge/INDEX.md` (one line pointing at it)
 - Modify: `webapp/knowledge/orders.md` (a "Paying" section and a line in Lifecycle)

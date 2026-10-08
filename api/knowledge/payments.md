@@ -5,10 +5,10 @@
 `src/payments/` owns how money moves, behind the `PaymentsProvider` interface in `src/payments/types.ts`.
 Routes never import the Stripe SDK; they see `createIntent(amountCents, metadata)` and `getIntent(id)` and nothing else.
 
-| Implementation             | File                         | When                                                        |
-| -------------------------- | ---------------------------- | ----------------------------------------------------------- |
-| `createStripePayments`     | `src/payments/stripe.ts`     | `STRIPE_SECRET_KEY` is set. The official `stripe` package.  |
-| `createUnavailablePayments`| `src/payments/unavailable.ts`| The key is unset. Every call throws `PaymentsError('unavailable')`. |
+| Implementation              | File                          | When                                                                |
+| --------------------------- | ----------------------------- | ------------------------------------------------------------------- |
+| `createStripePayments`      | `src/payments/stripe.ts`      | `STRIPE_SECRET_KEY` is set. The official `stripe` package.          |
+| `createUnavailablePayments` | `src/payments/unavailable.ts` | The key is unset. Every call throws `PaymentsError('unavailable')`. |
 
 `createDeps` picks one; tests build the app with a fake provider defined in `test/payments.test.ts`.
 Intents are created with `automatic_payment_methods` enabled, so the Payment Element decides what to offer.
@@ -26,13 +26,13 @@ Both routes live in `src/routes/payments.ts` and parse their responses against t
 
 `POST /payments/intent` takes `PaymentIntentRequest` and answers `PaymentIntentResponse`.
 
-| Status | Meaning                                                                      |
-| ------ | ---------------------------------------------------------------------------- |
-| 400    | The body does not match the schema.                                          |
-| 401    | A free drink was claimed without a valid bearer token.                       |
+| Status | Meaning                                                                                                             |
+| ------ | ------------------------------------------------------------------------------------------------------------------- |
+| 400    | The body does not match the schema.                                                                                 |
+| 401    | A free drink was claimed without a valid bearer token.                                                              |
 | 409    | No free drink on the card, or the client's total disagrees with the server's (the body carries `serverTotalCents`). |
-| 422    | Unknown drink or topping, or nothing to pay (the webapp should place directly). |
-| 503    | `STRIPE_SECRET_KEY` is unset.                                                |
+| 422    | Unknown drink or topping, or nothing to pay (the webapp should place directly).                                     |
+| 503    | `STRIPE_SECRET_KEY` is unset.                                                                                       |
 
 `GET /payments/:id` reads the intent back from Stripe and answers `PaymentStatusResponse`: the status mapped onto the shared enum (`other` for anything unrecognised), the amount, the currency, and `fromKangTea`, which is whether the metadata carries our `source: 'bbt'` tag.
 404 for an id Stripe does not know; 503 without a key.
