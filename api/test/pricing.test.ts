@@ -73,4 +73,9 @@ describe('priceLines', () => {
   it('throws when the free drink names a line that is not there', () => {
     expect(() => priceLines(menu, [line()], { lineIndex: 3, cents: 800 })).toThrow(PricingError);
   });
+
+  it('pins the free drink to the first line, as the card promises (ADR 0023)', () => {
+    const two = [line(), line()];
+    expect(() => priceLines(menu, two, { lineIndex: 1, cents: 800 })).toThrow(PricingError);
+  });
 });

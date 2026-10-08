@@ -32,7 +32,11 @@ export function priceLines(menu: Menu, lines: readonly OrderLine[], freeDrink?: 
   const total = lines.reduce((sum, line) => sum + unitPrice(line) * line.quantity, 0);
   if (!freeDrink) return total;
 
-  const freeLine = lines[freeDrink.lineIndex];
+  // ADR 0023: the free drink is always the first drink in the cart, never a chosen line.
+  if (freeDrink.lineIndex !== 0) {
+    throw new PricingError('The free drink is always the first drink in the cart');
+  }
+  const freeLine = lines[0];
   if (!freeLine) throw new PricingError('The free drink names a line that is not in the cart');
   const base = menu.items.find((candidate) => candidate.id === freeLine.itemId)?.priceCents ?? 0;
   return Math.max(0, total - Math.min(base, unitPrice(freeLine)));
