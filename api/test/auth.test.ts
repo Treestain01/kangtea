@@ -1,4 +1,4 @@
-﻿import { PGlite } from '@electric-sql/pglite';
+import { PGlite } from '@electric-sql/pglite';
 import { AccountSchema, AuthSessionSchema, MeResponseSchema } from '@bbt/shared';
 import { sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/pglite';

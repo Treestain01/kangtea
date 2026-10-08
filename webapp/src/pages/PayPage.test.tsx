@@ -1,4 +1,4 @@
-﻿import { STAMPS_PER_CARD, type LoyaltyCard, type Store } from '@bbt/shared';
+import { STAMPS_PER_CARD, type LoyaltyCard, type Store } from '@bbt/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
