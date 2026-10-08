@@ -1,6 +1,6 @@
 import type { FreeDrink, Order } from '@bbt/shared';
 import { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { useCatalogue } from '../../api/useCatalogue';
 import { useStoreInfo } from '../../api/useStoreInfo';
 import { KITCHEN_SCHEDULE, stripePublishableKey } from '../../config';
@@ -74,6 +74,13 @@ export function OrderPanel({ compact = false }: OrderPanelProps) {
   const stripRef = useRef<HTMLDivElement>(null);
   const [notice, setNotice] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // The pay page hands its free drink notice over in navigation state, since it places and leaves.
+  useEffect(() => {
+    const carried = (location.state as { notice?: string } | null)?.notice;
+    if (carried) setNotice(carried);
+  }, [location.state]);
 
   const className = `order${compact ? ' order--compact' : ''}`;
   // The menu still knowing the drink gives the line its cup; a retired drink shows without one.

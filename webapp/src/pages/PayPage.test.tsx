@@ -1,8 +1,11 @@
-﻿import type { Store } from '@bbt/shared';
+﻿import { STAMPS_PER_CARD, type LoyaltyCard, type Store } from '@bbt/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { MemoryRouter, Route, Routes } from 'react-router';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { createFakeAuthClient } from '../auth/testing';
+import type { AuthClient } from '../auth/AuthClient';
+import type { LoyaltyClient } from '../loyalty/LoyaltyClient';
 import { TestProviders } from '../test/providers';
 import {
   cartLineFixture,
@@ -67,20 +70,65 @@ const verified = {
   fromKangTea: true,
 };
 
-function renderPay({ cart, path = '/pay' }: { cart: CartLine[]; path?: string }): Stores {
-  const stores = createTestStores();
+/** The /order stand-in also prints a notice carried in navigation state, as OrderPanel does. */
+function OrderStub() {
+  const location = useLocation();
+  const notice = (location.state as { notice?: string } | null)?.notice;
+  return (
+    <>
+      <h1>Order route</h1>
+      {notice && <p role="status">{notice}</p>}
+    </>
+  );
+}
+
+function renderPay({
+  cart,
+  path = '/pay',
+  stores = createTestStores(),
+  auth,
+  loyalty,
+}: {
+  cart: CartLine[];
+  path?: string;
+  stores?: Stores;
+  auth?: AuthClient;
+  loyalty?: LoyaltyClient;
+}): Stores {
   for (const cartLine of cart) stores.cart.add(cartLine);
   render(
-    <TestProviders stores={stores}>
+    <TestProviders stores={stores} auth={auth} loyalty={loyalty}>
       <MemoryRouter initialEntries={[path]}>
         <Routes>
           <Route path="/pay" element={<PayPage />} />
-          <Route path="/order" element={<h1>Order route</h1>} />
+          <Route path="/order" element={<OrderStub />} />
         </Routes>
       </MemoryRouter>
     </TestProviders>,
   );
   return stores;
+}
+
+const fullCard: LoyaltyCard = {
+  stampsPerCard: STAMPS_PER_CARD,
+  stamps: [],
+  earned: STAMPS_PER_CARD,
+  redeemed: 0,
+  available: 1,
+  complete: true,
+};
+
+/** A signed-in session saved into the stores, so the loyalty card loads. */
+async function signedInStores(): Promise<{ stores: Stores; auth: AuthClient; token: string }> {
+  const auth = createFakeAuthClient();
+  const session = await auth.client.signUp({
+    email: 't@example.com',
+    password: 'correct horse',
+    displayName: 'T',
+  });
+  const stores = createTestStores();
+  stores.session.save(session);
+  return { stores, auth: auth.client, token: session.token };
 }
 
 beforeEach(() => {
@@ -151,6 +199,69 @@ describe('PayPage', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('Your card was declined.');
     expect(stores.cart.read()).toHaveLength(1);
     expect(stores.orders.read()).toHaveLength(0);
+  });
+
+  it('waits for the loyalty card before creating the intent, then prices the free drink in', async () => {
+    const { stores, auth, token } = await signedInStores();
+    let releaseCard!: () => void;
+    const loyalty: LoyaltyClient = {
+      card: () =>
+        new Promise((resolve) => {
+          releaseCard = () => resolve(fullCard);
+        }),
+      earn: async () => fullCard,
+      redeem: async () => ({ ...fullCard, redeemed: 1, available: 0, complete: false }),
+    };
+    mockedCreateIntent.mockResolvedValue({ ...intent, amountCents: 150 });
+    mockedFetchStatus.mockResolvedValue({ ...verified, amountCents: 150 });
+    renderPay({ cart: [line], stores, auth, loyalty });
+    // While the card is loading, no intent may exist: it would be priced without the free drink.
+    await screen.findByRole('status');
+    expect(mockedCreateIntent).not.toHaveBeenCalled();
+    releaseCard();
+    // Line 900, fixture menu price 750: the free drink takes 750 off, leaving $1.50.
+    expect(await screen.findByRole('button', { name: 'Pay $1.50' })).toBeInTheDocument();
+    expect(mockedCreateIntent).toHaveBeenCalledTimes(1);
+    expect(mockedCreateIntent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        expectedTotalCents: 150,
+        freeDrink: { lineIndex: 0, cents: 750 },
+      }),
+      token,
+    );
+  });
+
+  it('retries verification without a second charge after a post-payment failure', async () => {
+    mockedFetchStatus.mockRejectedValueOnce(new Error('api down'));
+    const stores = renderPay({ cart: [line] });
+    fireEvent.click(await screen.findByRole('button', { name: 'Pay $9.00' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('payment went through');
+    expect(stores.cart.read()).toHaveLength(1);
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm order' }));
+    expect(await screen.findByRole('heading', { name: 'Order route' })).toBeInTheDocument();
+    expect(stores.orders.read()[0]?.paymentIntentId).toBe('pi_1');
+    expect(confirmPayment).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows the free drink notice at the order when the redeem fails after payment', async () => {
+    const { stores, auth } = await signedInStores();
+    const loyalty: LoyaltyClient = {
+      card: async () => fullCard,
+      earn: async () => fullCard,
+      redeem: async () => {
+        throw new Error('loyalty down');
+      },
+    };
+    mockedCreateIntent.mockResolvedValue({ ...intent, amountCents: 150 });
+    mockedFetchStatus.mockResolvedValue({ ...verified, amountCents: 150 });
+    renderPay({ cart: [line], stores, auth, loyalty });
+    fireEvent.click(await screen.findByRole('button', { name: 'Pay $1.50' }));
+    expect(await screen.findByRole('heading', { name: 'Order route' })).toBeInTheDocument();
+    expect(screen.getByRole('status')).toHaveTextContent('free drink');
+    expect(stores.orders.read()[0]).toMatchObject({
+      paymentIntentId: 'pi_1',
+      freeDrink: { lineIndex: 0, cents: 750 },
+    });
   });
 
   it('verifies a redirect return from the query string without a second confirm', async () => {

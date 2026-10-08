@@ -47,8 +47,14 @@ type Checkout =
  * The three checks from the spec: Stripe says succeeded, the amount equals the cart's total as it
  * stands now, the currency is AUD, and the metadata marks the intent as ours.
  * Resolves to '' on success (the caller navigates away) or to the message to show.
+ * `leaving` is flipped before the cart is cleared, so PayPage's own empty-cart redirect does not
+ * race the stateful navigation and strip its notice.
  */
-function useVerifiedPlacement(freeDrink: FreeDrink | undefined, storeId: string | undefined) {
+function useVerifiedPlacement(
+  freeDrink: FreeDrink | undefined,
+  storeId: string | undefined,
+  leaving: React.MutableRefObject<boolean>,
+) {
   const { cart: cartStore, orders: ordersStore } = useStores();
   const cart = useCart();
   const loyalty = useLoyalty();
@@ -68,13 +74,20 @@ function useVerifiedPlacement(freeDrink: FreeDrink | undefined, storeId: string 
     ) {
       return 'The payment did not match this order, so nothing was placed.';
     }
+    let notice = '';
     if (freeDrink) {
-      // The discount is already in the paid amount; a failed redeem never blocks the paid order.
-      await loyalty.redeem().catch(() => undefined);
+      // The discount is already in the paid amount; a failed redeem never blocks the paid order,
+      // but the person is told, through the order panel's notice, that the drink stays on the card.
+      try {
+        await loyalty.redeem();
+      } catch {
+        notice = 'We could not use your free drink just now, so it stays on your card.';
+      }
     }
     ordersStore.place(cart, storeId, new Date(), freeDrink, paymentIntentId);
+    leaving.current = true;
     cartStore.clear();
-    navigate('/order');
+    navigate('/order', notice ? { state: { notice } } : undefined);
     return '';
   };
 }
@@ -93,16 +106,22 @@ export function PayPage() {
   const [searchParams] = useSearchParams();
   const [checkout, setCheckout] = useState<Checkout>({ kind: 'loading' });
   const requested = useRef(false);
+  // True once an order has been placed: the page is on its way out and must not redirect again.
+  const leaving = useRef(false);
 
   const menu = catalogue.kind === 'ready' ? catalogue.menu : undefined;
+  // The loyalty card must settle before any pricing: an intent created while it loads would miss
+  // the free drink, charge full price, and then fail verification against the discounted total.
+  const loyaltySettled = loyalty.state.kind !== 'loading';
   const freeDrink = freeDrinkFor(cart, menu, loyalty.state);
   const totalCents = orderTotalCents(cart, freeDrink);
-  const placeIfVerified = useVerifiedPlacement(freeDrink, store?.id);
+  const placeIfVerified = useVerifiedPlacement(freeDrink, store?.id, leaving);
   // A redirect-based payment method lands back here with the intent in the query string.
   const returningIntentId = searchParams.get('payment_intent');
 
   useEffect(() => {
-    if (cart.length === 0 || totalCents <= 0 || requested.current || !menu || !store) return;
+    if (cart.length === 0 || totalCents <= 0 || requested.current) return;
+    if (!menu || !store || !loyaltySettled) return;
     requested.current = true; // StrictMode mounts twice; one intent (or one verification) is enough.
     if (returningIntentId) {
       placeIfVerified(returningIntentId).then(
@@ -129,11 +148,13 @@ export function PayPage() {
           message: error instanceof Error ? error.message : 'We could not start the payment.',
         }),
     );
-    // The cart cannot change while this page is open in this tab; a change elsewhere is caught at verification.
+    // The cart cannot change in this tab while this page is open. Another tab's stores are separate
+    // snapshots, so a change there is not seen here; what is paid always equals what this tab
+    // showed on the button and what the placed order records.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cart, totalCents, menu, store, returningIntentId]);
+  }, [cart, totalCents, menu, store, loyaltySettled, returningIntentId]);
 
-  if (!stripePublishableKey() || cart.length === 0 || totalCents <= 0) {
+  if (!leaving.current && (!stripePublishableKey() || cart.length === 0 || totalCents <= 0)) {
     return <Navigate to="/order" replace />;
   }
 
@@ -157,6 +178,7 @@ export function PayPage() {
             amountCents={checkout.amountCents}
             freeDrink={freeDrink}
             storeId={store.id}
+            leaving={leaving}
           />
         </Elements>
       )}
@@ -164,15 +186,36 @@ export function PayPage() {
   );
 }
 
-type CheckoutFormProps = { amountCents: number; freeDrink?: FreeDrink; storeId: string };
+type CheckoutFormProps = {
+  amountCents: number;
+  freeDrink?: FreeDrink;
+  storeId: string;
+  leaving: React.MutableRefObject<boolean>;
+};
 
-function CheckoutForm({ amountCents, freeDrink, storeId }: CheckoutFormProps) {
+/** Shown when the card was charged but the api could not be reached to verify it. */
+const VERIFY_RETRY_MESSAGE =
+  'Your payment went through, but we could not confirm it with the shop just now. ' +
+  'Press Confirm order to try again; you will not be charged twice.';
+
+function CheckoutForm({ amountCents, freeDrink, storeId, leaving }: CheckoutFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
-  const placeIfVerified = useVerifiedPlacement(freeDrink, storeId);
+  const placeIfVerified = useVerifiedPlacement(freeDrink, storeId, leaving);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
+  // Once Stripe has confirmed, the money is captured: retries re-verify this intent and never
+  // confirm again, so a flaky api after a successful charge cannot lead to paying twice.
+  const [confirmedIntentId, setConfirmedIntentId] = useState('');
+
+  const verify = async (paymentIntentId: string) => {
+    try {
+      setMessage(await placeIfVerified(paymentIntentId));
+    } catch {
+      setMessage(VERIFY_RETRY_MESSAGE);
+    }
+  };
 
   const pay = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -180,7 +223,17 @@ function CheckoutForm({ amountCents, freeDrink, storeId }: CheckoutFormProps) {
     setBusy(true);
     setMessage('');
     try {
-      const result = await stripe.confirmPayment({ elements, redirect: 'if_required' });
+      if (confirmedIntentId) {
+        await verify(confirmedIntentId);
+        return;
+      }
+      let result: Awaited<ReturnType<typeof stripe.confirmPayment>>;
+      try {
+        result = await stripe.confirmPayment({ elements, redirect: 'if_required' });
+      } catch {
+        setMessage('We could not reach Stripe. Your card has not been charged; please try again.');
+        return;
+      }
       if (result.error) {
         setMessage(result.error.message ?? 'The payment did not go through.');
         return;
@@ -189,11 +242,8 @@ function CheckoutForm({ amountCents, freeDrink, storeId }: CheckoutFormProps) {
         setMessage('The payment is still on its way; give it a moment and try again.');
         return;
       }
-      setMessage(await placeIfVerified(result.paymentIntent.id));
-    } catch {
-      setMessage(
-        'We could not confirm the payment. Your card may not have been charged; please try again.',
-      );
+      setConfirmedIntentId(result.paymentIntent.id);
+      await verify(result.paymentIntent.id);
     } finally {
       setBusy(false);
     }
@@ -208,7 +258,7 @@ function CheckoutForm({ amountCents, freeDrink, storeId }: CheckoutFormProps) {
         </p>
       )}
       <button type="submit" className="pay__submit" disabled={busy || !stripe}>
-        {busy ? 'Paying' : `Pay ${formatPrice(amountCents)}`}
+        {busy ? 'Paying' : confirmedIntentId ? 'Confirm order' : `Pay ${formatPrice(amountCents)}`}
       </button>
       <button type="button" className="pay__back" onClick={() => navigate('/order')}>
         Back to your order

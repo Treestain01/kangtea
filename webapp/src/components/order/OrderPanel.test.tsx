@@ -132,6 +132,28 @@ describe('OrderPanel cart', () => {
   });
 });
 
+describe('OrderPanel notices', () => {
+  beforeEach(() => {
+    mockedFetchStore.mockReset();
+    mockedFetchStore.mockResolvedValue(store);
+    mockedFetchMenu.mockReset();
+    mockedFetchMenu.mockResolvedValue(menuFixture);
+  });
+
+  it('shows a notice carried in navigation state, as the pay page sends one', () => {
+    render(
+      <TestProviders stores={createTestStores()}>
+        <MemoryRouter
+          initialEntries={[{ pathname: '/order', state: { notice: 'It stays on your card.' } }]}
+        >
+          <OrderPanel />
+        </MemoryRouter>
+      </TestProviders>,
+    );
+    expect(screen.getByText('It stays on your card.')).toBeInTheDocument();
+  });
+});
+
 describe('Place order with payments configured', () => {
   beforeEach(() => {
     vi.stubEnv('VITE_STRIPE_PUBLISHABLE_KEY', 'pk_test_x');
